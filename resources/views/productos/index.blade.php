@@ -30,4 +30,6 @@
             </tbody>
         </table>
     </div>
+    
+    <a href="/productos/create">Crear producto</a>
 </x-app-layout>

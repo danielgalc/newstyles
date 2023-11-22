@@ -24,16 +24,33 @@ class ProductoController extends Controller
      */
     public function create()
     {
-        //
+        $producto = new Producto();
+
+
+        return view('productos.create', [
+            'producto' => $producto,
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        //
-    }
+{
+    $producto = new Producto();
+
+    $producto->nombre = $request->input('nombre');
+    $producto->descripcion = $request->input('descripcion');
+    $producto->precio = $request->input('precio');
+    $producto->imagen = $request->input('imagen'); // Si estás guardando el nombre del archivo, asegúrate de tener la lógica adecuada para manejar el archivo.
+    $producto->stock = $request->input('stock');
+
+    $producto->save();
+
+    return redirect('/productos')
+        ->with('success', 'Producto añadido con éxito.');
+}
+
 
     /**
      * Display the specified resource.

@@ -16,7 +16,10 @@ use App\Http\Controllers\ServicioController;
 |
 */
 
-Route::resource('productos', ProductoController::class);
+Route::get('/productos', [ProductoController::class, 'index']);
+Route::get('/productos/create', [ProductoController::class, 'create']);
+Route::post('/productos', [ProductoController::class, 'store'])->name('productos.store');
+
 
 Route::resource('servicios', ServicioController::class);
 
