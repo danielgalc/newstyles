@@ -25,6 +25,8 @@ Route::post('/productos', [ProductoController::class, 'store'])->name('productos
 Route::get('/productos/{id}/edit', [ProductoController::class, 'edit']);
 Route::put('/productos/{id}', [ProductoController::class, 'update'])
     ->name('productos.update');
+    
+Route::delete('/productos/{id}', [ProductoController::class, 'destroy'])->name('productos.destroy');
 
 
 // Rutas de servicios

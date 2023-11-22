@@ -27,6 +27,13 @@
                         <td>{{ $producto->descripcion }}</td>
                         <td>{{ $producto->stock }}</td>
                         <td><a href="/productos/{{ $producto->id }}/edit" style="background-color: aqua">Editar</a></td>
+                        <td>
+                            <form action="{{ route('productos.destroy', $producto->id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este producto?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" style="background-color: red; border: none; color: white; padding: 5px 10px; cursor: pointer;">Borrar</button>
+                            </form>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
