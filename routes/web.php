@@ -16,10 +16,18 @@ use App\Http\Controllers\ServicioController;
 |
 */
 
+// Rutas de productos
+
 Route::get('/productos', [ProductoController::class, 'index']);
 Route::get('/productos/create', [ProductoController::class, 'create']);
 Route::post('/productos', [ProductoController::class, 'store'])->name('productos.store');
 
+Route::get('/productos/{id}/edit', [ProductoController::class, 'edit']);
+Route::put('/productos/{id}', [ProductoController::class, 'update'])
+    ->name('productos.update');
+
+
+// Rutas de servicios
 
 Route::resource('servicios', ServicioController::class);
 

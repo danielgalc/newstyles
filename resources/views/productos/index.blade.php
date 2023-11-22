@@ -16,6 +16,7 @@
                     <th>Precio</th>
                     <th>Descripción</th>
                     <th>Stock</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -25,11 +26,12 @@
                         <td>{{ $producto->precio }}</td>
                         <td>{{ $producto->descripcion }}</td>
                         <td>{{ $producto->stock }}</td>
+                        <td><a href="/productos/{{ $producto->id }}/edit" style="background-color: aqua">Editar</a></td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
     </div>
     
-    <a href="/productos/create">Crear producto</a>
+    <a href="/productos/create" style="background-color: greenyellow">Crear producto</a>
 </x-app-layout>
