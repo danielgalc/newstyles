@@ -62,7 +62,11 @@ class ServicioController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $servicio = Servicio::findOrFail($id);
+
+        return view('servicios.edit', [
+            'servicio' => $servicio,
+        ]);
     }
 
     /**
@@ -70,14 +74,29 @@ class ServicioController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $servicio = Servicio::FindOrFail($id);
+
+        $servicio->nombre = $request->input('nombre');
+        $servicio->precio = $request->input('precio');
+        $servicio->duracion = $request->input('duracion');
+
+        $servicio->save();
+
+        return redirect('/servicios')
+            ->with('success', 'servicio modificado con éxito.');
     }
+    
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
-        //
+        $servicio = Servicio::FindOrFail($id);
+
+        $servicio->delete();
+
+        return redirect('/servicios')
+            ->with('success', 'Servicio eliminado con éxito.');
     }
 }

@@ -15,6 +15,7 @@
                     <th>Nombre</th>
                     <th>Precio</th>
                     <th>Duracion</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -23,6 +24,14 @@
                         <td>{{ $servicio->nombre }}</td>
                         <td>{{ $servicio->precio }}</td>
                         <td>{{ $servicio->duracion }}</td>
+                        <td><a href="/servicios/{{ $servicio->id }}/edit" style="background-color: aqua">Editar</a></td>
+                        <td>
+                            <form action="{{ route('servicios.destroy', $servicio->id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este servicio?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" style="background-color: red; border: none; color: white; padding: 5px 10px; cursor: pointer;">Borrar</button>
+                            </form>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
