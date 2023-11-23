@@ -27,5 +27,8 @@
                 @endforeach
             </tbody>
         </table>
+
+        <a href="/servicios/create" style="background-color: greenyellow">Añadir servicio</a>
+
     </div>
 </x-app-layout>

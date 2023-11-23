@@ -24,7 +24,12 @@ class ServicioController extends Controller
      */
     public function create()
     {
-        //
+        $servicio = new Servicio();
+
+
+        return view('servicios.create', [
+            'servicio' => $servicio,
+        ]);
     }
 
     /**
@@ -32,7 +37,16 @@ class ServicioController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $servicio = new Servicio();
+
+        $servicio->nombre = $request->input('nombre');
+        $servicio->precio = $request->input('precio');
+        $servicio->duracion = $request->input('duracion');
+    
+        $servicio->save();
+    
+        return redirect('/servicios')
+            ->with('success', 'Servicio añadido con éxito.');
     }
 
     /**

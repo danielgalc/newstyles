@@ -31,7 +31,10 @@ Route::delete('/productos/{id}', [ProductoController::class, 'destroy'])->name('
 
 // Rutas de servicios
 
-Route::resource('servicios', ServicioController::class);
+Route::get('/servicios', [ServicioController::class, 'index']);
+Route::get('/servicios/create', [ServicioController::class, 'create']);
+Route::post('/servicios', [ServicioController::class, 'store'])->name('servicios.store');
+
 
 Route::get('/', function () {
     return view('welcome');

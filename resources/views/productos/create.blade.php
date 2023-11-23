@@ -2,7 +2,7 @@
     @csrf
 
     <label for="Nombre"> Nombre del producto</label>
-    <input type="text" name="nombre" id="descripcion">
+    <input type="text" name="nombre" id="nombre">
     <br>
     
     <label for="Descripción"> Descripción </label>
