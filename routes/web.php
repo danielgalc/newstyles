@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\ServicioController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -42,6 +43,9 @@ Route::put('/servicios/{id}', [ServicioController::class, 'update'])
 
 Route::delete('/servicios/{id}', [ServicioController::class, 'destroy'])->name('servicios.destroy');
 
+// Rutas de usuarios
+
+Route::get('/perfil', [UserController::class, 'index']);
 
 
 

@@ -24,7 +24,7 @@
                 </div>
             </div>
 
-            {{-- <!-- Settings Dropdown -->
+            <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
@@ -40,18 +40,31 @@
                     </x-slot>
 
                     <x-slot name="content">
+                        
+                        <x-dropdown-link :href="('perfil')" :active="request()->routeIs('perfil')">
+                            {{ __('Mi perfil') }}
+                        </x-dropdown-link>
+
+                        <x-dropdown-link :href="('')">
+                            {{ __('Historial de citas') }}
+                        </x-dropdown-link>
+
+                        <x-dropdown-link :href="('')">
+                            {{ __('Mis pedidos') }}
+                        </x-dropdown-link>
+                        
                         <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
+                            {{ __('Configuración') }}
                         </x-dropdown-link>
 
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
 
-                            <x-dropdown-link :href="route('logout')"
+                            <x-dropdown-link style="color: red" :href="route('logout')"
                                     onclick="event.preventDefault();
                                                 this.closest('form').submit();">
-                                {{ __('Log Out') }}
+                                {{ __('Cerrar sesión') }}
                             </x-dropdown-link>
                         </form>
                     </x-slot>
@@ -102,5 +115,5 @@
                 </form>
             </div>
         </div>
-    </div> --}}
+    </div>
 </nav>
