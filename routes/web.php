@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\ServicioController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\CitaController;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -47,7 +48,11 @@ Route::delete('/servicios/{id}', [ServicioController::class, 'destroy'])->name('
 
 Route::get('/perfil', [UserController::class, 'index']);
 
+// Rutas de citas
 
+Route::get('/citas', [CitaController::class, 'index']);
+Route::get('/citas/{id}/create', [CitaController::class, 'create']);
+Route::post('/citas', [CitaController::class, 'store'])->name('citas.store');
 
 Route::get('/', function () {
     return view('welcome');

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Auth\MustVerifyEmail as MustVerifyEmailTrait;
 use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -22,6 +23,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
         'name',
         'email',
         'password',
+        'rol'
     ];
 
     /**
@@ -43,4 +45,9 @@ class User extends Authenticatable implements MustVerifyEmailContract
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function citas(): HasMany
+    {
+        return $this->hasMany(Cita::class);
+    }
 }

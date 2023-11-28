@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Servicio;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class ServicioController extends Controller
@@ -12,11 +13,15 @@ class ServicioController extends Controller
      */
     public function index()
     {
+        
         $servicios = Servicio::all();
+        $peluqueros = User::where('rol', 'empleado')->get();
 
         return view('servicios.index', [
             'servicios' => $servicios,
+            'peluqueros' => $peluqueros,
         ]);
+    
     }
 
     /**
