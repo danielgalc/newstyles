@@ -3,7 +3,6 @@
         <h1 class="font-semibold leading-tight ">
             {{ __('CATÁLOGO') }}
         </h1>
-
     </x-slot>
 
     <div class="container">
@@ -12,7 +11,7 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th class="text-rose">Nombre</th>
+                    <th>Nombre</th>
                     <th>Precio</th>
                     <th>Descripción</th>
                     <th>Stock</th>
