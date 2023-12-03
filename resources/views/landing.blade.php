@@ -5,22 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=YourCustomFont&display=swap">
     @vite('resources/css/app.css')
 
     <title>Document</title>
 </head>
 <body>
-     <div class="bg-gray-900 p-8 w-full flex items-center justify-between">
+     <nav class="bg-gray-900 p-4 w-full flex items-center justify-between">
         <div class="flex items-center">
-            <img src="ruta/a/tu/logo.png" alt="Logo" class="mr-4">
-            <span class="text-white">Nombre de tu Página</span>
+            <img src="{{ asset('images/Logo1Transparente.png') }}" alt="Logo 1"  class="w-40 h-20">
         </div>
 
-        <div class="flex items-center space-x-4">
-            <a href="#" class="text-white">Servicios</a>
-            <a href="#" class="text-white">Productos</a>
-            <a href="#" class="text-white">Quiénes Somos</a>
-
+        <div class="bg-gray-900 p-8 w-full flex items-center justify-between">
+            <div class="flex w-full justify-center items-center left-12 space-x-24"> <!-- Ajusta el valor de space-x según sea necesario -->
+                <a href="#" class="text-white text-3xl font-custom font-semibold transition-all duration-300 transform hover:text-teal-500 hover:scale-105">Servicios</a>
+                <a href="#" class="text-white text-3xl font-custom font-semibold transition-all duration-300 transform hover:text-teal-500 hover:scale-105">Productos</a>
+                <a href="#" class="text-white text-3xl font-custom font-semibold transition-all duration-300 transform hover:text-teal-500 hover:scale-105">Quiénes Somos</a>        
+            </div>
+        </div>
+        
             <!-- Verifica si el usuario está logueado -->
             {{-- @if ($usuarioLogueado)
                 <!-- Si está logueado, muestra el icono de usuario y el desplegable -->
@@ -32,13 +35,18 @@
                         <li><a href="#">Historial de Compra</a></li>
                     </ul>
                 </div>
-            @else
-             --}}    <!-- Si no está logueado, muestra enlaces de inicio de sesión -->
+            @else --}}
+            <!-- Si no está logueado, muestra enlaces de inicio de sesión -->
+            <div class="flex items-center space-x-4 ml-auto border border-white"> <!-- Utiliza ml-auto para moverlo a la derecha -->
                 <a href="#" class="text-white">Login</a>
                 <a href="#" class="text-white">Registrarse</a>
+            </div>
             {{-- @endif --}}
         </div>
-    </div>
+        
+        
+            
+    </nav>
     
 <div class="flex items-center">
     <div class="h-96 w-full relative">
