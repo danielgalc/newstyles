@@ -16,8 +16,16 @@
             <x-nav-link :href="''" :active="request()->routeIs('')" class="text-white text-3xl font-custom font-semibold transition-all duration-300 transform hover:text-teal-500 hover:scale-105">
                 {{ __('Quiénes Somos') }}
             </x-nav-link>
+            @if(Auth::user()->rol=='cliente')           
+                <x-nav-link :href="('carrito')" :active="request()->routeIs('carrito')" class="text-white text-3xl font-custom font-semibold transition-all duration-300 transform hover:text-teal-500 hover:scale-105">
+                    {{ __('Ver carrito')}} ({{(Auth::user()->carrito()->sum('cantidad'))}})
+                </x-nav-link>
+            @endif
         </div>
     </div>
+
+
+
     <div class="hidden sm:flex sm:items-center sm:ms-6">
         <x-dropdown align="right" width="48">
             <x-slot name="trigger">

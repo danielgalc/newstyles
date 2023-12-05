@@ -50,4 +50,9 @@ class User extends Authenticatable implements MustVerifyEmailContract
     {
         return $this->hasMany(Cita::class);
     }
+
+    public function carrito(): HasMany
+    {
+        return $this->hasMany(Carrito::class);
+    }
 }

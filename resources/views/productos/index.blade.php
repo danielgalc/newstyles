@@ -33,6 +33,13 @@
                                 <button type="submit" style="background-color: red; border: none; color: white; padding: 5px 10px; cursor: pointer;">Borrar</button>
                             </form>
                         </td>
+                        <td>
+                            <form action="{{ route('add', $producto) }}" method="POST">
+                                @csrf
+                                @method('POST')
+                                <button type="submit" class="px-4 py-1 text-sm text-white bg-orange-500 rounded">Añadir al carrito</button>
+                            </form>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
