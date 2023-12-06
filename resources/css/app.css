@@ -1,3 +1,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.teal-shadow {
+    box-shadow: 4px 4px 4px 0 rgba(0, 228, 215, 1);
+}
+
+.delete-shadow {
+    box-shadow: 4px 4px 4px 0 rgb(228, 38, 0);
+}
+  
