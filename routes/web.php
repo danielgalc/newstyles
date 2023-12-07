@@ -36,7 +36,7 @@ Route::delete('/productos/{id}', [ProductoController::class, 'destroy'])->name('
 
 // Rutas de servicios
 
-Route::get('/servicios', [ServicioController::class, 'index']);
+Route::get('/servicios', [ServicioController::class, 'index'])->name('servicios');
 Route::get('/servicios/create', [ServicioController::class, 'create']);
 Route::post('/servicios', [ServicioController::class, 'store'])->name('servicios.store');
 

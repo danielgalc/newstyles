@@ -4,7 +4,7 @@
             {{ __('CATÁLOGO') }}
         </h1>
     </x-slot>
-
+   
     <div class="container">
         <h2>Lista de Productos</h2>
 
@@ -25,7 +25,6 @@
                 <button type="submit">Filtrar</button>
             </form>
         </div>
-
 
         <table class="table">
             <thead>
@@ -67,3 +66,6 @@
     
     <a href="/productos/create" style="background-color: greenyellow">Crear producto</a>
 </x-app-layout>
+
+
+
