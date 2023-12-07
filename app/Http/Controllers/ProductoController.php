@@ -7,12 +7,33 @@ use Illuminate\Http\Request;
 
 class ProductoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+ 
+    public function index(Request $request)
     {
-        $productos = Producto::all();
+        // Obtener todos los productos
+        $query = Producto::query();
+
+        // Aplicar filtros y búsqueda si están presentes en la solicitud
+        if ($request->has('ordenar')) {
+            $ordenar = $request->input('ordenar');
+            if ($ordenar == 'nombre_asc') {
+                $query->orderBy('nombre', 'asc');
+            } elseif ($ordenar == 'nombre_desc') {
+                $query->orderBy('nombre', 'desc');
+            } elseif ($ordenar == 'precio_asc') {
+                $query->orderBy('precio', 'asc');
+            } elseif ($ordenar == 'precio_desc') {
+                $query->orderBy('precio', 'desc');
+            }
+        }
+
+        if ($request->has('buscar')) {
+            $buscar = $request->input('buscar');
+            $query->where('nombre', 'like', '%' . $buscar . '%');
+        }
+
+        // Obtener la colección de productos después de aplicar filtros y búsqueda
+        $productos = $query->get();
 
         return view('productos.index', [
             'productos' => $productos,

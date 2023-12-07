@@ -8,6 +8,25 @@
     <div class="container">
         <h2>Lista de Productos</h2>
 
+        <!-- Formulario de filtros -->
+        <div class="mb-4">
+            <form action="{{ route('productos') }}" method="GET">
+                <label for="ordenar">Ordenar por:</label>
+                <select name="ordenar" id="ordenar">
+                    <option value="nombre_asc" {{ request('ordenar') == 'nombre_asc' ? 'selected' : '' }}>Nombre (ascendente)</option>
+                    <option value="nombre_desc" {{ request('ordenar') == 'nombre_desc' ? 'selected' : '' }}>Nombre (descendente)</option>
+                    <option value="precio_asc" {{ request('ordenar') == 'precio_asc' ? 'selected' : '' }}>Precio (ascendente)</option>
+                    <option value="precio_desc" {{ request('ordenar') == 'precio_desc' ? 'selected' : '' }}>Precio (descendente)</option>
+                </select>
+
+                <label for="buscar">Buscar:</label>
+                <input type="text" name="buscar" id="buscar" value="{{ request('buscar') }}">
+
+                <button type="submit">Filtrar</button>
+            </form>
+        </div>
+
+
         <table class="table">
             <thead>
                 <tr>
