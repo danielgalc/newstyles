@@ -5,7 +5,7 @@
         </h1>
     </x-slot>
    
-    <div class="container">
+    <div class="container mx-auto">
         <h2>Lista de Productos</h2>
 
         <!-- Formulario de filtros -->
@@ -26,42 +26,28 @@
             </form>
         </div>
 
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Precio</th>
-                    <th>Descripción</th>
-                    <th>Stock</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($productos as $producto)
-                    <tr>
-                        <td>{{ $producto->nombre }}</td>
-                        <td>{{ $producto->precio }}</td>
-                        <td>{{ $producto->descripcion }}</td>
-                        <td>{{ $producto->stock }}</td>
-                        <td><a href="/productos/{{ $producto->id }}/edit" style="background-color: aqua">Editar</a></td>
-                        <td>
-                            <form action="{{ route('productos.destroy', $producto->id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este producto?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" style="background-color: red; border: none; color: white; padding: 5px 10px; cursor: pointer;">Borrar</button>
-                            </form>
-                        </td>
-                        <td>
-                            <form action="{{ route('add', $producto) }}" method="POST">
-                                @csrf
-                                @method('POST')
-                                <button type="submit" class="px-4 py-1 text-sm text-white bg-orange-500 rounded">Añadir al carrito</button>
-                            </form>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            @foreach($productos as $producto)
+                <div class="bg-white p-4 rounded-md shadow-md transition-all duration-300 ease-in-out transform hover:shadow-lg hover:bg-gray-900 hover:text-white hover:scale-105">
+                    <img src="{{ $producto->imagen_url }}" alt="{{ $producto->nombre }}" class="w-full h-32 object-cover mb-2 rounded-md">
+                    
+                    <div class="text-container">
+                        <h3 class="text-lg font-semibold">{{ $producto->nombre }}</h3>
+                        <p class="text-gray-400">{{ $producto->descripcion }}</p>
+                        <p class="text-lg font-bold text-teal-600">{{ $producto->precio }}&euro;</p>
+                    </div>
+                    
+                    <form action="{{ route('add', $producto) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="mt-2 px-4 py-2 text-sm text-white bg-teal-500 rounded">Añadir al carrito</button>
+                    </form>
+                </div>
+            @endforeach
+        </div>        
+
+        <div class="mt-4">
+            {{ $productos->links() }}
+        </div>
     </div>
     
     <a href="/productos/create" style="background-color: greenyellow">Crear producto</a>

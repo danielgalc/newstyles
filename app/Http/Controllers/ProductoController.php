@@ -10,10 +10,8 @@ class ProductoController extends Controller
  
     public function index(Request $request)
     {
-        // Obtener todos los productos
         $query = Producto::query();
 
-        // Aplicar filtros y búsqueda si están presentes en la solicitud
         if ($request->has('ordenar')) {
             $ordenar = $request->input('ordenar');
             if ($ordenar == 'nombre_asc') {
@@ -32,8 +30,7 @@ class ProductoController extends Controller
             $query->where('nombre', 'like', '%' . $buscar . '%');
         }
 
-        // Obtener la colección de productos después de aplicar filtros y búsqueda
-        $productos = $query->get();
+        $productos = $query->paginate(8);
 
         return view('productos.index', [
             'productos' => $productos,
