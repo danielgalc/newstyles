@@ -35,10 +35,10 @@
         </div> --}}
 
         <div class="grid grid-cols-2 gap-x-24 gap-y-12">
-            @foreach($servicios as $index => $servicio)
+            @foreach($serviciosPrincipales as $index => $servicio)
                 <div class="relative h-32 p-6 shadow-md rounded-md {{ $index % 4 == 0 ? 'bg-gray-50' : 'bg-gray-100' }}">
                     <h3 class="text-3xl font-semibold mb-3">{{ $servicio->nombre }}</h3>
-        
+            
                     <div class="absolute bottom-0 right-0 h-full w-1/4 flex flex-col items-center justify-center p-4">
                         <p class="text-3xl">{{ $servicio->precio }} &euro;</p>
                         <p class="text-lg text-gray-600">Aprox. {{ $servicio->duracion }}</p>
@@ -47,34 +47,44 @@
                 </div>
             @endforeach
         </div>
+        
         <p id="otrosServiciosToggle" class="cursor-pointer text-blue-500 underline mt-4">
             Otros Servicios
         </p>
-    
+        
         <div id="otrosServiciosContainer" class="hidden mt-4 w-full">
-            <div class="grid grid-cols-2 gap-x-24 gap-y-12">
-            @foreach($servicios as $index => $servicio)
-            <div class="relative h-32 p-6 shadow-md rounded-md {{ $index % 4 == 0 ? 'bg-gray-50' : 'bg-gray-100' }}">
-                <h3 class="text-3xl font-semibold mb-3">{{ $servicio->nombre }}</h3>
-    
-                <div class="absolute bottom-0 right-0 h-full w-1/4 flex flex-col items-center justify-center p-4">
-                    <p class="text-3xl">{{ $servicio->precio }} &euro;</p>
-                    <p class="text-lg text-gray-600">Aprox. {{ $servicio->duracion }}</p>
-                    <a href="/citas/{{ $servicio->id }}/create" class="bg-teal-400 text-white font-bold text-2xl w-full h-12 text-center rounded-full mt-2">Reservar</a>
+            @if ($serviciosSecundarios->count() > 0)
+                <p>Servicios secundarios encontrados.</p>
+                <div class="grid grid-cols-2 gap-x-24 gap-y-12">
+                    @foreach($serviciosSecundarios as $index => $servicio)
+                    <div class="relative h-32 p-6 shadow-md rounded-md {{ $index % 4 == 0 ? 'bg-gray-50' : 'bg-gray-100' }}">
+                        <h3 class="text-3xl font-semibold mb-3">{{ $servicio->nombre }}</h3>
+            
+                        <div class="absolute bottom-0 right-0 h-full w-1/4 flex flex-col items-center justify-center p-4">
+                            <p class="text-3xl">{{ $servicio->precio }} &euro;</p>
+                            <p class="text-lg text-gray-600">Aprox. {{ $servicio->duracion }}</p>
+                            <a href="/citas/{{ $servicio->id }}/create" class="bg-teal-400 text-white font-bold text-2xl w-full h-12 text-center rounded-full mt-2">Reservar</a>
+                        </div>
+                    </div>
+                    @endforeach
                 </div>
-            </div>
-            @endforeach
-            </div>
+            @else
+                <p>No hay servicios secundarios encontrados.</p>
+            @endif
         </div>
+
+        
         
         <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-        <script>
-            $(document).ready(function() {
-                $("#otrosServiciosToggle").click(function() {
-                    $("#otrosServiciosContainer").slideToggle();
-                });
-            });
-        </script>
+<script>
+    $(document).ready(function() {
+        console.log("jQuery loaded successfully.");
+        $("#otrosServiciosToggle").click(function() {
+            console.log("Toggle clicked.");
+            $("#otrosServiciosContainer").slideToggle();
+        });
+    });
+</script>
 
     {{-- <a href="/servicios/create" style="background-color: greenyellow">Añadir servicio</a> --}}
     {{-- 

@@ -15,5 +15,12 @@
     <input type="text" name="duracion" id="duracion">
     <br>
     
+    <label for="clase">Clase</label>
+    <select name="clase" id="clase">
+        <option value="principal">Principal</option>
+        <option value="secundario">Secundario</option>
+    </select>
+    <br>
+    
     <a href="/servicios"><button type="submit">Añadir servicio</button></a>
 </form>
