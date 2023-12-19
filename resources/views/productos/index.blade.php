@@ -1,10 +1,9 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h1 class="font-semibold leading-tight ">
-            {{ __('CATÁLOGO') }}
-        </h1>
-    </x-slot>
-   
+        <div class="w-full h-24 flex items-center justify-center bg-teal-400 shadow-md"> 
+            <h2 class="font-righteous text-4xl text-gray-800 leading-tight">
+                {{ __('Catálogo de productos ')}}
+            </h2>
+        </div>
     <div class="container mx-auto">
         <h2>Lista de Productos</h2>
 
