@@ -55,30 +55,24 @@ Route::get('/citas', [CitaController::class, 'index']);
 Route::get('/citas/{id}/create', [CitaController::class, 'create']);
 Route::post('/citas', [CitaController::class, 'store'])->name('citas.store');
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
 // Ruta de Landing Page
 
 Route::get('/', function () {
     return view('landing');
-});
+})->name('landing');;
 
 // Rutas del carrito
 
-Route::get('/carrito', [CarritoController::class, 'index'])->name('carrito');
-Route::post('/carrito/add/{producto}', [CarritoController::class, 'add'])->name('add');
-Route::post('/carrito/clear', [CarritoController::class, 'clear'])->name('clear');
+Route::middleware('auth', 'verified')->group(function () {
+    Route::get('/carrito', [CarritoController::class, 'index'])->name('carrito');
+    Route::post('/carrito/add/{producto}', [CarritoController::class, 'add'])->name('add');
+    Route::post('/carrito/clear', [CarritoController::class, 'clear'])->name('clear');
 
-Route::post('/carrito/decrementarCantidad/{carrito}', [CarritoController::class, 'decrementarCantidad'])->name('decrementarCantidad');
-Route::post('/carrito/incrementarCantidad/{carrito}', [CarritoController::class, 'incrementarCantidad'])->name('incrementarCantidad');
-
+    Route::post('/carrito/decrementarCantidad/{carrito}', [CarritoController::class, 'decrementarCantidad'])->name('decrementarCantidad');
+    Route::post('/carrito/incrementarCantidad/{carrito}', [CarritoController::class, 'incrementarCantidad'])->name('incrementarCantidad');
+});
 //
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -87,3 +81,10 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+// Login
+
+Route::middleware('guest')->get('/login', function () {
+    return view('auth.login');
+})->name('login');
+
