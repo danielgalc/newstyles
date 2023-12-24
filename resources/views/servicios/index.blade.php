@@ -1,12 +1,11 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h1 class="font-semibold leading-tight ">
-            {{ __('CATÁLOGO') }}
-        </h1>
+        <div class="w-full h-24 flex items-center justify-center bg-teal-400 shadow-md"> 
+            <h2 class="font-righteous text-4xl text-gray-800 leading-tight">
+                {{ __('Listado de servicios')}}
+            </h2>
+        </div>
 
-    </x-slot>
-
-    <div class="container">
+    <div class="container mx-auto">
         <h2>Lista de Servicios</h2>
 
         <!-- Formulario de filtros -->
@@ -26,45 +25,69 @@
                 <button type="submit">Filtrar</button>
             </form>
         </div>
+        {{-- <div class="mt-4">
+            <a href="/servicios/{{ $servicio->id }}/edit" class="bg-blue-500 text-white py-2 px-4 rounded">Editar</a>
+            <form action="{{ route('servicios.destroy', $servicio->id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este servicio?')" class="inline">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="bg-red-500 text-white py-2 px-4 rounded" style="margin-left: 4px;">Borrar</button>
+            </form>
+        </div> --}}
 
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Precio</th>
-                    <th>Duracion</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($servicios as $servicio)
-                    <tr>
-                        <td>{{ $servicio->nombre }}</td>
-                        <td>{{ $servicio->precio }}</td>
-                        <td>{{ $servicio->duracion }}</td>
-                        <td><a href="/servicios/{{ $servicio->id }}/edit" style="background-color: aqua">Editar</a></td>
-                        <td>
-                            <form action="{{ route('servicios.destroy', $servicio->id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este servicio?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" style="background-color: red; border: none; color: white; padding: 5px 10px; cursor: pointer;">Borrar</button>
-                            </form>
-                        </td>
-                        <td>
-                            <a href="/citas/{{ $servicio->id }}/create" style="background-color: orange">Reservar</a>
-                        </td>
-                        {{-- <td>
-                            <button id="openModalBtn" class="bg-blue-500 text-white py-2 px-4 rounded">Reservar</button>
-                        </td> --}}
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
+        <div class="grid grid-cols-2 gap-x-24 gap-y-12">
+            @foreach($serviciosPrincipales as $index => $servicio)
+                <div class="relative h-32 p-6 shadow-md rounded-md {{ $index % 4 == 0 ? 'bg-gray-50' : 'bg-gray-100' }}">
+                    <h3 class="text-3xl font-semibold mb-3">{{ $servicio->nombre }}</h3>
+            
+                    <div class="absolute bottom-0 right-0 h-full w-1/4 flex flex-col items-center justify-center p-4">
+                        <p class="text-3xl">{{ $servicio->precio }} &euro;</p>
+                        <p class="text-lg text-gray-600">Aprox. {{ $servicio->duracion }}</p>
+                        <a href="/citas/{{ $servicio->id }}/create" class="bg-teal-400 text-white font-bold text-2xl w-full h-12 text-center rounded-full mt-2">Reservar</a>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+        
+        <p id="otrosServiciosToggle" class="cursor-pointer text-blue-500 underline mt-4">
+            Otros Servicios
+        </p>
+        
+        <div id="otrosServiciosContainer" class="hidden mt-4 w-full">
+            @if ($serviciosSecundarios->count() > 0)
+                <p>Servicios secundarios encontrados.</p>
+                <div class="grid grid-cols-2 gap-x-24 gap-y-12">
+                    @foreach($serviciosSecundarios as $index => $servicio)
+                    <div class="relative h-32 p-6 shadow-md rounded-md {{ $index % 4 == 0 ? 'bg-gray-50' : 'bg-gray-100' }}">
+                        <h3 class="text-3xl font-semibold mb-3">{{ $servicio->nombre }}</h3>
+            
+                        <div class="absolute bottom-0 right-0 h-full w-1/4 flex flex-col items-center justify-center p-4">
+                            <p class="text-3xl">{{ $servicio->precio }} &euro;</p>
+                            <p class="text-lg text-gray-600">Aprox. {{ $servicio->duracion }}</p>
+                            <a href="/citas/{{ $servicio->id }}/create" class="bg-teal-400 text-white font-bold text-2xl w-full h-12 text-center rounded-full mt-2">Reservar</a>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+            @else
+                <p>No hay servicios secundarios encontrados.</p>
+            @endif
+        </div>
 
-        <a href="/servicios/create" style="background-color: greenyellow">Añadir servicio</a>
+        
+        
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    $(document).ready(function() {
+        console.log("jQuery loaded successfully.");
+        $("#otrosServiciosToggle").click(function() {
+            console.log("Toggle clicked.");
+            $("#otrosServiciosContainer").slideToggle();
+        });
+    });
+</script>
 
-    </div>
-{{-- 
+    {{-- <a href="/servicios/create" style="background-color: greenyellow">Añadir servicio</a> --}}
+    {{-- 
 <!-- Modal -->
 <div id="reservarModal" class="fixed inset-0 overflow-y-auto hidden">
     <div class="flex items-center justify-center min-h-screen p-4">

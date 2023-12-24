@@ -15,6 +15,7 @@ class ServicioController extends Controller
     public function index(Request $request)
     {
         $query = Servicio::query();
+
         $peluqueros = User::where('rol', 'empleado')->get();
 
         if ($request->has('ordenar')) {
@@ -35,10 +36,16 @@ class ServicioController extends Controller
             $query->where('nombre', 'like', '%' . $buscar . '%');
         }
 
-        $productos = $query->get();
+        $servicios = $query->get()->where('clase', 'secundario');
+
+        $serviciosPrincipales = $query->get()->where("clase", "principal");
+        $serviciosSecundarios = $query->get()->where("clase", "secundario");
+
 
         return view('servicios.index', [
-            'servicios' => $productos,
+            'servicios' => $servicios,
+            'serviciosPrincipales' => $serviciosPrincipales,
+            'serviciosSecundarios' => $serviciosSecundarios,
             'peluqueros' => $peluqueros,
         ]);
     }
@@ -66,6 +73,7 @@ class ServicioController extends Controller
         $servicio->nombre = $request->input('nombre');
         $servicio->precio = $request->input('precio');
         $servicio->duracion = $request->input('duracion');
+        $servicio->clase = $request->input('clase');
     
         $servicio->save();
     
