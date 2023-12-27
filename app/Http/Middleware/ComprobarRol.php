@@ -15,7 +15,7 @@ class ComprobarRol
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (auth()->user()->rol != 'admin') {
+        if (!auth()->check() || auth()->user()->rol != 'admin') {
             return $next($request);
         }
 
