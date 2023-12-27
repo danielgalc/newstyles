@@ -47,7 +47,7 @@
             </x-slot>
     
             <x-slot name="content">
-                <x-dropdown-link :href="('perfil')" :active="request()->routeIs('perfil')">
+                <x-dropdown-link :href="('profile')" :active="request()->routeIs('perfil')">
                     {{ __('Mi perfil') }}
                 </x-dropdown-link>
     

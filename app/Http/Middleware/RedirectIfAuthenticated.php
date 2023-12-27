@@ -18,7 +18,7 @@ class RedirectIfAuthenticated
                     case 'cliente':
                         return redirect('/');
                     case 'admin':
-                        return redirect('/dashboard');
+                        return redirect('/admin');
                     default:
                         return redirect('/');
                 }
