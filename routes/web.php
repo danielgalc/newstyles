@@ -43,7 +43,7 @@ Route::middleware('guest')->get('/login', function () {
 
 Route::get('/', function () {
     return view('landing');
-})->name('landing');;
+})->name('landing');
 
 // Rutas accesibles para el usuario logueado
 
