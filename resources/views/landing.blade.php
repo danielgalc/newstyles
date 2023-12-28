@@ -10,8 +10,7 @@
 
     <title>Bienvenid@ a Newstyles</title>
 </head>
-<x-app-layout>
-    
+<x-app-layout>    
     <div class="flex items-center">
         <div class="h-96 w-full relative">
             <img src="https://bracknell.activatelearning.ac.uk/app/uploads/sites/2/2020/12/gen_Hairdressing_03-e1610560564268-1240x460.jpg" alt="Imagen" class="w-full h-full object-cover rounded-lg object-left-top">

@@ -63,7 +63,6 @@
                     {{ __('Configuración') }}
                 </x-dropdown-link>
     
-                <!-- Authentication -->
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <x-dropdown-link style="color: red" :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();">

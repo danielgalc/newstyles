@@ -14,6 +14,7 @@ export default {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
                 righteous: ['Righteous', 'cursive'],
+                inter: ['Inter', 'regular'],
             },
         },
     },
