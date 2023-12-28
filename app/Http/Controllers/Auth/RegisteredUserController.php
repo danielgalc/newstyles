@@ -44,11 +44,11 @@ class RegisteredUserController extends Controller
         ]);
 
         /* $user->notify(new EmailVerificationNotification()); */
-
         event(new Registered($user));
 
         Auth::login($user);
 
-        return redirect(RouteServiceProvider::HOME);
+        return redirect()->route('verification.notice');
+
     }
 }

@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
+
 class AuthenticatedSessionController extends Controller
 {
     /**
@@ -27,9 +28,20 @@ class AuthenticatedSessionController extends Controller
     {
         $request->authenticate();
 
+       
+        if ($request->user()->hasVerifiedEmail()) {
+            auth()->login($request->user());
+        
+            if(auth()->user()->rol === 'admin'){
+                return redirect('/admin');
+            } else {
+                return redirect('/');
+            }
+        }
+        
         $request->session()->regenerate();
-
-        return redirect()->intended(RouteServiceProvider::HOME);
+        
+        return redirect()->route('verification.notice');
     }
 
     /**
