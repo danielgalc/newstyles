@@ -60,11 +60,12 @@ class CitaController extends Controller
          $cita->fecha = $request->input('fecha');
          $cita->hora = $request->input('hora');
      
-         // Obtener la ID del servicio desde la solicitud
-         $servicioId = $request->input('servicio_id');
+         // Obtener el nombre del servicio desde la solicitud
+         $servicio = $request->input('servicio');
+         //dd($servicioId);
      
-         // Asociar el ID del servicio a la relación "servicio"
-         $cita->servicio = $servicioId;
+         // Asociar el nombre del servicio a la relación "servicio"
+         $cita->servicio = $servicio;
      
          $cita->save();
      

@@ -14,7 +14,7 @@ class Cita extends Model
      */
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function peluquero(): BelongsTo
@@ -22,9 +22,9 @@ class Cita extends Model
         return $this->belongsTo(User::class, 'peluquero_id');
     }
 
-    public function servicio()
+    public function servicio(): BelongsTo
     {
-        return $this->belongsTo(Servicio::class, 'servicio_id');
+        return $this->belongsTo(Servicio::class, 'servicio');
     }
     
 }

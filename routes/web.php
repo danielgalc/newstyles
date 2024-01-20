@@ -5,10 +5,8 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\ServicioController;
-use App\Http\Controllers\UserController;
 use App\Http\Controllers\CitaController;
-use App\Http\Controllers\CartController;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,8 +26,9 @@ use Illuminate\Support\Facades\Auth;
 Route::middleware('comprobarRol')->group(function () {
     Route::get('/productos', [ProductoController::class, 'index'])->name('productos');
     Route::get('/servicios', [ServicioController::class, 'index'])->name('servicios');
-
-    // Ruta Quienes Somos
+    Route::get('/quienes-somos', function () {
+        return view('index');
+    })->name('quienes-somos');
     
 });
 
@@ -75,18 +74,25 @@ require __DIR__.'/auth.php';
 
 Route::middleware('auth', 'admin')->group(function() {
     Route::get('/admin', function () {
-        return view('admin');
+        return view('admin/admin');
     })->name('admin');
+
+    // Rutas zona usuario - Listados
+    Route::get('/admin/usuarios', [AdminController::class, 'usuarios'])->name('usuarios');
+    Route::get('/admin/gestionar_citas', [AdminController::class, 'gestionarCitas'])->name('gestionar_citas');
+    Route::get('/admin/lista_servicios', [AdminController::class, 'listaServicios']);
+    Route::get('/admin/lista_productos', [AdminController::class, 'listaProductos']);
 });
 
-Route::get('/productos/create', [ProductoController::class, 'create']);
+
+/* Route::get('/productos/create', [ProductoController::class, 'create']);
 Route::post('/productos', [ProductoController::class, 'store'])->name('productos.store');
 
 Route::get('/productos/{id}/edit', [ProductoController::class, 'edit']);
 Route::put('/productos/{id}', [ProductoController::class, 'update'])
     ->name('productos.update');
     
-Route::delete('/productos/{id}', [ProductoController::class, 'destroy'])->name('productos.destroy');
+Route::delete('/productos/{id}', [ProductoController::class, 'destroy'])->name('productos.destroy'); */
 
 // Rutas de servicios
 

@@ -3,9 +3,7 @@
 @section('title', 'Dashboard')
 
 @section('content')
-    <div class="p-4">
-        <!-- Aquí va el contenido específico de la página de administradores -->
+    <div id="content-container">
         <h1 class="text-6xl font-bold mb-4">Bienvenido, {{ auth()->user()->name }}</h1>
-        <!-- Agrega más contenido según sea necesario -->
     </div>
 @endsection
