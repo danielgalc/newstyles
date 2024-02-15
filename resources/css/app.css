@@ -28,20 +28,20 @@
     stroke-width: 1;
   }
 
-  /* ICONO USUARIO */
+  /* ICONO USUARIO ADMIN */
 
-  .svg-icon {
+  .svg-icon-2 {
     width: 1.5em;
     height: 1.5em;
   }
 
-  .svg-icon path,
-  .svg-icon polygon,
-  .svg-icon rect {
+  .svg-icon-2 path,
+  .svg-icon-2 polygon,
+  .svg-icon-2 rect {
     fill: whitesmoke;
   }
 
-  .svg-icon circle {
+  .svg-icon-2 circle {
     stroke: whitesmoke;
     stroke-width: 1;
   }

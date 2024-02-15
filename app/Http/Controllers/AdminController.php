@@ -19,6 +19,11 @@ class AdminController extends Controller
 public function gestionarCitas()
 {
     $citas = Cita::all();
+    // Dando formato con Carbon
+    $citas->each(function ($cita) {
+        $cita->hora = \Carbon\Carbon::parse($cita->hora);
+    });
+
     return view('admin.gestionar_citas', compact('citas'));
 }
 
