@@ -79,10 +79,15 @@
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
+<!-- Utilizando Axios para cargar dinámicamente el contenido de las secciones -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
 <script>
     function loadSection(section) {
+        // Realiza una solicitud GET al servidor para obtener el contenido cada sección
         axios.get(`/admin/${section}`)
             .then(response => {
+                // Actualiza el contenido de la sección según la respuesta
                 document.getElementById('content-container').innerHTML = response.data;
             })
             .catch(error => {
@@ -90,7 +95,6 @@
             });
     }
 </script>
-
 
 </body>
 </html>
