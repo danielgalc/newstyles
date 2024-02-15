@@ -12,7 +12,6 @@
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Hora</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
-                    <!-- Agrega más columnas según tus necesidades -->
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
@@ -25,7 +24,6 @@
                         <td class="px-6 py-4 whitespace-nowrap">{{ $cita->fecha }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ $cita->hora->format('H:i') }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ $cita->estado }}</td>
-                        <!-- Agrega más celdas según tus necesidades -->
                     </tr>
                 @endforeach
             </tbody>

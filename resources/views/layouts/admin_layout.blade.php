@@ -6,7 +6,6 @@
     <title>@yield('title', 'Admin Dashboard')</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
     @vite('resources/css/app.css')
-    <!-- Agrega cualquier otra configuración, estilos o scripts necesarios aquí -->
 </head>
 <body class="bg-white">
     <div class="flex h-screen">
