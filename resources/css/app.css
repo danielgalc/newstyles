@@ -15,36 +15,63 @@
 .svg-icon {
     width: 1.5em;
     height: 1.5em;
-  }
-  
-  .svg-icon path,
-  .svg-icon polygon,
-  .svg-icon rect {
-    fill: #00C8BC;
-  }
-  
-  .svg-icon circle {
-    stroke: #00C8BC;
-    stroke-width: 1;
-  }
+}
 
-  /* ICONO USUARIO ADMIN */
+.svg-icon path,
+.svg-icon polygon,
+.svg-icon rect {
+  fill: #00C8BC;
+}
 
-  .svg-icon-2 {
-    width: 1.5em;
-    height: 1.5em;
-  }
+.svg-icon circle {
+  stroke: #00C8BC;
+  stroke-width: 1;
+}
 
-  .svg-icon-2 path,
-  .svg-icon-2 polygon,
-  .svg-icon-2 rect {
-    fill: whitesmoke;
-  }
+/* ICONO USUARIO ADMIN */
 
-  .svg-icon-2 circle {
-    stroke: whitesmoke;
-    stroke-width: 1;
-  }
+.svg-icon-2 {
+  width: 1.5em;
+  height: 1.5em;
+
+  padding-right: 1px;
+}
+.svg-icon-2 path,
+.svg-icon-2 polygon,
+.svg-icon-2 rect {
+  fill: whitesmoke;
+}
+.svg-icon-2 circle {
+  stroke: whitesmoke;
+  stroke-width: 1;
+}
+
+/* ICONO TIJERAS ADMIN */
+
+.tijeras-icon {
+  margin-left: -3px;
+}
+
+.tijeras-icon polygon,
+.tijeras-icon rect {
+  fill: whitesmoke;
+}
+.tijeras-icon circle {
+  stroke: whitesmoke;
+  stroke-width: 1;
+}
+
+/* ICONO PRODUCTOS ADMIN */
+
+.productos-icon path {
+  fill: whitesmoke;
+}
+
+.productos-icon circle {
+  stroke: whitesmoke;
+  stroke-width: 1;
+}
+
 
 /* ICONO CARRITO */
 
@@ -57,4 +84,6 @@
 .carrito-icono rect {
   fill: #00C8BC;
 }
+
+/* */
   

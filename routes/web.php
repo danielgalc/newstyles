@@ -80,8 +80,8 @@ Route::middleware('auth', 'admin')->group(function() {
     // Rutas zona usuario - Listados
     Route::get('/admin/usuarios', [AdminController::class, 'usuarios'])->name('usuarios');
     Route::get('/admin/gestionar_citas', [AdminController::class, 'gestionarCitas'])->name('gestionar_citas');
-    Route::get('/admin/lista_servicios', [AdminController::class, 'listaServicios']);
-    Route::get('/admin/lista_productos', [AdminController::class, 'listaProductos']);
+    Route::get('/admin/lista_servicios', [AdminController::class, 'listaServicios'])->name('lista_servicios');
+    Route::get('/admin/lista_productos', [AdminController::class, 'listaProductos'])->name('lista_productos');
 });
 
 

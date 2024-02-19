@@ -29,12 +29,14 @@ public function gestionarCitas()
 
 public function listaServicios()
 {
-    // Lógica para obtener y retornar la vista de lista de servicios
+    $servicios = Servicio::all();
+    return view('admin.lista_servicios', compact('servicios'));
 }
 
 public function listaProductos()
 {
-    // Lógica para obtener y retornar la vista de lista de productos
+    $productos = Producto::all();
+    return view('admin.lista_productos', compact('productos'));
 }
 
 }
