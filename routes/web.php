@@ -7,6 +7,7 @@ use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\ServicioController;
 use App\Http\Controllers\CitaController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -95,6 +96,12 @@ Route::put('/productos/{id}', [ProductoController::class, 'update'])
     
 Route::delete('/productos/{id}', [ProductoController::class, 'destroy'])->name('productos.destroy'); */
 
+// Rutas de usuarios
+
+Route::post('/usuarios', [UserController::class, 'store'])->name('users.store');
+
+
+
 // Rutas de servicios
 
 Route::get('/servicios/create', [ServicioController::class, 'create']);
@@ -104,3 +111,4 @@ Route::get('/servicios/{id}/edit', [ServicioController::class, 'edit']);
 Route::put('/servicios/{id}', [ServicioController::class, 'update'])->name('servicios.update');
 
 Route::delete('/servicios/{id}', [ServicioController::class, 'destroy'])->name('servicios.destroy');
+
