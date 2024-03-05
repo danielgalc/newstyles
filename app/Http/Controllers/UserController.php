@@ -92,7 +92,7 @@ class UserController extends Controller
     
         $user->save();
     
-        return redirect('/users')
+        return redirect('/admin/usuarios')
             ->with('success', 'Usuario modificado con éxito.');
     }
 
