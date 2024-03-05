@@ -1,4 +1,10 @@
 <!-- resources/views/admin/lista_productos.blade.php -->
+@extends('layouts.admin_layout')
+
+@section('title', 'Lista de Usuarios')
+
+@section('content')
+
 <div class="p-4">
     <h2 class="text-4xl font-bold mb-4">Lista de Productos</h2>
     @if($productos->count() > 0)
@@ -34,3 +40,4 @@
         <p>No hay productos disponibles.</p>
     @endif
 </div>
+@endsection

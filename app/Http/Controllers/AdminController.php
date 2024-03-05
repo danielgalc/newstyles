@@ -13,7 +13,7 @@ class AdminController extends Controller
     public function usuarios()
 {
     $usuarios = User::all();
-    return view('admin.usuarios', compact('usuarios'));
+    return view('admin.usuarios.usuarios', compact('usuarios'));
 }
 
 public function gestionarCitas()
@@ -24,19 +24,19 @@ public function gestionarCitas()
         $cita->hora = \Carbon\Carbon::parse($cita->hora);
     });
 
-    return view('admin.gestionar_citas', compact('citas'));
+    return view('admin.citas.gestionar_citas', compact('citas'));
 }
 
 public function listaServicios()
 {
     $servicios = Servicio::all();
-    return view('admin.lista_servicios', compact('servicios'));
+    return view('admin.servicios.lista_servicios', compact('servicios'));
 }
 
 public function listaProductos()
 {
     $productos = Producto::all();
-    return view('admin.lista_productos', compact('productos'));
+    return view('admin.productos.lista_productos', compact('productos'));
 }
 
 }

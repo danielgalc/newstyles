@@ -1,4 +1,11 @@
 <!-- resources/views/admin/citas.blade.php -->
+
+@extends('layouts.admin_layout')
+
+@section('title', 'Gestionar Citas')
+
+@section('content')
+
 <div class="p-4">
     <h2 class="text-4xl font-bold mb-4">Lista de Citas</h2>
     @if($citas->count() > 0)
@@ -32,3 +39,4 @@
         <p>No hay citas disponibles.</p>
     @endif
 </div>
+@endsection

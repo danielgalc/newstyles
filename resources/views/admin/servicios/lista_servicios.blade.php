@@ -1,4 +1,10 @@
 <!-- resources/views/admin/lista_servicios.blade.php -->
+@extends('layouts.admin_layout')
+
+@section('title', 'Lista de Usuarios')
+
+@section('content')
+
 <div class="p-4">
     <h2 class="text-4xl font-bold mb-4">Lista de Servicios</h2>
     @if($servicios->count() > 0)
@@ -32,3 +38,4 @@
         <p>No hay servicios disponibles.</p>
     @endif
 </div>
+@endsection
