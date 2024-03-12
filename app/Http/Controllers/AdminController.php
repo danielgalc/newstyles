@@ -39,4 +39,18 @@ public function listaProductos()
     return view('admin.productos.lista_productos', compact('productos'));
 }
 
+public function mostrarDatos()
+{
+    $usuarios = User::latest()->take(5)->get();
+    $citas = Cita::latest()->take(5)->get();
+    
+    $citas->each(function ($cita) {
+        $cita->hora = \Carbon\Carbon::parse($cita->hora);});
+
+    $citas->load('user', 'peluquero');
+
+
+    return view('admin.admin', compact('usuarios', 'citas'));
+}
+
 }

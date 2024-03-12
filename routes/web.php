@@ -78,13 +78,19 @@ Route::middleware('auth', 'admin')->group(function() {
         return view('admin/admin');
     })->name('admin');
 
+    // Panel Admin
+
+    /* REVISTAR ESTA RUTA CON LA DEL ADMIN_LAYOUT */
+    Route::get('admin', [AdminController::class, 'mostrarDatos'])->name('admin.preview');
+    
+
     // Rutas zona usuario - Listados
     Route::get('/admin/usuarios', [AdminController::class, 'usuarios'])->name('usuarios');
     Route::get('/admin/gestionar_citas', [AdminController::class, 'gestionarCitas'])->name('citas');
     Route::get('/admin/lista_servicios', [AdminController::class, 'listaServicios'])->name('servicios');
     Route::get('/admin/lista_productos', [AdminController::class, 'listaProductos'])->name('productos');
 
-    Route::get('/get_users',)->name('get_users');
+    
 });
 
 /* Route::get('/productos/create', [ProductoController::class, 'create']);

@@ -14,7 +14,10 @@
         <div class="flex flex-col w-64 bg-teal-400 p-4 shadow-md text-xl font-inter">
             <!-- Logo del sitio -->
             <div class="text-black text-2xl font-semibold mb-4">
-                <a href="{{route('admin')}}">Mi Sitio</a>
+                <a href="/admin">Mi Sitio</a>
+
+                {{-- Esto no me deja ponerlo a causa de la ruta (?) --}}
+                {{-- <a href="{{route('admin')}}">Mi Sitio</a> --}}
             </div>
             <!-- Correo electrónico del administrador con línea inferior -->
             <div class="text-black mb-4 pb-2 border-b border-black font-medium">
