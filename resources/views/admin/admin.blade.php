@@ -54,7 +54,7 @@
                 <div class="flex justify-between items-center mb-4">
                     <div>
                         <h2 class="text-4xl font-bold">Citas</h2>
-                        <h5 class="text-md font-extralight">Últimos citas añadidos</h5>
+                        <h5 class="text-md font-extralight">Últimas citas añadidos</h5>
                     </div>
                     <div class=" pb-10">
                         <a href="{{ route('citas') }}" class="text-blue-700 hover:underline">Gestionar todas los citas</a>
@@ -93,37 +93,39 @@
             <div class="user-preview px-3 py-2 rounded-lg border border-gray-300 overflow-y-auto h-auto">
                 <div class="flex justify-between items-center mb-4">
                     <div>
-                        <h2 class="text-4xl font-bold">Usuarios</h2>
-                        <h5 class="text-md font-extralight">Últimos usuarios añadidos</h5>
+                        <h2 class="text-4xl font-bold">Servicios</h2>
+                        <h5 class="text-md font-extralight">Últimos servicios agregados</h5>
                     </div>
                     <div class=" pb-10">
-                        <a href="{{ route('usuarios') }}" class="text-blue-700 hover:underline">Ver todos los usuarios</a>
+                        <a href="{{ route('servicios') }}" class="text-blue-700 hover:underline">Ver todos los servicios</a>
                     </div>
                 </div>
                 <table class="min-w-full divide-y divide-gray-200 rounded-lg overflow-hidden" id="users-table">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rol</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Verificado</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Última Modificación</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Servicio</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Precio</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Duración</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Clase</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha de creación</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Última modificación</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
-                        @foreach ($usuarios as $usuario)
+                        @foreach ($servicios as $servicio)
                             <tr>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $usuario->name }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $usuario->email }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $usuario->rol }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $servicio->nombre }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $servicio->precio }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $servicio->duracion }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    @if ($usuario->email_verified_at)
-                                        Sí
+                                    @if ($servicio->clase == 'principal')
+                                        Principal
                                     @else
-                                        No
+                                        Secundario
                                     @endif
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $usuario->updated_at }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $servicio->created_at }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $servicio->updated_at }}</td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -134,37 +136,33 @@
             <div class="user-preview px-3 py-2 rounded-lg border border-gray-300 overflow-y-auto h-auto">
                 <div class="flex justify-between items-center mb-4">
                     <div>
-                        <h2 class="text-4xl font-bold">Usuarios</h2>
-                        <h5 class="text-md font-extralight">Últimos usuarios añadidos</h5>
+                        <h2 class="text-4xl font-bold">Productos</h2>
+                        <h5 class="text-md font-extralight">Últimos productos añadidos al catálogo</h5>
                     </div>
                     <div class=" pb-10">
-                        <a href="{{ route('usuarios') }}" class="text-blue-700 hover:underline">Ver todos los usuarios</a>
+                        <a href="{{ route('productos') }}" class="text-blue-700 hover:underline">Ver todos los productos</a>
                     </div>
                 </div>
                 <table class="min-w-full divide-y divide-gray-200 rounded-lg overflow-hidden" id="users-table">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rol</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Verificado</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Última Modificación</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Producto</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Descripción</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Precio</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha de creación</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Última modificación</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
-                        @foreach ($usuarios as $usuario)
+                        @foreach ($productos as $producto)
                             <tr>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $usuario->name }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $usuario->email }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $usuario->rol }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    @if ($usuario->email_verified_at)
-                                        Sí
-                                    @else
-                                        No
-                                    @endif
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $usuario->updated_at }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $producto->nombre }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $producto->descripcion }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $producto->precio }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $producto->stock }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $producto->created_at }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $producto->updated_at }}</td>
                             </tr>
                         @endforeach
                     </tbody>

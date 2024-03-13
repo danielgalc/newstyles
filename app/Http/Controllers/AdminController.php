@@ -43,6 +43,8 @@ public function mostrarDatos()
 {
     $usuarios = User::latest()->take(5)->get();
     $citas = Cita::latest()->take(5)->get();
+    $servicios = Servicio::latest()->take(5)->get();
+    $productos = Producto::latest()->take(5)->get();
     
     $citas->each(function ($cita) {
         $cita->hora = \Carbon\Carbon::parse($cita->hora);});
@@ -50,7 +52,7 @@ public function mostrarDatos()
     $citas->load('user', 'peluquero');
 
 
-    return view('admin.admin', compact('usuarios', 'citas'));
+    return view('admin.admin', compact('usuarios', 'citas', 'servicios', 'productos'));
 }
 
 }

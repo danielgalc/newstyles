@@ -1,7 +1,7 @@
 <!-- resources/views/admin/lista_servicios.blade.php -->
 @extends('layouts.admin_layout')
 
-@section('title', 'Lista de Usuarios')
+@section('title', 'Lista de Servicios')
 
 @section('content')
 
