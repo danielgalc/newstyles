@@ -105,7 +105,7 @@ class UserController extends Controller
 
         $user->delete();
 
-        return redirect('/users')
+        return redirect('/admin/usuarios')
             ->with('success', 'Usuario eliminado con éxito.');
     }
 }

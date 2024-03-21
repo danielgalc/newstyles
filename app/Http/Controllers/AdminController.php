@@ -13,7 +13,7 @@ class AdminController extends Controller
 
 public function usuarios()
 {
-    $usuarios = User::paginate(5); // Paginar con 5 usuarios por página
+    $usuarios = User::orderBy('updated_at', 'desc')->paginate(8); // Paginar con 5 usuarios por página
     return view('admin.usuarios.usuarios', compact('usuarios'));
 }
 
