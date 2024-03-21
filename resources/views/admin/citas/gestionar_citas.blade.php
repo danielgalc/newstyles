@@ -35,6 +35,8 @@
                 @endforeach
             </tbody>
         </table>
+        <!-- Mostrar enlaces de paginación -->
+        {{ $citas->links() }}
     @else
         <p>No hay citas disponibles.</p>
     @endif

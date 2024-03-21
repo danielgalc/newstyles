@@ -34,6 +34,8 @@
                 @endforeach
             </tbody>
         </table>
+        <!-- Mostrar enlaces de paginación -->
+        {{ $servicios->links() }}
     @else
         <p>No hay servicios disponibles.</p>
     @endif

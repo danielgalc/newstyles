@@ -36,6 +36,8 @@
                 @endforeach
             </tbody>
         </table>
+        <!-- Mostrar enlaces de paginación -->
+        {{ $productos->links() }}
     @else
         <p>No hay productos disponibles.</p>
     @endif

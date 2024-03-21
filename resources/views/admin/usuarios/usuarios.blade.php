@@ -47,15 +47,13 @@
             </tbody>            
         </table>
 
+        <!-- Mostrar enlaces de paginación -->
+        {{ $usuarios->links() }}
+
     @else
         <p>No hay usuarios disponibles.</p>
     @endif
 
-    <div class="footer-paginacion">
-        <div class="botones-paginacion">
-
-        </div>
-    </div>
 </div>
 
 <!-- MODAL PARA EDITAR USUARIOS -->

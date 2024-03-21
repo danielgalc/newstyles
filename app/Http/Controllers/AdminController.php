@@ -10,15 +10,16 @@ use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
-    public function usuarios()
+
+public function usuarios()
 {
-    $usuarios = User::all();
+    $usuarios = User::paginate(5); // Paginar con 5 usuarios por página
     return view('admin.usuarios.usuarios', compact('usuarios'));
 }
 
 public function gestionarCitas()
 {
-    $citas = Cita::all();
+    $citas = Cita::paginate(5); 
     // Dando formato con Carbon
     $citas->each(function ($cita) {
         $cita->hora = \Carbon\Carbon::parse($cita->hora);
@@ -29,13 +30,13 @@ public function gestionarCitas()
 
 public function listaServicios()
 {
-    $servicios = Servicio::all();
+    $servicios = Servicio::paginate(5); 
     return view('admin.servicios.lista_servicios', compact('servicios'));
 }
 
 public function listaProductos()
 {
-    $productos = Producto::all();
+    $productos = Producto::paginate(5);
     return view('admin.productos.lista_productos', compact('productos'));
 }
 
