@@ -77,7 +77,7 @@ class ServicioController extends Controller
     
         $servicio->save();
     
-        return redirect('/servicios')
+        return redirect('/admin/lista_servicios')
             ->with('success', 'Servicio añadido con éxito.');
     }
 

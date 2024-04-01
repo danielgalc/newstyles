@@ -13,7 +13,7 @@ class AdminController extends Controller
 
 public function usuarios()
 {
-    $usuarios = User::orderBy('updated_at', 'desc')->paginate(8); // Paginar con 5 usuarios por página
+    $usuarios = User::orderBy('updated_at', 'desc')->paginate(8); // Paginar con 8 usuarios por página
     return view('admin.usuarios.usuarios', compact('usuarios'));
 }
 
@@ -30,7 +30,7 @@ public function gestionarCitas()
 
 public function listaServicios()
 {
-    $servicios = Servicio::paginate(5); 
+    $servicios = Servicio::orderBy('updated_at', 'desc')->paginate(8); 
     return view('admin.servicios.lista_servicios', compact('servicios'));
 }
 
