@@ -14,11 +14,15 @@ class EmailVerificationNotificationController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        if ($request->user()->hasVerifiedEmail()) {
+        // Al realizar esta comprobación, el botón de reenviar enlace de verificación no funciona.
+
+        /*
+          if ($request->user()->hasVerifiedEmail()) {
             return redirect()->intended(RouteServiceProvider::HOME);
         } else {
-            return redirect()->route('verification.route');
+            return redirect()->route('verification.send');
         }
+         */
 
         $request->user()->sendEmailVerificationNotification();
 

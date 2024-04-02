@@ -41,7 +41,7 @@ Route::middleware('guest')->get('/login', function () {
 
 // Ruta de Landing Page
 
-Route::get('/', function () {
+Route::get('/', function () { // REVISAR ESTA RUTA PARA USUARIOS LOGUEADOS Y NO VERIFICADOS.
     return view('landing');
 })->name('landing');
 
@@ -93,6 +93,7 @@ Route::middleware('auth', 'admin')->group(function() {
     
 });
 
+
 /* Route::get('/productos/create', [ProductoController::class, 'create']);
 Route::post('/productos', [ProductoController::class, 'store'])->name('productos.store');
 
@@ -107,7 +108,6 @@ Route::delete('/productos/{id}', [ProductoController::class, 'destroy'])->name('
 Route::post('/usuarios', [UserController::class, 'store'])->name('users.store'); 
 Route::put('/usuarios/{id}', [UserController::class, 'update'])->name('users.update');
 Route::delete('/usuarios/{id}', [UserController::class, 'destroy'])->name('users.destroy');
-
 
 
 // Rutas de servicios
