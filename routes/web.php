@@ -94,14 +94,14 @@ Route::middleware('auth', 'admin')->group(function() {
 });
 
 
-/* Route::get('/productos/create', [ProductoController::class, 'create']);
+Route::get('/productos/create', [ProductoController::class, 'create']);
 Route::post('/productos', [ProductoController::class, 'store'])->name('productos.store');
 
 Route::get('/productos/{id}/edit', [ProductoController::class, 'edit']);
 Route::put('/productos/{id}', [ProductoController::class, 'update'])
     ->name('productos.update');
     
-Route::delete('/productos/{id}', [ProductoController::class, 'destroy'])->name('productos.destroy'); */
+Route::delete('/productos/{id}', [ProductoController::class, 'destroy'])->name('productos.destroy');
 
 // Rutas de usuarios
 

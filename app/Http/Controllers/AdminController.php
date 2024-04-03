@@ -36,7 +36,7 @@ public function listaServicios()
 
 public function listaProductos()
 {
-    $productos = Producto::paginate(5);
+    $productos = Producto::paginate(8);
     return view('admin.productos.lista_productos', compact('productos'));
 }
 
