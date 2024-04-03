@@ -6,7 +6,15 @@
 @section('content')
 
 <div class="p-4">
-    <h2 class="text-4xl font-bold mb-4">Lista de Productos</h2>
+    <div class="flex justify-between pb-4">
+        <h2 class="text-4xl font-bold mb-4">Lista de Servicios</h2>
+        <!-- Modal toggle -->
+        <button data-modal-target="crud-modal" data-modal-toggle="crud-modal"
+            class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 h-10 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            type="button">
+            Añadir nuevo servicio
+        </button>
+    </div>
     @if($productos->count() > 0)
         <table class="min-w-full divide-y divide-gray-200 rounded-lg overflow-hidden">
             <thead class="bg-gray-50">

@@ -114,7 +114,7 @@ class ServicioController extends Controller
 
         $servicio->save();
 
-        return redirect('/servicios')
+        return redirect('/admin/lista_servicios')
             ->with('success', 'servicio modificado con éxito.');
     }
     
@@ -128,7 +128,7 @@ class ServicioController extends Controller
 
         $servicio->delete();
 
-        return redirect('/servicios')
+        return redirect('/admin/lista_servicios')
             ->with('success', 'Servicio eliminado con éxito.');
     }
 }

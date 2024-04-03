@@ -6,7 +6,7 @@
 @section('content')
 
     <div class="p-4">
-        <div class="flex justify-between pb-4">            
+        <div class="flex justify-between pb-4">
             <h2 class="text-4xl font-bold mb-4">Lista de Usuarios</h2>
             <!-- Modal toggle -->
             <button data-modal-target="crud-modal" data-modal-toggle="crud-modal"
@@ -36,7 +36,7 @@
                             data-modal-toggle="edit_user_modal_{{ $usuario->id }}"
                             data-modal-target="edit_user_modal_{{ $usuario->id }}">
                             <div>
-                                
+
                                 <td class="px-6 py-4 whitespace-nowrap">{{ $usuario->name }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ $usuario->email }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ $usuario->rol }}</td>
@@ -48,7 +48,7 @@
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ $usuario->updated_at }}</td>
-                                
+
                             </div>
                         </tr>
                     @endforeach
@@ -126,7 +126,8 @@
 
                         <button type="button"
                             class="text-white inline-flex items-center bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
-                            data-modal-hide="edit_user_modal_{{ $usuario->id }}" data-modal-target="confirm_delete_modal_{{ $usuario->id }}"
+                            data-modal-hide="edit_user_modal_{{ $usuario->id }}"
+                            data-modal-target="confirm_delete_modal_{{ $usuario->id }}"
                             data-modal-toggle="confirm_delete_modal_{{ $usuario->id }}">
                             Eliminar usuario
                         </button>
@@ -149,7 +150,7 @@
                         </h3>
                         <button type="button"
                             class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                            data-modal-toggle="confirm_delete_modal_{{ $usuario->id}}">
+                            data-modal-toggle="confirm_delete_modal_{{ $usuario->id }}">
                             <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                                 viewBox="0 0 14 14">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -177,7 +178,7 @@
 
                             <button type="button"
                                 class="text-gray-600 bg-gray-200 hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800"
-                                data-modal-toggle="confirm_delete_modal_{{$usuario->id}}"
+                                data-modal-toggle="confirm_delete_modal_{{ $usuario->id }}"
                                 data-delete-route="{{ route('users.destroy', ['id' => $usuario->id]) }}">
                                 Cancelar
                             </button>
@@ -262,5 +263,4 @@
             </div>
         </div>
     </div>
-
 @endsection

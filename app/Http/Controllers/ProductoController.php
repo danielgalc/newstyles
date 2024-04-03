@@ -65,7 +65,7 @@ class ProductoController extends Controller
 
     $producto->save();
 
-    return redirect('/productos')
+    return redirect('/admin/lista_productos')
         ->with('success', 'Producto añadido con éxito.');
 }
 
@@ -105,7 +105,7 @@ class ProductoController extends Controller
 
         $producto->save();
 
-        return redirect('/productos')
+        return redirect('/admin/lista_productos')
             ->with('success', 'Producto modificado con éxito.');
     }
 
@@ -118,7 +118,7 @@ class ProductoController extends Controller
 
         $producto->delete();
 
-        return redirect('/productos')
+        return redirect('/admin/lista_productos')
             ->with('success', 'Producto eliminado con éxito.');
     }
 }
