@@ -30,19 +30,19 @@ class CitaController extends Controller
     {
         $cita = new Cita();
         $peluqueros = User::where('rol', 'empleado')->get();
-    
+
         $servicios = Servicio::all();
-    
+
         // Obtener la ID de la URL
         $servicioId = $request->route('id');
-    
+
         // Buscar el servicio por ID
         $servicio = $servicios->find($servicioId);
-    
+
         return view('citas.create', [
             'cita' => $cita,
             'peluqueros' => $peluqueros,
-            'servicio' => $servicio
+            'servicio' => $servicio,
         ]);
     }
 
@@ -50,33 +50,44 @@ class CitaController extends Controller
      * Store a newly created resource in storage.
      */
 
-     public function store(Request $request)
-     {
-         $cita = new Cita();
-     
-         // Otros campos de la cita
-         $cita->user_id = $request->input('user_id');
-         $cita->peluquero_id = $request->input('peluquero_id');
-         $cita->fecha = $request->input('fecha');
-         $cita->hora = $request->input('hora');
-     
-         // Obtener el nombre del servicio desde la solicitud
-         $servicio = $request->input('servicio');
-         //dd($servicioId);
-     
-         // Asociar el nombre del servicio a la relación "servicio"
-         $cita->servicio = $servicio;
-     
-         $cita->save();
-     
-         return redirect('/servicios')->with('success', 'Cita añadida con éxito.');
-     }
-     
-     
-     
-    
- 
-    
+    public function store(Request $request)
+    {
+        $cita = new Cita();
+
+        // Otros campos de la cita
+        $cita->user_id = $request->input('user_id');
+        $cita->peluquero_id = $request->input('peluquero_id');
+        $cita->fecha = $request->input('fecha');
+        $cita->hora = $request->input('hora');
+
+        // Obtener el nombre del servicio desde la solicitud
+        $servicio = $request->input('servicio');
+        //dd($servicioId);
+
+        // Asociar el nombre del servicio a la relación "servicio"
+        $cita->servicio = $servicio;
+
+        // Verifica si el usuario que crea la cita es un administrador
+        $user = $request->user();
+        if ($user->isAdmin()) {
+            $cita = new Cita([
+                'user_id' => $request->input('user_id'),
+                'peluquero_id' => $request->input('peluquero_id'),
+                'fecha' => $request->input('fecha'),
+                'hora' => $request->input('hora'),
+                'servicio' => $request->input('servicio'),
+                'estado' => 'aceptada',
+            ]);
+
+            $cita->save();
+
+            return redirect('/admin/citas')->with('success', 'Cita añadida con éxito.');
+        }
+
+        $cita->save();
+
+        return redirect('/admin/citas')->with('success', 'Cita añadida con éxito.');
+    }
 
     /**
      * Display the specified resource.

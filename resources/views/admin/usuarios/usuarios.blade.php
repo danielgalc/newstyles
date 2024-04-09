@@ -162,7 +162,7 @@
                     <!-- Modal body -->
                     <div class="p-4 md:p-5">
                         <p>¿Estás seguro de que quieres eliminar este usuario? ID: {{ $usuario->id }}</p>
-                        <div class="flex justify-end mt-4 space-x-4">
+                        <div class="flex justify-end items-center mt-4">
                             <form action="{{ route('users.destroy', ['id' => $usuario->id]) }}" method="post"
                                 class="p-4 md:p-5">
                                 @csrf
@@ -177,7 +177,7 @@
                             </form>
 
                             <button type="button"
-                                class="text-gray-600 bg-gray-200 hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800"
+                                class="h-10 text-gray-600 bg-gray-200 hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800"
                                 data-modal-toggle="confirm_delete_modal_{{ $usuario->id }}"
                                 data-delete-route="{{ route('users.destroy', ['id' => $usuario->id]) }}">
                                 Cancelar

@@ -25,7 +25,9 @@ public function gestionarCitas()
         $cita->hora = \Carbon\Carbon::parse($cita->hora);
     });
 
-    return view('admin.citas.gestionar_citas', compact('citas'));
+    $servicios = Servicio::all();
+
+    return view('admin.citas.gestionar_citas', compact('citas', 'servicios'));
 }
 
 public function listaServicios()
