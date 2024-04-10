@@ -120,3 +120,6 @@ Route::put('/servicios/{id}', [ServicioController::class, 'update'])->name('serv
 
 Route::delete('/servicios/{id}', [ServicioController::class, 'destroy'])->name('servicios.destroy');
 
+// Rutas de citas
+
+Route::post('/admin/gestionar_citas', [CitaController::class, 'store'])->name('citas.store');

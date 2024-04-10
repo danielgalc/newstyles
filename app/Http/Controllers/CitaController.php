@@ -69,24 +69,20 @@ class CitaController extends Controller
 
         // Verifica si el usuario que crea la cita es un administrador
         $user = $request->user();
-        if ($user->isAdmin()) {
-            $cita = new Cita([
-                'user_id' => $request->input('user_id'),
-                'peluquero_id' => $request->input('peluquero_id'),
-                'fecha' => $request->input('fecha'),
-                'hora' => $request->input('hora'),
-                'servicio' => $request->input('servicio'),
-                'estado' => 'aceptada',
-            ]);
-
+        if ($user->rol == 'admin') {
+            $cita->servicio = Servicio::findOrFail($servicio)->nombre; // Asigna el nombre del servicio a la cita
+            $cita->estado = 'aceptada';
+            
             $cita->save();
 
-            return redirect('/admin/citas')->with('success', 'Cita añadida con éxito.');
+            
+            return redirect('/admin/gestionar_citas')->with('success', 'Cita añadida con éxito.');
         }
+
 
         $cita->save();
 
-        return redirect('/admin/citas')->with('success', 'Cita añadida con éxito.');
+        return redirect('/citas')->with('success', 'Cita añadida con éxito.');
     }
 
     /**

@@ -77,28 +77,19 @@ class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 
             @csrf
             <div class="grid gap-4 mb-4 grid-cols-2">
                 <div class="col-span-2">
-                    <label for="id_cliente"
+                    <label for="user_id"
                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">ID Cliente</label>
-                    <input type="text" name="id_cliente" id="id_cliente"
+                    <input type="text" name="user_id" id="user_id"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                         placeholder="Introduzca el ID del cliente" required>
                 </div>
                 <div class="col-span-2">
-                    <label for="id_peluquero"
+                    <label for="peluquero_id"
                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">ID Peluquero</label>
-                    <input type="text" name="id_peluquero" id="id_peluquero"
+                    <input type="text" name="peluquero_id" id="peluquero_id"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                         placeholder="Introduzca el ID del peluquero" required>
-                </div>
-                <div class="col-span-2">
-                    <label for="cita_servicio"
-                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Servicio</label>
-                    <select name="cita_servicio" id="cita_servicio" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                        @foreach($servicios as $servicio)
-                            <option value="{{ $servicio->id }}">{{ $servicio->nombre }}</option>
-                        @endforeach
-                    </select>
-                </div>
+                </div>                
                 {{-- TODO: FILTRADO DE HORAS SEGÚN DISPONIBILIDAD DEL PELUQUERO --}}
                 <div class="col-span-2">
                     <label for="fecha"
@@ -113,6 +104,15 @@ class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                         placeholder="Introduce la hora" required>
                 </div>
+                <div class="col-span-2">
+                    <label for="servicio"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Servicio</label>
+                    <select name="servicio" id="servicio" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                        @foreach($servicios as $servicio)
+                            <option value="{{ $servicio->id }}">{{ $servicio->nombre }}</option>
+                        @endforeach
+                    </select>
+                </div>
             </div>
             {{-- TODO: AL CREAR UNA NUEVA CITA, SU ESTADO HA DE SER ACEPTADA AUTOMÁTICAMENTE --}}
             <button type="submit"
@@ -123,7 +123,7 @@ class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 
                         d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
                         clip-rule="evenodd"></path>
                 </svg>
-                Añadir nuevo producto
+                Añadir nueva cita
             </button>
         </form>
     </div>
