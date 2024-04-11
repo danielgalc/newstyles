@@ -87,7 +87,7 @@
                     <!-- Modal header -->
                     <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                            Editar cita {{ $cita->id }}
+                            Editar Cita: <span class="italic text-teal-600">#{{ $cita->id }}</span>
                         </h3>
                         <button type="button"
                             class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
@@ -130,12 +130,13 @@
                                 <input id="fecha" name="fecha" type="date" value="{{ $cita->fecha }}"
                                     class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400">
                             </div>
+                            {{-- FIXEAR EL VALUE DE HORA EN EL EDITAR --}}
                             <div class="col-span-2">
                                 <label for="hora"
                                     class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Hora</label>
-                                <input id="hora" name="hora" type="time" value="{{ $cita->hora }}"
+                                <input id="hora" name="hora" type="time" {{-- REVISAR EL TIPO DEL INPUT --}}
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                    required>
+                                    value="{{ \Carbon\Carbon::parse($cita->hora)->format('H:i') }}" placeholder="HH:mm" required>
                             </div>
                             <div class="col-span-2">
                                 <label for="servicio"
@@ -277,19 +278,19 @@
                             <label for="fecha"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fecha</label>
                             <input id="fecha" name="fecha" type="date"
-                                class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400">
+                                class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" required>
                         </div>
                         <div class="col-span-2">
                             <label for="hora"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Hora</label>
-                            <input id="hora" name="hora" type="time"
+                            <input id="hora" name="hora" type="time" 
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                placeholder="Introduce la hora" required>
+                                value="{{ $cita->hora }}" required>
                         </div>
                         <div class="col-span-2">
                             <label for="servicio"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Servicio</label>
-                            <select name="servicio" id="servicio"
+                            <select name="servicio" id="servicio" required
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                 @foreach ($servicios as $servicio)
                                     <option value="{{ $servicio->id }}">{{ $servicio->nombre }}</option>
@@ -312,5 +313,4 @@
             </div>
         </div>
     </div>
-
 @endsection
