@@ -29,7 +29,7 @@ class CitaController extends Controller
     public function create(Request $request)
     {
         $cita = new Cita();
-        $peluqueros = User::where('rol', 'empleado')->get();
+        $peluqueros = User::where('rol', 'peluquero')->get();
 
         $servicios = Servicio::all();
 
@@ -98,7 +98,11 @@ class CitaController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $cita = Cita::findOrFail($id);
+
+        return view('citas.edit', [
+            'cita' => $cita,
+        ]);
     }
 
     /**
@@ -106,7 +110,23 @@ class CitaController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $cita = Cita::FindOrFail($id);
+
+        // Obtener el nombre del servicio desde la solicitud
+        $servicio = $request->input('servicio');
+
+        $cita->user_id = $request->input('user_id');
+        $cita->peluquero_id = $request->input('peluquero_id');
+        $cita->servicio = Servicio::findOrFail($servicio)->nombre; // Asigna el nombre del servicio a la cita
+
+        $cita->fecha = $request->input('fecha');
+        $cita->hora = $request->input('hora');
+        $cita->estado = $request->input('estado');
+
+        $cita->save();
+
+        return redirect('/admin/gestionar_citas')
+            ->with('success', 'Cita modificada con éxito.');
     }
 
     /**
@@ -114,6 +134,23 @@ class CitaController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $cita = Cita::FindOrFail($id);
+
+        $cita->delete();
+
+        return redirect('/admin/gestionar_citas')
+            ->with('success', 'Cita eliminada con éxito.');
+    }
+
+        public function actualizar_estado(Request $request, string $id)
+    {
+        $cita = Cita::findOrFail($id);
+    
+        // Actualiza solo el estado de la cita
+        $cita->estado = $request->input('estado');
+    
+        $cita->save();
+    
+        return redirect()->back()->with('success', 'Estado de la cita actualizado con éxito.');
     }
 }

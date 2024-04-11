@@ -19,15 +19,17 @@ public function usuarios()
 
 public function gestionarCitas()
 {
-    $citas = Cita::paginate(5); 
+    $citas = Cita::paginate(5);
     // Dando formato con Carbon
     $citas->each(function ($cita) {
         $cita->hora = \Carbon\Carbon::parse($cita->hora);
     });
 
     $servicios = Servicio::all();
+    $users = User::where('rol', 'peluquero')->get();
+    /* dd($users); */
 
-    return view('admin.citas.gestionar_citas', compact('citas', 'servicios'));
+    return view('admin.citas.gestionar_citas', compact('citas', 'servicios', 'users'));
 }
 
 public function listaServicios()
