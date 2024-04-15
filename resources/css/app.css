@@ -39,7 +39,7 @@
 .svg-icon-2 path,
 .svg-icon-2 polygon,
 .svg-icon-2 rect {
-  fill: whitesmoke;
+  fill: currentColor;
 }
 .svg-icon-2 circle {
   stroke: whitesmoke;
@@ -64,7 +64,7 @@
 /* ICONO PRODUCTOS ADMIN */
 
 .productos-icon path {
-  fill: whitesmoke;
+  fill: currentColor;
 }
 
 .productos-icon circle {

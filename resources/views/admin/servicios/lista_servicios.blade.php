@@ -22,18 +22,18 @@
             <table class="min-w-full divide-y divide-gray-200 rounded-lg overflow-hidden">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">ID</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Nombre
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Precio
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Precio
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Duración
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Duración
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Creado en
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Creado en
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">
                             Actualizado en</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Clase
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Clase
                         </th>
                     </tr>
                 </thead>
@@ -43,13 +43,13 @@
                             data-modal-toggle="edit_servicio_modal_{{ $servicio->id }}"
                             data-modal-target="edit_servicio_modal_{{ $servicio->id }}">
                             <div>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $servicio->id }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $servicio->nombre }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $servicio->precio }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $servicio->duracion }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $servicio->created_at }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $servicio->updated_at }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">
+                                <td class="px-6 py-4 whitespace-nowrap text-center">{{ $servicio->id }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-center">{{ $servicio->nombre }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-center">{{ $servicio->precio }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-center">{{ $servicio->duracion }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-center">{{ $servicio->created_at }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-center">{{ $servicio->updated_at }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-center">
                                     @if ($servicio->clase == 'principal')
                                         Principal
                                     @else
@@ -69,7 +69,7 @@
         @endif
     </div>
 
-    <!-- MODAL PARA EDITAR USUARIOS -->
+    <!-- MODAL PARA EDITAR NOMBRE -->
     @foreach ($servicios as $servicio)
         <div id="edit_servicio_modal_{{ $servicio->id }}" tabindex="-1" aria-hidden="true"
             class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
@@ -79,7 +79,7 @@
                     <!-- Modal header -->
                     <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                            Editar servicio {{ $servicio->id }}
+                            Editar Servicio: <span class="italic text-teal-600">{{ $servicio->nombre }}</span>
                         </h3>
                         <button type="button"
                             class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"

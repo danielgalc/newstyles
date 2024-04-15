@@ -3,6 +3,10 @@
 
 @section('title', 'Lista de Productos')
 
+@php
+    use Illuminate\Support\Str;
+@endphp
+
 @section('content')
 
     <div class="p-4">
@@ -12,7 +16,7 @@
             <button data-modal-target="crud-modal" data-modal-toggle="crud-modal"
                 class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 h-10 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                 type="button">
-                Añadir nuevo servicio
+                Añadir nuevo producto
             </button>
         </div>
 
@@ -20,20 +24,20 @@
             <table class="min-w-full divide-y divide-gray-200 rounded-lg overflow-hidden">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">ID</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Nombre
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">
                             Descripción</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Precio
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Precio
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Imagen
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Imagen
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Stock
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Creado en
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Creado en
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">
                             Actualizado en</th>
                     </tr>
                 </thead>
@@ -42,14 +46,14 @@
                         <tr class="hover:bg-teal-200 cursor-pointer w-full"
                             data-modal-toggle="edit_producto_modal_{{ $producto->id }}"
                             data-modal-target="edit_producto_modal_{{ $producto->id }}">
-                            <td class="px-6 py-4 whitespace-nowrap">{{ $producto->id }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">{{ $producto->nombre }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">{{ $producto->descripcion }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">{{ $producto->precio }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">{{ $producto->imagen }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">{{ $producto->stock }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">{{ $producto->created_at }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">{{ $producto->updated_at }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center">{{ $producto->id }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center">{{ $producto->nombre }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center">{{ Str::limit($producto->descripcion, $limit = 20, $end = '...') }}                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center">{{ $producto->precio }} &euro;</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center">{{ $producto->imagen }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center">{{ $producto->stock }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center">{{ $producto->created_at }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center">{{ $producto->updated_at }}</td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -266,12 +270,6 @@
                     </div>
                     <button type="submit"
                         class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                        <svg class="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd"
-                                d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                                clip-rule="evenodd"></path>
-                        </svg>
                         Añadir nuevo producto
                     </button>
                 </form>

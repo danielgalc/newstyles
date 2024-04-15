@@ -19,14 +19,14 @@
             <table class="min-w-full divide-y divide-gray-200 rounded-lg overflow-hidden" id="users-table">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Nombre
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Email
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rol</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Rol</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">
                             Verificado</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Última
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Última
                             Modificación</th>
                     </tr>
                 </thead>
@@ -37,17 +37,25 @@
                             data-modal-target="edit_user_modal_{{ $usuario->id }}">
                             <div>
 
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $usuario->name }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $usuario->email }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $usuario->rol }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">
+                                <td class="px-6 py-4 whitespace-nowrap text-center">{{ $usuario->name }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-center">{{ $usuario->email }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-center">
+                                    @if($usuario->rol === 'cliente')
+                                        Cliente
+                                    @elseif($usuario->rol === 'admin')
+                                        Admin
+                                    @else
+                                        Peluquero
+                                    @endif
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowraptext-center text-center">
                                     @if ($usuario->email_verified_at)
                                         Verificado
                                     @else
                                         No verificado
                                     @endif
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $usuario->updated_at }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-center">{{ $usuario->updated_at }}</td>
 
                             </div>
                         </tr>
@@ -73,7 +81,7 @@
                     <!-- Modal header -->
                     <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                            Editar Usuario {{ $usuario->id }}
+                            Editar Usuario: <span class="italic text-teal-600">{{ $usuario->name }}</span>
                         </h3>
                         <button type="button"
                             class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
@@ -253,12 +261,6 @@
                     </div>
                     <button type="submit"
                         class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                        <svg class="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd"
-                                d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                                clip-rule="evenodd"></path>
-                        </svg>
                         Añadir nuevo usuario
                     </button>
                 </form>
