@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200&display=swap');
+
+/* Luego, puedes aplicar la fuente en tu clase CSS */
+.text-inter {
+    font-family: 'Inter', sans-serif;
+    font-weight: 200; /* Para ExtraLight */
+}
+
+
 .teal-shadow {
     box-shadow: 4px 4px 4px 0 rgba(0, 228, 215, 1);
 }
@@ -85,3 +94,9 @@
   fill: #00C8BC;
 }
 
+.admin-email {
+  font-size: small;
+  font-style: italic;
+  font-family: 'Inter', sans-serif;
+  font-weight: 200; /* Para ExtraLight */
+}
