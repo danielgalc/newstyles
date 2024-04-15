@@ -5,10 +5,9 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\ServicioController;
-use App\Http\Controllers\UserController;
 use App\Http\Controllers\CitaController;
-use App\Http\Controllers\CartController;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,8 +27,9 @@ use Illuminate\Support\Facades\Auth;
 Route::middleware('comprobarRol')->group(function () {
     Route::get('/productos', [ProductoController::class, 'index'])->name('productos');
     Route::get('/servicios', [ServicioController::class, 'index'])->name('servicios');
-
-    // Ruta Quienes Somos
+    Route::get('/quienes-somos', function () {
+        return view('index');
+    })->name('quienes-somos');
     
 });
 
@@ -41,7 +41,7 @@ Route::middleware('guest')->get('/login', function () {
 
 // Ruta de Landing Page
 
-Route::get('/', function () {
+Route::get('/', function () { // REVISAR ESTA RUTA PARA USUARIOS LOGUEADOS Y NO VERIFICADOS.
     return view('landing');
 })->name('landing');
 
@@ -75,9 +75,24 @@ require __DIR__.'/auth.php';
 
 Route::middleware('auth', 'admin')->group(function() {
     Route::get('/admin', function () {
-        return view('admin');
+        return view('admin/admin');
     })->name('admin');
+
+    // Panel Admin
+
+    /* REVISTAR ESTA RUTA CON LA DEL ADMIN_LAYOUT */
+    Route::get('admin', [AdminController::class, 'mostrarDatos'])->name('admin.preview');
+    
+
+    // Rutas zona usuario - Listados
+    Route::get('/admin/usuarios', [AdminController::class, 'usuarios'])->name('usuarios');
+    Route::get('/admin/gestionar_citas', [AdminController::class, 'gestionarCitas'])->name('citas');
+    Route::get('/admin/lista_servicios', [AdminController::class, 'listaServicios'])->name('servicios');
+    Route::get('/admin/lista_productos', [AdminController::class, 'listaProductos'])->name('productos');
+
+    
 });
+
 
 Route::get('/productos/create', [ProductoController::class, 'create']);
 Route::post('/productos', [ProductoController::class, 'store'])->name('productos.store');
@@ -88,6 +103,13 @@ Route::put('/productos/{id}', [ProductoController::class, 'update'])
     
 Route::delete('/productos/{id}', [ProductoController::class, 'destroy'])->name('productos.destroy');
 
+// Rutas de usuarios
+
+Route::post('/usuarios', [UserController::class, 'store'])->name('users.store'); 
+Route::put('/usuarios/{id}', [UserController::class, 'update'])->name('users.update');
+Route::delete('/usuarios/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+
+
 // Rutas de servicios
 
 Route::get('/servicios/create', [ServicioController::class, 'create']);
@@ -97,3 +119,16 @@ Route::get('/servicios/{id}/edit', [ServicioController::class, 'edit']);
 Route::put('/servicios/{id}', [ServicioController::class, 'update'])->name('servicios.update');
 
 Route::delete('/servicios/{id}', [ServicioController::class, 'destroy'])->name('servicios.destroy');
+
+// Rutas de citas
+
+Route::post('/admin/gestionar_citas', [CitaController::class, 'store'])->name('citas.store');
+
+Route::get('/admin/gestionar_citas/{id}/edit', [CitaController::class, 'edit']);
+Route::put('/admin/gestionar_citas/{id}', [CitaController::class, 'update'])->name('citas.update');
+
+Route::delete('/admin/gestionar_citas/{id}', [CitaController::class, 'destroy'])->name('citas.destroy');
+
+
+Route::put('admin/gestionar_citas/{id}/actualizar-estado', [CitaController::class, 'actualizar_estado'])->name('citas.actualizar_estado');
+

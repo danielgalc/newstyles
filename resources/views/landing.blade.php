@@ -10,8 +10,7 @@
 
     <title>Bienvenid@ a Newstyles</title>
 </head>
-<x-app-layout>
-    
+<x-app-layout>    
     <div class="flex items-center">
         <div class="h-96 w-full relative">
             <img src="https://bracknell.activatelearning.ac.uk/app/uploads/sites/2/2020/12/gen_Hairdressing_03-e1610560564268-1240x460.jpg" alt="Imagen" class="w-full h-full object-cover rounded-lg object-left-top">
@@ -23,7 +22,7 @@
                 Descubre la experiencia de belleza en Newstyles, donde cada corte es una obra maestra. Nuestros estilistas expertos están aquí para realzar tu estilo único y dejarte sintiéndote renovado. 
                 <br><br> ¡Bienvenid@ a un mundo de elegancia y estilo!
             </p>
-            <button type="submit" class="bg-teal-500 hover:bg-teal-700 rounded-md px-8 py-4 shadow-md text-white font-bold text-lg transform transition-transform duration-300 ease-in-out hover:scale-105">¡Reserva tu cita ahora!</button>
+            <button class="bg-teal-500 hover:bg-teal-700 rounded-md px-8 py-4 shadow-md text-white font-bold text-lg transform transition-transform duration-300 ease-in-out hover:scale-105"><a href="{{route('servicios')}}">¡Reserva tu cita ahora!</a></button>
         </div>
     </div>
 

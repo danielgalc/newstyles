@@ -26,7 +26,7 @@
                 <p>{{dump($servicio)}}</p>
                 <p>{{dump(Auth::user()->id)}}</p>
 
-                <input type="hidden" name="servicio_id" value="{{ $servicio->id }}">
+                <input type="hidden" name="servicio" value="{{ $servicio->nombre }}">
 
                 <a href="/servicios"><button type="submit">Añadir cita</button></a>
 </form>
