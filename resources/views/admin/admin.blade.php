@@ -158,7 +158,7 @@
                         @foreach ($productos as $producto)
                             <tr>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ $producto->nombre }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $producto->descripcion }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ Str::limit($producto->descripcion, $limit = 20, $end = '...') }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ $producto->precio }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ $producto->stock }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ $producto->created_at }}</td>

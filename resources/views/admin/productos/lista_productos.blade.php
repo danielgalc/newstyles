@@ -48,7 +48,7 @@
                             data-modal-target="edit_producto_modal_{{ $producto->id }}">
                             <td class="px-6 py-4 whitespace-nowrap text-center">{{ $producto->id }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-center">{{ $producto->nombre }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-center">{{ Str::limit($producto->descripcion, $limit = 20, $end = '...') }}                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center">{{ Str::limit($producto->descripcion, $limit = 20, $end = '...') }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-center">{{ $producto->precio }} &euro;</td>
                             <td class="px-6 py-4 whitespace-nowrap text-center">{{ $producto->imagen }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-center">{{ $producto->stock }}</td>

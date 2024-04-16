@@ -28,7 +28,7 @@ Route::middleware('comprobarRol')->group(function () {
     Route::get('/productos', [ProductoController::class, 'index'])->name('productos');
     Route::get('/servicios', [ServicioController::class, 'index'])->name('servicios');
     Route::get('/quienes-somos', function () {
-        return view('index');
+        return view('quienes_somos.index');
     })->name('quienes-somos');
     
 });
