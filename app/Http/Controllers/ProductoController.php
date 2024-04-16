@@ -60,7 +60,7 @@ class ProductoController extends Controller
     $producto->nombre = $request->input('nombre');
     $producto->descripcion = $request->input('descripcion');
     $producto->precio = $request->input('precio');
-    $producto->imagen = $request->input('imagen'); // Si estás guardando el nombre del archivo, asegúrate de tener la lógica adecuada para manejar el archivo.
+    $producto->imagen = $request->input('imagen');
     $producto->stock = $request->input('stock');
 
     $producto->save();
