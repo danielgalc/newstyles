@@ -2,41 +2,36 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Models\Producto;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class ProductoController extends Controller
 {
- 
     public function index(Request $request)
     {
+        $search = $request->input('search');
         $query = Producto::query();
 
-        if ($request->has('ordenar')) {
-            $ordenar = $request->input('ordenar');
-            if ($ordenar == 'nombre_asc') {
-                $query->orderBy('nombre', 'asc');
-            } elseif ($ordenar == 'nombre_desc') {
-                $query->orderBy('nombre', 'desc');
-            } elseif ($ordenar == 'precio_asc') {
-                $query->orderBy('precio', 'asc');
-            } elseif ($ordenar == 'precio_desc') {
-                $query->orderBy('precio', 'desc');
-            }
-        }
-
-        if ($request->has('buscar')) {
-            $buscar = $request->input('buscar');
-            $query->where('nombre', 'like', '%' . $buscar . '%');
+        if ($search) {
+            $query->where('nombre', 'ilike', "%{$search}%")
+                  ->orWhere('descripcion', 'ilike', "%{$search}%");
         }
 
         $productos = $query->paginate(8);
 
-        return view('productos.index', [
+        if ($request->wantsJson()) {
+            return response()->json([
+                'productos' => $productos,
+            ]);
+        }
+
+        return Inertia::render('Productos/Productos', [
             'productos' => $productos,
+            'search' => $search,
         ]);
     }
-
     /**
      * Show the form for creating a new resource.
      */
@@ -54,20 +49,20 @@ class ProductoController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-{
-    $producto = new Producto();
+    {
+        $producto = new Producto();
 
-    $producto->nombre = $request->input('nombre');
-    $producto->descripcion = $request->input('descripcion');
-    $producto->precio = $request->input('precio');
-    $producto->imagen = $request->input('imagen');
-    $producto->stock = $request->input('stock');
+        $producto->nombre = $request->input('nombre');
+        $producto->descripcion = $request->input('descripcion');
+        $producto->precio = $request->input('precio');
+        $producto->imagen = $request->input('imagen');
+        $producto->stock = $request->input('stock');
 
-    $producto->save();
+        $producto->save();
 
-    return redirect('/admin/lista_productos')
-        ->with('success', 'Producto añadido con éxito.');
-}
+        return redirect('/admin/lista_productos')
+            ->with('success', 'Producto añadido con éxito.');
+    }
 
 
     /**
@@ -100,7 +95,7 @@ class ProductoController extends Controller
         $producto->nombre = $request->input('nombre');
         $producto->descripcion = $request->input('descripcion');
         $producto->precio = $request->input('precio');
-        $producto->imagen = $request->input('imagen'); 
+        $producto->imagen = $request->input('imagen');
         $producto->stock = $request->input('stock');
 
         $producto->save();
