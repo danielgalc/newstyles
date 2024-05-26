@@ -10,41 +10,50 @@ use Inertia\Inertia;
 class ProductoController extends Controller
 {
     public function index(Request $request)
-    {
-        $search = $request->input('search');
-        $query = Producto::query();
+{
+    $search = $request->input('search');
+    $sortBy = $request->input('sortBy'); // Obtener el tipo de orden seleccionado
 
-        if ($search) {
-            $query->where('nombre', 'ilike', "%{$search}%")
-                  ->orWhere('descripcion', 'ilike', "%{$search}%");
-        }
+    $query = Producto::query();
 
-        $productos = $query->paginate(8);
+    if ($search) {
+        $query->where('nombre', 'ilike', "%{$search}%")
+              ->orWhere('descripcion', 'ilike', "%{$search}%");
+    }
 
-        if ($request->wantsJson()) {
-            return response()->json([
-                'productos' => $productos,
-            ]);
-        }
+    // Aplicar el tipo de orden seleccionado
+    switch ($sortBy) {
+        case 'asc':
+            $query->orderBy('nombre', 'asc');
+            break;
+        case 'desc':
+            $query->orderBy('nombre', 'desc');
+            break;
+        case 'price_asc':
+            $query->orderBy('precio', 'asc');
+            break;
+        case 'price_desc':
+            $query->orderBy('precio', 'desc');
+            break;
+        default:
+            // No se especificó un tipo de orden, aplicar el orden por defecto
+            $query->orderBy('id', 'desc');
+            break;
+    }
 
-        return Inertia::render('Productos/Productos', [
+    $productos = $query->paginate(8);
+
+    if ($request->wantsJson()) {
+        return response()->json([
             'productos' => $productos,
-            'search' => $search,
-        ]);
-    }
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        $producto = new Producto();
-
-
-        return view('productos.create', [
-            'producto' => $producto,
         ]);
     }
 
+    return Inertia::render('Productos/Productos', [
+        'productos' => $productos,
+        'search' => $search,
+    ]);
+}
     /**
      * Store a newly created resource in storage.
      */

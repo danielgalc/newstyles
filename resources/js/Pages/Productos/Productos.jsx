@@ -3,49 +3,50 @@ import Banner from '@/Components/Banner';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'; 
 import GuestLayout from '@/Layouts/GuestLayout';
 import Grid from '@/Components/Productos/Grid';
-import axios from 'axios'; // Importamos axios para hacer solicitudes HTTP
-import debounce from 'lodash/debounce'; // Importamos debounce para limitar la frecuencia de las búsquedas
+import axios from 'axios'; 
+import debounce from 'lodash/debounce'; 
 
 export default function Productos({ auth, productos, search }) {
-  // useState para manejar el término de búsqueda y los productos filtrados
   const [searchTerm, setSearchTerm] = useState(search || '');
   const [filteredProductos, setFilteredProductos] = useState(productos);
+  const [sortBy, setSortBy] = useState(null); // Estado para el tipo de orden
 
   const fetchProductos = debounce(async (search) => {
     try {
-      const response = await axios.get(route('productos.productos'), { params: { search } });
+      const response = await axios.get(route('productos.productos'), { params: { search, sortBy } }); // Pasar sortBy a la solicitud
       setFilteredProductos(response.data.productos);
     } catch (error) {
       console.error('Error fetching productos:', error);
     }
   }, 30);
 
-  // useEffect que se ejecuta cuando cambia el término de búsqueda (searchTerm)
   useEffect(() => {
-    if (searchTerm) {
-      fetchProductos(searchTerm); // Si hay un término de búsqueda, busca productos
+    if (searchTerm || sortBy) { // Si hay término de búsqueda o tipo de orden
+      fetchProductos(searchTerm); 
     } else {
-      setFilteredProductos(productos); // Si no hay término de búsqueda, muestra todos los productos iniciales
+      setFilteredProductos(productos);
     }
 
-    // Función de limpieza antes de ejecutar una nueva búsqueda
     return () => {
       fetchProductos.cancel();
     };
-  }, [searchTerm]); // Dependencia en searchTerm
+  }, [searchTerm, sortBy]); // Dependencias en searchTerm y sortBy
 
-  // Función para manejar cambios en el campo de búsqueda
   const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value); // Actualizamos el término de búsqueda con el valor del input
+    setSearchTerm(e.target.value); 
+  };
+
+  const handleSortChange = (e) => {
+    const selectedSort = e.target.value;
+    setSortBy(selectedSort); // Actualizar el estado de sortBy
   };
 
   return (
     <div className="Productos">
       {auth.user ? (
-        // Si el usuario está autenticado, renderiza el layout autenticado
         <AuthenticatedLayout user={auth.user}>
           <Banner text="Catálogo de productos" />
-          <div className="search-bar my-4">
+          <div className="flex justify-between items-center my-4">
             <input
               type="text"
               value={searchTerm}
@@ -53,14 +54,20 @@ export default function Productos({ auth, productos, search }) {
               placeholder="Buscar productos..."
               className="p-2 border rounded-md w-3/4"
             />
+            <select onChange={handleSortChange} className="p-2 border rounded-md ml-4">
+              <option value="">Ordenar por...</option>
+              <option value="asc">A - Z</option>
+              <option value="desc">Z - A</option>
+              <option value="price_asc">Menor a mayor precio</option>
+              <option value="price_desc">Mayor a menor precio</option>
+            </select>
           </div>
-          <Grid productos={filteredProductos} /> {/* Renderiza los productos filtrados */}
+          <Grid productos={filteredProductos} />
         </AuthenticatedLayout>
       ) : (
-        // Si el usuario no está autenticado, renderiza el layout de invitados
         <GuestLayout>
           <Banner text="Catálogo de productos" />
-          <div className="flex justify-center search-bar mx-auto my-4">
+          <div className="flex justify-center items-center my-4">
             <input
               type="text"
               value={searchTerm}
@@ -68,8 +75,15 @@ export default function Productos({ auth, productos, search }) {
               placeholder="Buscar productos..."
               className="p-2 border rounded-md w-1/4"
             />
+            <select onChange={handleSortChange} className="p-2 border rounded-md ml-4 w-52">
+              <option value="">Ordenar por...</option>
+              <option value="asc">A - Z</option>
+              <option value="desc">Z - A</option>
+              <option value="price_asc">Menor a mayor precio</option>
+              <option value="price_desc">Mayor a menor precio</option>
+            </select>
           </div>
-          <Grid productos={filteredProductos} /> {/* Renderiza los productos filtrados */}
+          <Grid productos={filteredProductos} />
         </GuestLayout>
       )}
     </div>
