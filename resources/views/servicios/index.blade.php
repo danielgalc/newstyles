@@ -27,44 +27,46 @@
             </form>
         </div>
 
-        <div class="grid grid-cols-2 gap-x-24 gap-y-12">
-            @foreach($serviciosPrincipales as $index => $servicio)
-            <div class="relative h-32 p-6 shadow-md rounded-md {{ $index % 4 == 0 ? 'bg-gray-50' : 'bg-gray-100' }}">
-                <h3 class="text-3xl font-semibold mb-3">{{ $servicio->nombre }}</h3>
+        <div class="grid grid-cols-2 gap-x-8 gap-y-8">
 
-                <div class="absolute bottom-0 right-0 h-full w-1/4 flex flex-col items-center justify-center p-4">
-                    <p class="text-3xl">{{ $servicio->precio }} &euro;</p>
-                    <p class="text-lg text-gray-600">Aprox. {{ $servicio->duracion }}</p>
-                    <a href="/citas/{{ $servicio->id }}/create" class="bg-teal-400 text-white font-bold text-2xl w-full h-12 text-center rounded-full mt-2">Reservar</a>
-                </div>
-            </div>
-            @endforeach
+
+    @foreach($serviciosPrincipales as $index => $servicio)
+    <div class="relative h-36 p-6 shadow-md rounded-md">
+        <h3 class="text-3xl font-semibold mb-3">{{ $servicio->nombre }}</h3>
+
+        <div class="absolute bottom-0 right-0 w-1/4 flex flex-col items-center justify-center p-4">
+            <p class="text-3xl">{{ $servicio->precio }} &euro;</p>
+            <p class="text-lg text-gray-600">Aprox. {{ $servicio->duracion }}</p>
+            <a href="/citas/{{ $servicio->id }}/create" class="bg-teal-400 text-white font-bold text-lg w-full py-1 text-center rounded-full items-center">Reservar</a>
         </div>
+    </div>
+    @endforeach
+</div>
 
-        <p id="otrosServiciosToggle" class="cursor-pointer text-blue-500 underline mt-4">
-            Otros Servicios
-        </p>
+<p id="otrosServiciosToggle" class="cursor-pointer text-blue-500 underline mt-4">
+    Otros Servicios
+</p>
 
-        <div id="otrosServiciosContainer" class="hidden mt-4 w-full">
-            @if ($serviciosSecundarios->count() > 0)
-            <p>Servicios secundarios encontrados.</p>
-            <div class="grid grid-cols-2 gap-x-24 gap-y-12">
-                @foreach($serviciosSecundarios as $index => $servicio)
-                <div class="relative h-32 p-6 shadow-md rounded-md {{ $index % 4 == 0 ? 'bg-gray-50' : 'bg-gray-100' }}">
-                    <h3 class="text-3xl font-semibold mb-3">{{ $servicio->nombre }}</h3>
+<div id="otrosServiciosContainer" class="hidden mt-4">
+    @if ($serviciosSecundarios->count() > 0)
+    <p>Servicios secundarios encontrados.</p>
+    <div class="grid grid-cols-2 gap-x-8 gap-y-8">
+        @foreach($serviciosSecundarios as $index => $servicio)
+        <div class="relative h-36 p-6 shadow-md rounded-md">
+            <h3 class="text-3xl font-semibold mb-3">{{ $servicio->nombre }}</h3>
 
-                    <div class="absolute bottom-0 right-0 h-full w-1/4 flex flex-col items-center justify-center p-4">
-                        <p class="text-3xl">{{ $servicio->precio }} &euro;</p>
-                        <p class="text-lg text-gray-600">Aprox. {{ $servicio->duracion }}</p>
-                        <a href="/citas/{{ $servicio->id }}/create" class="bg-teal-400 text-white font-bold text-2xl w-full h-12 text-center rounded-full mt-2">Reservar</a>
-                    </div>
-                </div>
-                @endforeach
+            <div class="absolute bottom-0 right-0 w-1/4 flex flex-col items-center justify-center p-4">
+                <p class="text-3xl">{{ $servicio->precio }} &euro;</p>
+                <p class="text-lg text-gray-600">Aprox. {{ $servicio->duracion }}</p>
+                <a href="/citas/{{ $servicio->id }}/create" class="bg-teal-400 text-white font-bold text-lg w-full py-1 text-center rounded-full mt-2">Reservar</a>
             </div>
-            @else
-            <p>No hay servicios secundarios encontrados.</p>
-            @endif
         </div>
+        @endforeach
+    </div>
+    @else
+    <p>No hay servicios secundarios encontrados.</p>
+    @endif
+</div>
 
 
 

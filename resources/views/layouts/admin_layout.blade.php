@@ -6,14 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Admin Dashboard')</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
     @vite('resources/css/app.css')
 </head>
 
 <body class="bg-white">
     <div class="flex h-screen">
         <!-- Barra de navegación izquierda -->
-        <div class="flex flex-col w-64 bg-teal-400 shadow-md text-xl font-inter text-center pt-4">
+        <div class="flex flex-col w-64 bg-teal-400 shadow-md text-xl text-center pt-4">
             <!-- Logo del sitio -->
             <div class="text-black text-2xl font-semibold mb-4">
                 <a href="/admin">
@@ -22,16 +21,16 @@
             </div>
 
             <!-- Correo electrónico del administrador con línea inferior -->
-            <div class="text-black mb-4 pb-2 border-b border-black px-4 admin-email">
+            <div class="mb-4 py-2 border-b border-black font-inter text-sm font-thin italic px-4">
                 {{ auth()->user()->email }}
             </div>
 
             <!-- Enlaces de navegación -->
 
             <nav class="nav-admin p-4">
-                <ul class="space-y-8 mt-4 ">
+                <ul class="space-y-8 mt-4 font-inter text-[18px]">
                     <li class="transition-all duration-150 hover:scale-105">
-                        <a href="{{ route('usuarios') }}" class="text-white flex items-center hover:text-teal-700">
+                        <a href="{{ route('admin.usuarios') }}" class="text-white flex items-center font-inter text-[18px] hover:text-teal-700">
                             <svg class="svg-icon-2 mr-2 pb-1 hover:text-teal-700" xmlns="http://www.w3.org/2000/svg" height="16" width="14" viewBox="0 0 448 512" fill="currentColor">
                                 <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z" />
                             </svg>
@@ -40,7 +39,7 @@
                     </li>
 
                     <li class="transition-all duration-150 hover:scale-105">
-                        <a href="{{ route('citas') }}" class="text-white flex items-center hover:text-teal-700">
+                        <a href="{{ route('admin.citas') }}" class="text-white flex items-center hover:text-teal-700 font-inter text-[18px]">
                             <svg fill="currentColor" class="mr-2.5 pb-1" height="32" width="28" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 610.398 610.398" xml:space="preserve">
                                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -66,7 +65,7 @@
                         </a>
                     </li>
                     <li class="transition-all duration-150 hover:scale-105">
-                        <a href="{{ route('servicios') }}" class="text-white flex items-center hover:text-teal-700">
+                        <a href="{{ route('admin.servicios') }}" class="text-white flex items-center hover:text-teal-700 font-inter text-[18px]">
                             <svg xmlns="http://www.w3.org/2000/svg" width="34" height="30" fill="currentColor" class="tijeras-icon mr-2 pb-1" viewBox="0 0 16 16">
                                 <path d="M3.5 3.5c-.614-.884-.074-1.962.858-2.5L8 7.226 11.642 1c.932.538 1.472 1.616.858 2.5L8.81 8.61l1.556 2.661a2.5 2.5 0 1 1-.794.637L8 9.73l-1.572 2.177a2.5 2.5 0 1 1-.794-.637L7.19 8.61 3.5 3.5zm2.5 10a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0zm7 0a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0z" />
                             </svg>
@@ -74,7 +73,7 @@
                         </a>
                     </li>
                     <li class="transition-all duration-150 hover:scale-105">
-                        <a href="{{ route('productos') }}" class="text-white flex items-center hover:text-teal-700">
+                        <a href="{{ route('admin.productos') }}" class="text-white flex items-center hover:text-teal-700 font-inter text-[18px]">
                             <svg fill="currentColor" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve" width="34px" height="30px" class="mr-1.5 pb-1 productos-icon" stroke="currentColor">
                                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -113,31 +112,6 @@
             @yield('content')
         </div>
     </div>
-
-    {{--
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
-<!-- Utilizando Axios para cargar dinámicamente el contenido de las secciones -->
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
-<script>
-    function loadSection(section, page = 1) {
-        // Realiza una solicitud GET al servidor para obtener el contenido de la sección y la página actual
-        axios.get(`/admin/${section}?page=${page}`)
-            .then(response => {
-                // Actualiza el contenido de la sección según la respuesta
-                document.getElementById('content-container').innerHTML = response.data;
-            })
-            .catch(error => {
-                console.error('Error fetching data:', error);
-            });
-    }
-</script>
-
- --}}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
-
 </body>
 
 </html>

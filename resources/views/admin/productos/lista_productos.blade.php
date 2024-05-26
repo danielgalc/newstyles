@@ -48,7 +48,7 @@
                             data-modal-target="edit_producto_modal_{{ $producto->id }}">
                             <td class="px-6 py-4 whitespace-nowrap text-center">{{ $producto->id }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-center">{{ $producto->nombre }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-center">{{ Str::limit($producto->descripcion, $limit = 20, $end = '...') }}                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center">{{ Str::limit($producto->descripcion, $limit = 20, $end = '...') }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-center">{{ $producto->precio }} &euro;</td>
                             <td class="px-6 py-4 whitespace-nowrap text-center">{{ $producto->imagen }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-center">{{ $producto->stock }}</td>
@@ -60,6 +60,7 @@
             </table>
             <!-- Mostrar enlaces de paginación -->
             {{ $productos->links() }}
+            
         @else
             <p>No hay productos disponibles.</p>
         @endif
@@ -174,7 +175,7 @@
                         </button>
                     </div>
                     <!-- Modal body -->
-                    <div class="p-4 md:p-5">
+                    <div class="p-4 md:p-5 dark:text-white">
                         <p>¿Estás seguro de que quieres eliminar este producto? ID: {{ $producto->id }}</p>
                         <div class="flex justify-end items-center mt-4">
                             <form action="{{ route('productos.destroy', ['id' => $producto->id]) }}" method="post"
@@ -191,7 +192,7 @@
                             </form>
 
                             <button type="button"
-                                class="h-10 text-gray-600 bg-gray-200 hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800"
+                                class="h-10 text-black border border-red-400 bg-white hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-white dark:hover:bg-gray-300 dark:focus:ring-red-800"
                                 data-modal-toggle="confirm_delete_modal_{{ $producto->id }}"
                                 data-delete-route="{{ route('productos.destroy', ['id' => $producto->id]) }}">
                                 Cancelar
@@ -255,9 +256,8 @@
                         <div class="col-span-2">
                             <label for="imagen"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Imagen</label>
-                            <input id="imagen" name="imagen" type="file"
+                            <input id="imagen" name="imagen" type="file" value="{{$producto->imagen}}"
                                 class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400">
-
                         </div>
                         <div class="col-span-2">
                             <label for="stock"

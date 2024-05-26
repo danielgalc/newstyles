@@ -16,7 +16,7 @@
                         <h5 class="text-md font-extralight">Últimos usuarios añadidos</h5>
                     </div>
                     <div class=" pb-10">
-                        <a href="{{ route('usuarios') }}" class="text-blue-700 hover:underline">Ver todos los usuarios</a>
+                        <a href="{{ route('admin.usuarios') }}" class="text-blue-700 hover:underline">Ver todos los usuarios</a>
                     </div>
                 </div>
                 <table class="min-w-full divide-y divide-gray-200 rounded-lg overflow-hidden" id="users-table">
@@ -57,7 +57,7 @@
                         <h5 class="text-md font-extralight">Últimas citas añadidos</h5>
                     </div>
                     <div class=" pb-10">
-                        <a href="{{ route('citas') }}" class="text-blue-700 hover:underline">Gestionar todas los citas</a>
+                        <a href="{{ route('admin.citas') }}" class="text-blue-700 hover:underline">Gestionar todas los citas</a>
                     </div>
                 </div>
                 <table class="min-w-full divide-y divide-gray-200 rounded-lg overflow-hidden" id="citas-table">
@@ -97,7 +97,7 @@
                         <h5 class="text-md font-extralight">Últimos servicios agregados</h5>
                     </div>
                     <div class=" pb-10">
-                        <a href="{{ route('servicios') }}" class="text-blue-700 hover:underline">Ver todos los servicios</a>
+                        <a href="{{ route('admin.servicios') }}" class="text-blue-700 hover:underline">Ver todos los servicios</a>
                     </div>
                 </div>
                 <table class="min-w-full divide-y divide-gray-200 rounded-lg overflow-hidden" id="users-table">
@@ -140,7 +140,7 @@
                         <h5 class="text-md font-extralight">Últimos productos añadidos al catálogo</h5>
                     </div>
                     <div class=" pb-10">
-                        <a href="{{ route('productos') }}" class="text-blue-700 hover:underline">Ver todos los productos</a>
+                        <a href="{{ route('admin.productos') }}" class="text-blue-700 hover:underline">Ver todos los productos</a>
                     </div>
                 </div>
                 <table class="min-w-full divide-y divide-gray-200 rounded-lg overflow-hidden" id="users-table">
@@ -158,7 +158,7 @@
                         @foreach ($productos as $producto)
                             <tr>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ $producto->nombre }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $producto->descripcion }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ Str::limit($producto->descripcion, $limit = 20, $end = '...') }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ $producto->precio }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ $producto->stock }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ $producto->created_at }}</td>

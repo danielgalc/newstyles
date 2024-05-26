@@ -1,13 +1,49 @@
 <?php
 
-use App\Http\Controllers\CarritoController;
 use App\Http\Controllers\ProfileController;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
+use App\Http\Controllers\CarritoController;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\ServicioController;
 use App\Http\Controllers\CitaController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\UserController;
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
+|
+*/
+
+/* Route::get('/', function () {
+    return Inertia::render('Welcome', [
+        'canLogin' => Route::has('login'),
+        'canRegister' => Route::has('register'),
+        'laravelVersion' => Application::VERSION,
+        'phpVersion' => PHP_VERSION,
+    ]);
+});
+
+Route::get('/dashboard', function () {
+    return Inertia::render('Dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+}); */
+
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -25,24 +61,32 @@ use App\Http\Controllers\UserController;
 // Rutas accesibles para usuarios no logueados
 
 Route::middleware('comprobarRol')->group(function () {
-    Route::get('/productos', [ProductoController::class, 'index'])->name('productos');
-    Route::get('/servicios', [ServicioController::class, 'index'])->name('servicios');
+    Route::get('/servicios', [ServicioController::class, 'index'])->name('servicios');    
+    Route::get('/productos', [ProductoController::class, 'index'])->name('productos.productos');
     Route::get('/quienes-somos', function () {
-        return view('index');
-    })->name('quienes-somos');
-    
+        return Inertia::render('QuienesSomos');
+    })->name('quienes-somos');    
 });
 
 // Login
 
+Route::get('/landing', function () {
+    return Inertia::render('landing', [
+        'canLogin' => Route::has('login'),
+        'canRegister' => Route::has('register'),
+        'laravelVersion' => Application::VERSION,
+        'phpVersion' => PHP_VERSION,
+    ]);
+});
+
 Route::middleware('guest')->get('/login', function () {
-    return view('auth.login');
+    return view('login');
 })->name('login');
 
 // Ruta de Landing Page
 
-Route::get('/', function () { // REVISAR ESTA RUTA PARA USUARIOS LOGUEADOS Y NO VERIFICADOS.
-    return view('landing');
+Route::get('/', function () {
+    return Inertia::render('Landing');
 })->name('landing');
 
 // Rutas accesibles para el usuario logueado
@@ -85,10 +129,11 @@ Route::middleware('auth', 'admin')->group(function() {
     
 
     // Rutas zona usuario - Listados
-    Route::get('/admin/usuarios', [AdminController::class, 'usuarios'])->name('usuarios');
-    Route::get('/admin/gestionar_citas', [AdminController::class, 'gestionarCitas'])->name('citas');
-    Route::get('/admin/lista_servicios', [AdminController::class, 'listaServicios'])->name('servicios');
-    Route::get('/admin/lista_productos', [AdminController::class, 'listaProductos'])->name('productos');
+    Route::get('/admin', [AdminController::class, 'mostrarDatos'])->name('admin.admin');
+    Route::get('/admin/usuarios', [AdminController::class, 'usuarios'])->name('admin.usuarios');
+    Route::get('/admin/citas', [AdminController::class, 'gestionarCitas'])->name('admin.citas');
+    Route::get('/admin/servicios', [AdminController::class, 'listaServicios'])->name('admin.servicios');
+    Route::get('/admin/productos', [AdminController::class, 'listaProductos'])->name('admin.productos');
 
     
 });
@@ -102,6 +147,8 @@ Route::put('/productos/{id}', [ProductoController::class, 'update'])
     ->name('productos.update');
     
 Route::delete('/productos/{id}', [ProductoController::class, 'destroy'])->name('productos.destroy');
+
+
 
 // Rutas de usuarios
 
@@ -132,3 +179,5 @@ Route::delete('/admin/gestionar_citas/{id}', [CitaController::class, 'destroy'])
 
 Route::put('admin/gestionar_citas/{id}/actualizar-estado', [CitaController::class, 'actualizar_estado'])->name('citas.actualizar_estado');
 
+
+require __DIR__.'/auth.php';

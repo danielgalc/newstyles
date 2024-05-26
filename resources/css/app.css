@@ -2,21 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
 
-/* Luego, puedes aplicar la fuente en tu clase CSS */
-.text-inter {
-    font-family: 'Inter', sans-serif;
-    font-weight: 200; /* Para ExtraLight */
+@font-face {
+    font-family: 'Righteous';
+    src: url('/fonts/Righteous-Regular.ttf') format('truetype');
 }
-
 
 .teal-shadow {
-    box-shadow: 4px 4px 4px 0 rgba(0, 228, 215, 1);
+  box-shadow: 4px 4px 4px 0 rgba(0, 228, 215, 1);
 }
 
-.delete-shadow {
-    box-shadow: 4px 4px 4px 0 rgb(228, 38, 0);
+.teal-shadow-2 {
+  box-shadow: 4px 4px 4px 0 rgb(10, 162, 154);
+}
+
+.circle-shadow {
+  box-shadow: 4px 4px 4px 0 rgb(21, 21, 21);
 }
 
 /* ICONO USUARIO */
@@ -31,6 +33,7 @@
 .svg-icon rect {
   fill: #00C8BC;
 }
+
 
 .svg-icon circle {
   stroke: #00C8BC;
@@ -81,6 +84,19 @@
   stroke-width: 1;
 }
 
+.admin-email {
+  font-size: small;
+  font-style: italic;
+}
+
+.font-right {
+  font-family: Righteous;
+}
+
+
+.font-inter {
+  font-family: 'Inter', sans-serif;
+}
 
 /* ICONO CARRITO */
 
@@ -94,9 +110,115 @@
   fill: #00C8BC;
 }
 
-.admin-email {
-  font-size: small;
-  font-style: italic;
-  font-family: 'Inter', sans-serif;
-  font-weight: 200; /* Para ExtraLight */
+/* BANNER.JSX */
+
+.banner-text {
+    font-family: Righteous, sans-serif;
+    font-size: 4rem;
+    color: #333;
+}
+
+/* ANIMACION HERO QUIENES SOMOS */
+
+@keyframes slideDown {
+  0% {
+      height: 0;
+  }
+
+  100% {
+      height: 100%;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+      opacity: 0;
+  }
+
+  100% {
+      opacity: 1;
+  }
+}
+
+.animate-slide-down {
+  animation: slideDown 2s ease-out forwards;
+}
+
+.animate-fade-in {
+  animation: fadeIn 8s ease-out forwards;
+}
+
+/* TRANSICIONES SERVICIOS SECUNDARIOS */
+
+.fade-enter {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.fade-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.fade-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fade-exit-active {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 300ms, transform 300ms;
+}
+
+/* ESTILOS LOGIN */
+
+@keyframes blob {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(20px, -30px);
+  }
+  50% {
+    transform: translate(-20px, 20px);
+  }
+  75% {
+    transform: translate(10px, 10px);
+  }
+}
+
+.animate-blob {
+  animation: blob 10s infinite;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+
+/* FILTROS DE PRODUCTOS */
+
+.filters {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.search-input {
+  width: 60%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.sort-select {
+  width: 35%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }

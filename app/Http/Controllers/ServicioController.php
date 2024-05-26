@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Servicio;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class ServicioController extends Controller
 {
@@ -12,43 +13,24 @@ class ServicioController extends Controller
      * Display a listing of the resource.
      */
 
-    public function index(Request $request)
-    {
-        $query = Servicio::query();
-
-        $peluqueros = User::where('rol', 'empleado')->get();
-
-        if ($request->has('ordenar')) {
-            $ordenar = $request->input('ordenar');
-            if ($ordenar == 'nombre_asc') {
-                $query->orderBy('nombre', 'asc');
-            } elseif ($ordenar == 'nombre_desc') {
-                $query->orderBy('nombre', 'desc');
-            } elseif ($ordenar == 'precio_asc') {
-                $query->orderBy('precio', 'asc');
-            } elseif ($ordenar == 'precio_desc') {
-                $query->orderBy('precio', 'desc');
-            }
-        }
-
-        if ($request->has('buscar')) {
-            $buscar = $request->input('buscar');
-            $query->where('nombre', 'like', '%' . $buscar . '%');
-        }
-
-        $servicios = $query->get()->where('clase', 'secundario');
-
-        $serviciosPrincipales = $query->get()->where("clase", "principal");
-        $serviciosSecundarios = $query->get()->where("clase", "secundario");
+// ServicioController.php
 
 
-        return view('servicios.index', [
-            'servicios' => $servicios,
-            'serviciosPrincipales' => $serviciosPrincipales,
-            'serviciosSecundarios' => $serviciosSecundarios,
-            'peluqueros' => $peluqueros,
-        ]);
-    }
+
+public function index(Request $request)
+{
+    $serviciosPrincipales = Servicio::where('clase', 'principal')->get();
+    $serviciosSecundarios = Servicio::where('clase', 'secundario')->get();
+
+    $peluqueros = User::where('rol', 'empleado')->get();
+
+    return Inertia::render('Servicios', [
+        'serviciosPrincipales' => $serviciosPrincipales,
+        'serviciosSecundarios' => $serviciosSecundarios,
+        'peluqueros' => $peluqueros,
+    ]);
+}
+
 
     /**
      * Show the form for creating a new resource.

@@ -13,7 +13,7 @@
             <x-nav-link :href="('servicios')" :active="request()->routeIs('servicios')" class="text-white text-3xl font-custom font-semibold transition-all duration-300 transform hover:text-teal-500 hover:scale-105">
                 {{ __('Servicios') }}
             </x-nav-link>
-            <x-nav-link :href="''" :active="request()->routeIs('')" class="text-white text-3xl font-custom font-semibold transition-all duration-300 transform hover:text-teal-500 hover:scale-105">
+            <x-nav-link :href="('quienes-somos')" :active="request()->routeIs('quienes-somos')" class="text-white text-3xl font-custom font-semibold transition-all duration-300 transform hover:text-teal-500 hover:scale-105">
                 {{ __('Quiénes Somos') }}
             </x-nav-link>
         </div>
