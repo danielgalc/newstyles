@@ -44,20 +44,20 @@ class AdminController extends Controller
         return view('admin.productos.lista_productos', compact('productos'));
     }
 
+
     public function mostrarDatos()
     {
         $usuarios = User::latest()->take(5)->get();
         $citas = Cita::latest()->take(5)->get();
         $servicios = Servicio::latest()->take(5)->get();
         $productos = Producto::latest()->take(5)->get();
-
-        // Formatear la hora en las citas
-        foreach ($citas as $cita) {
-            $cita->hora = Carbon::parse($cita->hora)->format('H:i');
-        }
         
+        $citas->each(function ($cita) {
+            $cita->hora = \Carbon\Carbon::parse($cita->hora);
+        });
+    
         $citas->load('user', 'peluquero');
-
+    
         return Inertia::render('Admin/Admin', [
             'usuarios' => $usuarios,
             'citas' => $citas,

@@ -36,8 +36,8 @@ class AuthenticatedSessionController extends Controller
         if ($request->user()->hasVerifiedEmail()) {
             auth()->login($request->user());
         
-            if(auth()->user()->rol === 'admin'){
-                return redirect('/admin');
+            if (auth()->user()->rol === 'admin') {
+                return redirect('/admin')->with('reload', true);
             } else {
                 return redirect('/');
             }

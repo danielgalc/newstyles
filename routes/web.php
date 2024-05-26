@@ -148,6 +148,8 @@ Route::put('/productos/{id}', [ProductoController::class, 'update'])
     
 Route::delete('/productos/{id}', [ProductoController::class, 'destroy'])->name('productos.destroy');
 
+
+
 // Rutas de usuarios
 
 Route::post('/usuarios', [UserController::class, 'store'])->name('users.store'); 
