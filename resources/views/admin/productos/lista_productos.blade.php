@@ -35,7 +35,7 @@
                         </th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Stock
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Creado en
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Categoría
                         </th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">
                             Actualizado en</th>
@@ -52,7 +52,7 @@
                             <td class="px-6 py-4 whitespace-nowrap text-center">{{ $producto->precio }} &euro;</td>
                             <td class="px-6 py-4 whitespace-nowrap text-center">{{ $producto->imagen }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-center">{{ $producto->stock }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-center">{{ $producto->created_at }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center">{{ $producto->categoria }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-center">{{ $producto->updated_at }}</td>
                         </tr>
                     @endforeach
@@ -133,6 +133,13 @@
                                     placeholder="Añade el valor del stock del producto" step="1" min="0"
                                     required>
                             </div>
+                            <div class="col-span-2">
+                                <label for="categoria"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Categoría</label>
+                                <input type="text" name="categoria" id="categoria" value="{{ $producto->categoria }}"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                    required>
+                            </div>                         
                         </div>
                         <button type="submit"
                             class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
@@ -267,6 +274,13 @@
                                 placeholder="Añade el valor del stock del producto" step="1" min="0"
                                 required>
                         </div>
+                        <div class="col-span-2">
+                                <label for="categoria"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Categoría</label>
+                                <input type="text" name="categoria" id="categoria" value="{{ $producto->categoria }}"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                    required>
+                            </div>  
                     </div>
                     <button type="submit"
                         class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
