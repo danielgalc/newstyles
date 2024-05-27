@@ -24,6 +24,41 @@ class CitaController extends Controller
         ]);
     }
 
+    public function historial()
+    {
+        // Obtiene el usuario actualmente autenticado
+        $user = auth()->user();
+
+        // Obtiene la próxima cita (no finalizada)
+        $proximaCita = Cita::where('user_id', $user->id)
+            ->where('estado', '<>', 'finalizada')
+            ->orderBy('fecha', 'asc')
+            ->orderBy('hora', 'asc')
+            ->first();
+
+        // Obtiene todas las citas finalizadas, ordenadas de más recientes a más antiguas
+        $citasFinalizadas = Cita::where('user_id', $user->id)
+            ->where('estado', 'finalizada')
+            ->orderBy('fecha', 'desc')
+            ->orderBy('hora', 'desc')
+            ->get();
+
+        return view('citas.historial-citas', [
+            'proximaCita' => $proximaCita,
+            'citasFinalizadas' => $citasFinalizadas,
+        ]);
+    }
+
+    public function cancelar(Request $request, $id)
+    {
+        $cita = Cita::findOrFail($id);
+        $cita->estado = 'cancelada';
+        $cita->save();
+
+        return redirect()->route('historial-citas')->with('success', 'Cita cancelada con éxito.');
+    }
+
+
     /**
      * Show the form for creating a new resource.
      */
@@ -73,10 +108,10 @@ class CitaController extends Controller
         if ($user->rol == 'admin') {
             $cita->servicio = Servicio::findOrFail($servicio)->nombre; // Asigna el nombre del servicio a la cita
             $cita->estado = 'aceptada';
-            
+
             $cita->save();
 
-            
+
             return redirect('/admin/gestionar_citas')->with('success', 'Cita añadida con éxito.');
         }
 
@@ -143,15 +178,15 @@ class CitaController extends Controller
             ->with('success', 'Cita eliminada con éxito.');
     }
 
-        public function actualizar_estado(Request $request, string $id)
+    public function actualizar_estado(Request $request, string $id)
     {
         $cita = Cita::findOrFail($id);
-    
+
         // Actualiza solo el estado de la cita
         $cita->estado = $request->input('estado');
-    
+
         $cita->save();
-    
+
         return redirect()->back()->with('success', 'Estado de la cita actualizado con éxito.');
     }
 }

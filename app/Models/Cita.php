@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Cita extends Model
 {
     protected $fillable = ['servicio', 'fecha'];
+    // Indica que los campos 'fecha' y 'hora' deben ser tratados como fechas
+    protected $dates = ['fecha', 'hora'];
 
     /**
      * Get the user that owns the cita.

@@ -51,6 +51,7 @@ class AdminController extends Controller
         $productos = Producto::paginate(8);
         return view('admin.productos.lista_productos', compact('productos'));
     }
+    
 
 
     public function mostrarDatos()

@@ -10,50 +10,64 @@ use Inertia\Inertia;
 class ProductoController extends Controller
 {
     public function index(Request $request)
-{
-    $search = $request->input('search');
-    $sortBy = $request->input('sortBy'); // Obtener el tipo de orden seleccionado
+    {
+        $search = $request->input('search');
+        $sortBy = $request->input('sortBy');
+        $category = $request->input('category'); // Obtener la categoría seleccionada
 
-    $query = Producto::query();
+        $query = Producto::query();
 
-    if ($search) {
-        $query->where('nombre', 'ilike', "%{$search}%")
-              ->orWhere('descripcion', 'ilike', "%{$search}%");
-    }
+        if ($search) {
+            $query->where('nombre', 'ilike', "%{$search}%")
+                ->orWhere('descripcion', 'ilike', "%{$search}%");
+        }
 
-    // Aplicar el tipo de orden seleccionado
-    switch ($sortBy) {
-        case 'asc':
-            $query->orderBy('nombre', 'asc');
-            break;
-        case 'desc':
-            $query->orderBy('nombre', 'desc');
-            break;
-        case 'price_asc':
-            $query->orderBy('precio', 'asc');
-            break;
-        case 'price_desc':
-            $query->orderBy('precio', 'desc');
-            break;
-        default:
-            // No se especificó un tipo de orden, aplicar el orden por defecto
-            $query->orderBy('id', 'desc');
-            break;
-    }
+        if ($category) {
+            $query->where('categoria', $category); // Filtrar por categoría
+        }
 
-    $productos = $query->paginate(8);
+        switch ($sortBy) {
+            case 'asc':
+                $query->orderBy('nombre', 'asc');
+                break;
+            case 'desc':
+                $query->orderBy('nombre', 'desc');
+                break;
+            case 'price_asc':
+                $query->orderBy('precio', 'asc');
+                break;
+            case 'price_desc':
+                $query->orderBy('precio', 'desc');
+                break;
+            default:
+                $query->orderBy('id', 'desc');
+                break;
+        }
 
-    if ($request->wantsJson()) {
-        return response()->json([
+        $productos = $query->paginate(8);
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'productos' => $productos,
+            ]);
+        }
+
+        return Inertia::render('Productos/Productos', [
             'productos' => $productos,
+            'search' => $search,
         ]);
     }
 
-    return Inertia::render('Productos/Productos', [
-        'productos' => $productos,
-        'search' => $search,
-    ]);
-}
+    public function categorias()
+    {
+        $categorias = Producto::select('categoria')
+            ->distinct()
+            ->whereNotNull('categoria')
+            ->pluck('categoria');
+
+        return response()->json($categorias);
+    }
+
     /**
      * Store a newly created resource in storage.
      */
@@ -66,6 +80,7 @@ class ProductoController extends Controller
         $producto->precio = $request->input('precio');
         $producto->imagen = $request->input('imagen');
         $producto->stock = $request->input('stock');
+        $producto->categoria = $request->input('categoria');
 
         $producto->save();
 
@@ -106,10 +121,11 @@ class ProductoController extends Controller
         $producto->precio = $request->input('precio');
         $producto->imagen = $request->input('imagen');
         $producto->stock = $request->input('stock');
+        $producto->categoria = $request->input('categoria');
 
         $producto->save();
 
-        return redirect('/admin/lista_productos')
+        return redirect('/admin/productos')
             ->with('success', 'Producto modificado con éxito.');
     }
 
