@@ -61,11 +61,17 @@ Route::middleware('auth')->group(function () {
 // Rutas accesibles para usuarios no logueados
 
 Route::middleware('comprobarRol')->group(function () {
-    Route::get('/servicios', [ServicioController::class, 'index'])->name('servicios');    
+    Route::get('/servicios', [ServicioController::class, 'index'])->name('servicios');
     Route::get('/productos', [ProductoController::class, 'index'])->name('productos.productos');
     Route::get('/quienes-somos', function () {
         return Inertia::render('QuienesSomos');
-    })->name('quienes-somos');    
+    })->name('quienes-somos');
+
+    // Ruta de Landing Page
+
+    Route::get('/', function () {
+        return Inertia::render('Landing');
+    })->name('landing');
 });
 
 // Login
@@ -83,11 +89,7 @@ Route::middleware('guest')->get('/login', function () {
     return view('login');
 })->name('login');
 
-// Ruta de Landing Page
 
-Route::get('/', function () {
-    return Inertia::render('Landing');
-})->name('landing');
 
 // Rutas accesibles para el usuario logueado
 
@@ -115,11 +117,11 @@ Route::middleware('auth', 'verified', 'comprobarRol')->group(function () {
     });
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 
 // Rutas accesibles para el usuario administrador
 
-Route::middleware('auth', 'admin')->group(function() {
+Route::middleware('auth', 'admin')->group(function () {
     Route::get('/admin', function () {
         return view('admin/admin');
     })->name('admin');
@@ -128,7 +130,7 @@ Route::middleware('auth', 'admin')->group(function() {
 
     /* REVISTAR ESTA RUTA CON LA DEL ADMIN_LAYOUT */
     Route::get('admin', [AdminController::class, 'mostrarDatos'])->name('admin.preview');
-    
+
 
     // Rutas zona usuario - Listados
     Route::get('/admin', [AdminController::class, 'mostrarDatos'])->name('admin.admin');
@@ -136,8 +138,6 @@ Route::middleware('auth', 'admin')->group(function() {
     Route::get('/admin/citas', [AdminController::class, 'gestionarCitas'])->name('admin.citas');
     Route::get('/admin/servicios', [AdminController::class, 'listaServicios'])->name('admin.servicios');
     Route::get('/admin/productos', [AdminController::class, 'listaProductos'])->name('admin.productos');
-
-    
 });
 
 
@@ -147,7 +147,7 @@ Route::post('/productos', [ProductoController::class, 'store'])->name('productos
 Route::get('/productos/{id}/edit', [ProductoController::class, 'edit']);
 Route::put('/productos/{id}', [ProductoController::class, 'update'])
     ->name('productos.update');
-    
+
 Route::delete('/productos/{id}', [ProductoController::class, 'destroy'])->name('productos.destroy');
 
 Route::get('/categorias', [ProductoController::class, 'categorias'])->name('categorias'); // Obtener las categorías de los productos para luego mapearlas en el filtro
@@ -157,7 +157,7 @@ Route::get('/categorias', [ProductoController::class, 'categorias'])->name('cate
 
 // Rutas de usuarios
 
-Route::post('/usuarios', [UserController::class, 'store'])->name('users.store'); 
+Route::post('/usuarios', [UserController::class, 'store'])->name('users.store');
 Route::put('/usuarios/{id}', [UserController::class, 'update'])->name('users.update');
 Route::delete('/usuarios/{id}', [UserController::class, 'destroy'])->name('users.destroy');
 
@@ -185,4 +185,4 @@ Route::delete('/admin/gestionar_citas/{id}', [CitaController::class, 'destroy'])
 Route::put('admin/gestionar_citas/{id}/actualizar-estado', [CitaController::class, 'actualizar_estado'])->name('citas.actualizar_estado');
 
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
