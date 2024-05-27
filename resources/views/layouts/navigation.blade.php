@@ -51,21 +51,21 @@
         </button>
 
         <!-- Dropdown menu -->
-        <div id="dropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
-            <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+        <div id="dropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 text-gray-700">
+            <ul class=" text-sm text-gray-900" aria-labelledby="dropdownDefaultButton">
                 <li>
-                    <a href="('profile')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
+                    <a href="('profile')" class="block px-4 py-2 hover:rounded-t-lg hover:bg-gray-100 dark:hover:bg-gray-200 ">Mi perfil</a>
                 </li>
                 <li>
-                    <a href="('historial-citas')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</a>
+                    <a href="('historial-citas')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200">Historial de citas</a>
                 </li>
                 <li>
-                    <a href="('historial-pedidos')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Earnings</a>
+                    <a href="('historial-pedidos')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200">Historial de pedidos</a>
                 </li>
                 <li>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
-                        <a class="block px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();">
+                        <a class="block px-4 py-2 cursor-pointer hover:bg-red-500 hover:rounded-b-lg" :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();">
                             {{ __('Cerrar sesión') }}
                         </a>
                     </form>

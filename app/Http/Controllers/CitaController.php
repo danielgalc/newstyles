@@ -41,7 +41,7 @@ class CitaController extends Controller
             ->where('estado', 'finalizada')
             ->orderBy('fecha', 'desc')
             ->orderBy('hora', 'desc')
-            ->get();
+            ->paginate(9);
     
         // Obtiene todos los peluqueros
         $users = User::where('rol', 'peluquero')->get();
