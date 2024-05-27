@@ -1,5 +1,3 @@
-<!-- resources/views/admin/citas.blade.php -->
-
 @extends('layouts.admin_layout')
 
 @section('title', 'Gestionar Citas')
@@ -14,46 +12,52 @@
             Añadir nueva cita
         </button>
     </div>
+    
+    <!-- FILTRO POR ESTADO -->
+    <div class="mb-4">
+        <form method="GET" action="{{ route('admin.citas') }}" id="filter-form">
+            <select class="rounded" name="estado" id="filtro-citas" onchange="document.getElementById('filter-form').submit();">
+                <option value="" {{ request('estado') == '' ? 'selected' : '' }}>Mostrar todo</option>
+                <option value="aceptada" {{ request('estado') == 'aceptada' ? 'selected' : '' }}>Aceptada</option>
+                <option value="cancelada" {{ request('estado') == 'cancelada' ? 'selected' : '' }}>Cancelada</option>
+                <option value="finalizada" {{ request('estado') == 'finalizada' ? 'selected' : '' }}>Finalizada</option>
+            </select>
+        </form>
+    </div>
+    
     @if ($citas->count() > 0)
     <table class="min-w-full divide-y divide-gray-200 rounded-lg overflow-hidden">
         <thead class="bg-gray-50">
             <tr>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">ID</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Usuario
-                </th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Peluquero
-                </th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Servicio
-                </th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Fecha
-                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Usuario</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Peluquero</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Servicio</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Fecha</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Hora</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Estado
-                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Estado</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Cambiar estado</th>
             </tr>
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
             @foreach ($citas as $cita)
-            <tr class="hover:bg-teal-200 cursor-pointer w-full">
-
+            <tr class="hover:bg-teal-200 cursor-pointer w-full cita-row" data-estado="{{ $cita->estado }}">
                 <td class="px-6 py-4 whitespace-nowrap text-center" data-modal-toggle="edit_cita_modal_{{ $cita->id }}" data-modal-target="edit_cita_modal_{{ $cita->id }}">{{ $cita->id }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-center" data-modal-toggle="edit_cita_modal_{{ $cita->id }}" data-modal-target="edit_cita_modal_{{ $cita->id }}">{{ $cita->user->name }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-center" data-modal-toggle="edit_cita_modal_{{ $cita->id }}" data-modal-target="edit_cita_modal_{{ $cita->id }}">{{ $cita->peluquero->name }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-center" data-modal-toggle="edit_cita_modal_{{ $cita->id }}" data-modal-target="edit_cita_modal_{{ $cita->id }}">{{ $cita->servicio }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-center" data-modal-toggle="edit_cita_modal_{{ $cita->id }}" data-modal-target="edit_cita_modal_{{ $cita->id }}">{{ $cita->fecha }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-center" data-modal-toggle="edit_cita_modal_{{ $cita->id }}" data-modal-target="edit_cita_modal_{{ $cita->id }}">{{ $cita->hora }}
-                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-center" data-modal-toggle="edit_cita_modal_{{ $cita->id }}" data-modal-target="edit_cita_modal_{{ $cita->id }}">{{ $cita->hora }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-center" data-modal-toggle="edit_cita_modal_{{ $cita->id }}" data-modal-target="edit_cita_modal_{{ $cita->id }}">{{ $cita->estado }}</td>
                 <td class="px-6 py-4 whitespace-nowrap">
                     <form action="{{ route('citas.actualizar_estado', ['id' => $cita->id]) }}" method="POST">
                         @csrf
                         @method('PUT')
-                        <select name="estado" onchange="this.form.submit()" class="bg-gray-50 border border-gray-300 text-gray-900 text-md rounded-lg focus:ring-teal-500 focus:border-teal-500 block w-full text-center p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-teal-500 dark:focus:border-teal-500">
-                            <option value="aceptada" {{ $cita->estado == 'aceptada' ? 'selected' : '' }}>
-                                Aceptada</option>
-                            <option value="cancelada" {{ $cita->estado == 'cancelada' ? 'selected' : '' }}>
-                                Cancelada</option>
-                            <option value="finalizada" {{ $cita->estado == 'finalizada' ? 'selected' : '' }}>
-                                Finalizada</option>
+                        <select name="estado" onchange="this.form.submit()" class="bg-gray-50 border border-gray-300 text-gray-900 text-md rounded-lg focus:ring-teal-500 focus:border-teal-500 block w-full text-center p-2.5">
+                            <option value="" selected>Elegir estado</option>    
+                            <option value="aceptada" {{ $cita->estado == 'aceptada' ? '' : '' }}>Aceptada</option>
+                            <option value="cancelada" {{ $cita->estado == 'cancelada' ? '' : '' }}>Cancelada</option>
+                            <option value="finalizada" {{ $cita->estado == 'finalizada' ? '' : '' }}>Finalizada</option>
                         </select>
                     </form>
                 </td>
@@ -88,7 +92,7 @@
             </div>
             <!-- Modal body -->
             <!-- Form Editar -->
-            <form action="{{ route('citas.update', ['id' => $cita->id]) }}" method="post" class="p-4 md:p-5">
+            <form action="{{ route('citas.update', ['id' => $cita->id]) }}" method="POST" class="p-4 md:p-5">
                 @csrf
                 @method('PUT')
                 <div class="grid gap-4 mb-4 grid-cols-2">
@@ -112,7 +116,7 @@
                     {{-- FIXEAR EL VALUE DE HORA EN EL EDITAR --}}
                     <div class="col-span-2">
                         <label for="hora" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Hora</label>
-                        <input id="hora" name="hora" type="time" {{-- REVISAR EL TIPO DEL INPUT --}} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ \Carbon\Carbon::parse($cita->hora)->format('H:i') }}" placeholder="HH:mm" required>
+                        <input id="hora" name="hora" type="time" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ \Carbon\Carbon::parse($cita->hora)->format('H:i') }}" placeholder="HH:mm" required>
                     </div>
                     <div class="col-span-2">
                         <label for="servicio" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Servicio</label>
@@ -207,8 +211,7 @@
                 @csrf
                 <div class="grid gap-4 mb-4 grid-cols-2">
                     <div class="col-span-2">
-                        <label for="user_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">ID
-                            Cliente</label>
+                        <label for="user_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">ID Cliente</label>
                         <input type="text" name="user_id" id="user_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Introduzca el ID del cliente" required>
                     </div>
                     <div class="col-span-2">
@@ -248,4 +251,25 @@
         </div>
     </div>
 </div>
+
+<!-- SCRIPT PARA FILTRAR POR ESTADOS -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const filterSelect = document.getElementById('filtro-citas');
+    const tableRows = document.querySelectorAll('.cita-row');
+
+    filterSelect.addEventListener('change', function () {
+        const filterValue = filterSelect.value;
+        tableRows.forEach(row => {
+            const estado = row.getAttribute('data-estado');
+            if (filterValue === "" || estado === filterValue) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+});
+</script>
+
 @endsection

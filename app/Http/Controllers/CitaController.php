@@ -28,26 +28,31 @@ class CitaController extends Controller
     {
         // Obtiene el usuario actualmente autenticado
         $user = auth()->user();
-
+    
         // Obtiene la próxima cita (no finalizada)
         $proximaCita = Cita::where('user_id', $user->id)
             ->where('estado', '<>', 'finalizada')
             ->orderBy('fecha', 'asc')
             ->orderBy('hora', 'asc')
             ->first();
-
+    
         // Obtiene todas las citas finalizadas, ordenadas de más recientes a más antiguas
         $citasFinalizadas = Cita::where('user_id', $user->id)
             ->where('estado', 'finalizada')
             ->orderBy('fecha', 'desc')
             ->orderBy('hora', 'desc')
-            ->get();
-
+            ->paginate(9);
+    
+        // Obtiene todos los peluqueros
+        $users = User::where('rol', 'peluquero')->get();
+    
         return view('citas.historial-citas', [
             'proximaCita' => $proximaCita,
             'citasFinalizadas' => $citasFinalizadas,
+            'users' => $users,
         ]);
     }
+    
 
     public function cancelar(Request $request, $id)
     {
@@ -57,6 +62,7 @@ class CitaController extends Controller
 
         return redirect()->route('historial-citas')->with('success', 'Cita cancelada con éxito.');
     }
+
 
 
     /**
@@ -112,7 +118,7 @@ class CitaController extends Controller
             $cita->save();
 
 
-            return redirect('/admin/gestionar_citas')->with('success', 'Cita añadida con éxito.');
+            return redirect('/admin/citas')->with('success', 'Cita añadida con éxito.');
         }
 
 
@@ -161,9 +167,30 @@ class CitaController extends Controller
 
         $cita->save();
 
-        return redirect('/admin/gestionar_citas')
+        return redirect('/admin/citas')
             ->with('success', 'Cita modificada con éxito.');
     }
+
+    public function updateFromHistorial(Request $request, string $id)
+    {
+        $cita = Cita::findOrFail($id);
+    
+        $newData = [
+            'peluquero_id' => $request->input('peluquero_id'),
+            'fecha' => $request->input('fecha'),
+            'hora' => $request->input('hora'),
+        ];
+    
+        $cita->peluquero_id = $newData['peluquero_id'];
+        $cita->fecha = $newData['fecha'];
+        $cita->hora = $newData['hora'];
+        $cita->estado = 'pendiente';
+    
+        $cita->save();
+    
+        return redirect()->route('historial-citas')->with('success', 'Cita modificada con éxito.');
+    }
+
 
     /**
      * Remove the specified resource from storage.
@@ -174,7 +201,7 @@ class CitaController extends Controller
 
         $cita->delete();
 
-        return redirect('/admin/gestionar_citas')
+        return redirect('/admin/citas')
             ->with('success', 'Cita eliminada con éxito.');
     }
 

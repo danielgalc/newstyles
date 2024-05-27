@@ -107,7 +107,9 @@ Route::middleware('auth', 'verified', 'comprobarRol')->group(function () {
     Route::get('/citas/{id}/create', [CitaController::class, 'create']);
     Route::post('/citas', [CitaController::class, 'store'])->name('citas.store');
     Route::get('/historial-citas', [CitaController::class, 'historial'])->name('historial-citas');
-    Route::post('/citas/{id}/cancelar', [CitaController::class, 'cancelar'])->name('citas.cancelar');
+    Route::put('/citas/updateFromHistorial/{id}', [CitaController::class, 'updateFromHistorial'])->name('citas.updateFromHistorial');
+
+    Route::put('/citas/{id}/cancelar', [CitaController::class, 'cancelar'])->name('citas.cancelar');
 
     // Perfil del usuario
     Route::middleware('auth')->group(function () {

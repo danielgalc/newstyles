@@ -27,17 +27,21 @@ class AdminController extends Controller
         return view('admin.usuarios.usuarios', compact('usuarios', 'rol'));
     }
 
-    public function gestionarCitas()
+    public function gestionarCitas(Request $request)
     {
-        $citas = Cita::paginate(5);
-        // Dando formato con Carbon
-
-
+        $estado = $request->input('estado'); // Obtener el filtro de estado desde la solicitud
+    
+        // Aplicar filtro de estado si está presente
+        if ($estado) {
+            $citas = Cita::where('estado', $estado)->orderBy('fecha', 'desc')->paginate(5);
+        } else {
+            $citas = Cita::orderBy('fecha', 'desc')->paginate(5);
+        }
+    
         $servicios = Servicio::all();
         $users = User::where('rol', 'peluquero')->get();
-        /* dd($users); */
-
-        return view('admin.citas.gestionar_citas', compact('citas', 'servicios', 'users'));
+    
+        return view('admin.citas.gestionar_citas', compact('citas', 'servicios', 'users', 'estado'));
     }
 
     public function listaServicios()
