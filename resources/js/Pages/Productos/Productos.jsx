@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import Banner from '@/Components/Banner';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'; 
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import GuestLayout from '@/Layouts/GuestLayout';
 import Grid from '@/Components/Productos/Grid';
-import axios from 'axios'; 
-import debounce from 'lodash/debounce'; 
+import axios from 'axios';
+import debounce from 'lodash/debounce';
 
 export default function Productos({ auth, productos, search }) {
   const [searchTerm, setSearchTerm] = useState(search || '');
@@ -29,8 +29,8 @@ export default function Productos({ auth, productos, search }) {
 
   const fetchProductos = debounce(async (search) => {
     try {
-      const response = await axios.get(route('productos.productos'), { 
-        params: { search, sortBy, category: selectedCategory } 
+      const response = await axios.get(route('productos.productos'), {
+        params: { search, sortBy, category: selectedCategory }
       }); // Agregar la categoría al filtrado
       setFilteredProductos(response.data.productos);
     } catch (error) {
@@ -40,8 +40,8 @@ export default function Productos({ auth, productos, search }) {
 
   // useEffect para actualizar la lista de productos cuando cambian searchTerm, sortBy o selectedCategory
   useEffect(() => {
-    if (searchTerm || sortBy || selectedCategory) { 
-      fetchProductos(searchTerm); 
+    if (searchTerm || sortBy || selectedCategory) {
+      fetchProductos(searchTerm);
     } else {
       setFilteredProductos(productos);
     }
@@ -52,7 +52,7 @@ export default function Productos({ auth, productos, search }) {
   }, [searchTerm, sortBy, selectedCategory]);
 
   const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value); 
+    setSearchTerm(e.target.value);
   };
 
   const handleSortChange = (e) => {
@@ -78,14 +78,14 @@ export default function Productos({ auth, productos, search }) {
               placeholder="Buscar productos..."
               className="p-2 border rounded-md w-3/4"
             />
-            <select onChange={handleSortChange} className="p-2 border rounded-md ml-4">
+            <select onChange={handleSortChange} className="p-2 border rounded-md ml-4 w-52">
               <option value="">Ordenar por...</option>
               <option value="asc">A - Z</option>
               <option value="desc">Z - A</option>
               <option value="price_asc">Menor a mayor precio</option>
               <option value="price_desc">Mayor a menor precio</option>
             </select>
-            <select onChange={handleCategoryChange} className="p-2 border rounded-md ml-4">
+            <select onChange={handleSortChange} className="p-2 border rounded-md ml-4 w-52">
               <option value="">Seleccionar categoría...</option>
               {/* Mapea sobre el estado 'categorias' para generar las opciones del select */}
               {categorias.map((categoria, index) => (
