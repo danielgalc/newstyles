@@ -16,17 +16,16 @@ class AdminController extends Controller
     public function usuarios(Request $request)
     {
         $rol = $request->input('rol'); // Obtener el filtro de rol desde la solicitud
-    
+
         // Aplicar filtro de rol si está presente
         if ($rol) {
             $usuarios = User::where('rol', $rol)->orderBy('updated_at', 'desc')->paginate(8);
         } else {
             $usuarios = User::orderBy('updated_at', 'desc')->paginate(8);
         }
-    
+
         return view('admin.usuarios.usuarios', compact('usuarios', 'rol'));
     }
-    
 
     public function gestionarCitas()
     {
@@ -52,6 +51,8 @@ class AdminController extends Controller
         $productos = Producto::paginate(8);
         return view('admin.productos.lista_productos', compact('productos'));
     }
+    
+
 
     public function mostrarDatos()
     {

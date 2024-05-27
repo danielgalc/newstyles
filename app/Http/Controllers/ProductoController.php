@@ -12,11 +12,36 @@ class ProductoController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search');
+        $sortBy = $request->input('sortBy');
+        $category = $request->input('category'); // Obtener la categoría seleccionada
+
         $query = Producto::query();
 
         if ($search) {
             $query->where('nombre', 'ilike', "%{$search}%")
-                  ->orWhere('descripcion', 'ilike', "%{$search}%");
+                ->orWhere('descripcion', 'ilike', "%{$search}%");
+        }
+
+        if ($category) {
+            $query->where('categoria', $category); // Filtrar por categoría
+        }
+
+        switch ($sortBy) {
+            case 'asc':
+                $query->orderBy('nombre', 'asc');
+                break;
+            case 'desc':
+                $query->orderBy('nombre', 'desc');
+                break;
+            case 'price_asc':
+                $query->orderBy('precio', 'asc');
+                break;
+            case 'price_desc':
+                $query->orderBy('precio', 'desc');
+                break;
+            default:
+                $query->orderBy('id', 'desc');
+                break;
         }
 
         $productos = $query->paginate(8);
@@ -32,17 +57,15 @@ class ProductoController extends Controller
             'search' => $search,
         ]);
     }
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+
+    public function categorias()
     {
-        $producto = new Producto();
+        $categorias = Producto::select('categoria')
+            ->distinct()
+            ->whereNotNull('categoria')
+            ->pluck('categoria');
 
-
-        return view('productos.create', [
-            'producto' => $producto,
-        ]);
+        return response()->json($categorias);
     }
 
     /**
@@ -57,6 +80,7 @@ class ProductoController extends Controller
         $producto->precio = $request->input('precio');
         $producto->imagen = $request->input('imagen');
         $producto->stock = $request->input('stock');
+        $producto->categoria = $request->input('categoria');
 
         $producto->save();
 
@@ -97,10 +121,11 @@ class ProductoController extends Controller
         $producto->precio = $request->input('precio');
         $producto->imagen = $request->input('imagen');
         $producto->stock = $request->input('stock');
+        $producto->categoria = $request->input('categoria');
 
         $producto->save();
 
-        return redirect('/admin/lista_productos')
+        return redirect('/admin/productos')
             ->with('success', 'Producto modificado con éxito.');
     }
 

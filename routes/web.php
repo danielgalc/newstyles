@@ -106,6 +106,8 @@ Route::middleware('auth', 'verified', 'comprobarRol')->group(function () {
     Route::get('/citas', [CitaController::class, 'index']);
     Route::get('/citas/{id}/create', [CitaController::class, 'create']);
     Route::post('/citas', [CitaController::class, 'store'])->name('citas.store');
+    Route::get('/historial-citas', [CitaController::class, 'historial'])->name('historial-citas');
+    Route::post('/citas/{id}/cancelar', [CitaController::class, 'cancelar'])->name('citas.cancelar');
 
     // Perfil del usuario
     Route::middleware('auth')->group(function () {
@@ -147,6 +149,9 @@ Route::put('/productos/{id}', [ProductoController::class, 'update'])
     ->name('productos.update');
 
 Route::delete('/productos/{id}', [ProductoController::class, 'destroy'])->name('productos.destroy');
+
+Route::get('/categorias', [ProductoController::class, 'categorias'])->name('categorias'); // Obtener las categorías de los productos para luego mapearlas en el filtro
+
 
 
 
