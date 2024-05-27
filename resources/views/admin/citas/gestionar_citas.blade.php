@@ -29,6 +29,7 @@
                 </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Hora</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Estado
+                </th><th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Cambiar estado
                 </th>
             </tr>
         </thead>
@@ -41,18 +42,19 @@
                 <td class="px-6 py-4 whitespace-nowrap text-center" data-modal-toggle="edit_cita_modal_{{ $cita->id }}" data-modal-target="edit_cita_modal_{{ $cita->id }}">{{ $cita->peluquero->name }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-center" data-modal-toggle="edit_cita_modal_{{ $cita->id }}" data-modal-target="edit_cita_modal_{{ $cita->id }}">{{ $cita->servicio }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-center" data-modal-toggle="edit_cita_modal_{{ $cita->id }}" data-modal-target="edit_cita_modal_{{ $cita->id }}">{{ $cita->fecha }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-center" data-modal-toggle="edit_cita_modal_{{ $cita->id }}" data-modal-target="edit_cita_modal_{{ $cita->id }}">{{ $cita->hora }}
-                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-center" data-modal-toggle="edit_cita_modal_{{ $cita->id }}" data-modal-target="edit_cita_modal_{{ $cita->id }}">{{ $cita->hora }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-center" data-modal-toggle="edit_cita_modal_{{ $cita->id }}" data-modal-target="edit_cita_modal_{{ $cita->id }}">{{ $cita->estado }}</td>
                 <td class="px-6 py-4 whitespace-nowrap">
                     <form action="{{ route('citas.actualizar_estado', ['id' => $cita->id]) }}" method="POST">
                         @csrf
                         @method('PUT')
-                        <select name="estado" onchange="this.form.submit()" class="bg-gray-50 border border-gray-300 text-gray-900 text-md rounded-lg focus:ring-teal-500 focus:border-teal-500 block w-full text-center p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-teal-500 dark:focus:border-teal-500">
-                            <option value="aceptada" {{ $cita->estado == 'aceptada' ? 'selected' : '' }}>
+                        <select name="estado" onchange="this.form.submit()" class="bg-gray-50 border border-gray-300 text-gray-900 text-md rounded-lg focus:ring-teal-500 focus:border-teal-500 block w-full text-center p-2.5">
+                        <option value="" selected>Elegir estado</option>    
+                        <option value="aceptada" {{ $cita->estado == 'aceptada' ? '' : '' }}>
                                 Aceptada</option>
-                            <option value="cancelada" {{ $cita->estado == 'cancelada' ? 'selected' : '' }}>
+                            <option value="cancelada" {{ $cita->estado == 'cancelada' ? '' : '' }}>
                                 Cancelada</option>
-                            <option value="finalizada" {{ $cita->estado == 'finalizada' ? 'selected' : '' }}>
+                            <option value="finalizada" {{ $cita->estado == 'finalizada' ? '' : '' }}>
                                 Finalizada</option>
                         </select>
                     </form>
@@ -88,7 +90,7 @@
             </div>
             <!-- Modal body -->
             <!-- Form Editar -->
-            <form action="{{ route('citas.update', ['id' => $cita->id]) }}" method="post" class="p-4 md:p-5">
+            <form action="{{ route('citas.update', ['id' => $cita->id]) }}" method="POST" class="p-4 md:p-5">
                 @csrf
                 @method('PUT')
                 <div class="grid gap-4 mb-4 grid-cols-2">
