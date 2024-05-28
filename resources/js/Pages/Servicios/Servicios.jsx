@@ -6,9 +6,10 @@ import GridServicios from '@/Components/Servicios/GridServicios';
 import axios from 'axios';
 import debounce from 'lodash/debounce';
 
-export default function Servicios({ auth, servicios: initialServicios, search }) {
+export default function Servicios({ auth, servicios, search }) {
   const [searchTerm, setSearchTerm] = useState(search || '');
-  const [filteredServicios, setFilteredServicios] = useState(initialServicios);
+  const [sortBy, setSortBy] = useState(null); // Estado para el tipo de orden
+  const [filteredServicios, setFilteredServicios] = useState(servicios);
 
   const fetchServicios = debounce(async (search) => {
     try {
@@ -25,13 +26,13 @@ export default function Servicios({ auth, servicios: initialServicios, search })
     if (searchTerm) {
       fetchServicios(searchTerm);
     } else {
-      setFilteredServicios(initialServicios);
+      setFilteredServicios(servicios);
     }
 
     return () => {
       fetchServicios.cancel();
     };
-  }, [searchTerm, initialServicios]);
+  }, [searchTerm, servicios]);
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
