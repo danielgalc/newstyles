@@ -1,8 +1,12 @@
+// ServicioCard.jsx
 import React, { useState } from 'react';
 import ModalReserva from './ModalReserva';
+import ModalConfirmacion from './ModalConfirmacion'; // Importa el nuevo modal
 
 export default function ServicioCard({ servicio, userId, peluqueros }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false); // Estado para el modal de confirmación
+  const [reservaInfo, setReservaInfo] = useState(null); // Estado para la información de la reserva
 
   const handleReserveClick = () => {
     setIsModalOpen(true);
@@ -10,6 +14,16 @@ export default function ServicioCard({ servicio, userId, peluqueros }) {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
+  };
+
+  const handleConfirmModalClose = () => {
+    setIsConfirmModalOpen(false);
+  };
+
+  const handleReservaSuccess = (info) => {
+    setReservaInfo(info);
+    setIsModalOpen(false);
+    setIsConfirmModalOpen(true);
   };
 
   return (
@@ -25,7 +39,19 @@ export default function ServicioCard({ servicio, userId, peluqueros }) {
           Reservar
         </button>
       </div>
-      <ModalReserva servicio={servicio} isOpen={isModalOpen} onClose={handleCloseModal} userId={userId} peluqueros={peluqueros} />
+      <ModalReserva
+        servicio={servicio}
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        onSuccess={handleReservaSuccess} // Pasa la función de éxito
+        userId={userId}
+        peluqueros={peluqueros}
+      />
+      <ModalConfirmacion
+        isOpen={isConfirmModalOpen}
+        onClose={handleConfirmModalClose}
+        reservaInfo={reservaInfo}
+      />
     </div>
   );
 }

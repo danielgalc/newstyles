@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-export default function ModalReserva({ servicio, isOpen, onClose, userId, peluqueros }) {
+export default function ModalReserva({ servicio, isOpen, onClose, onSuccess, userId, peluqueros }) {
   const [peluqueroId, setPeluqueroId] = useState('');
   const [fecha, setFecha] = useState('');
   const [hora, setHora] = useState('');
@@ -18,7 +18,7 @@ export default function ModalReserva({ servicio, isOpen, onClose, userId, peluqu
         servicio: servicio.id,
       });
       if (response.status === 200) {
-        onClose();
+        onSuccess({ fecha, hora, servicio });
       }
     } catch (error) {
       console.error('Error reservando la cita:', error);
