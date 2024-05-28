@@ -1,6 +1,6 @@
 <x-app-layout>
     <div class="w-full h-24 flex items-center justify-center bg-teal-400 shadow-md">
-        <h2 class="font-righteous text-4xl text-gray-800 leading-tight">
+        <h2 class="text-4xl text-gray-800 leading-tight banner-text">
             {{ __('Historial de Citas') }}
         </h2>
     </div>

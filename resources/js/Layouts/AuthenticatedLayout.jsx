@@ -10,10 +10,10 @@ export default function Authenticated({ user, header, children }) {
 
     return (
         <div className="min-h-screen">
-            <nav className="bg-gray-900 p-4 w-full flex items-center justify-between">
+            <nav className="bg-gray-900 py-[10px] pl-5 w-full flex items-center justify-center">
                 <div className="flex items-center">
                     <Link href="/">
-                        <ApplicationLogo className="w-44 h-30 fill-current text-gray-500" />
+                        <ApplicationLogo className="fill-current text-gray-500" />
                     </Link>
                 </div>
 

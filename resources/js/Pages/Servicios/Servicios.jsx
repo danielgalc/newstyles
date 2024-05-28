@@ -49,12 +49,12 @@ export default function Servicios({ auth, servicios, search }) {
         <AuthenticatedLayout user={auth.user}>
           <Banner text="Listado de servicios" />
           <div className="flex justify-center items-center my-4">
-            <input
+          <input
               type="text"
               value={searchTerm}
               onChange={handleSearchChange}
               placeholder="Buscar servicios..."
-              className="p-2 border rounded-md w-3/4"
+              className="p-2 border rounded-md w-1/4"
             />
             <select onChange={handleSortChange} className="p-2 border rounded-md ml-4 w-52">
               <option value="">Ordenar por...</option>
