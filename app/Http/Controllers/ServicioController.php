@@ -20,6 +20,8 @@ class ServicioController extends Controller
 public function index(Request $request)
 {
     $search = $request->input('search');
+    $sortBy = $request->input('sortBy');
+
     
     // Construimos la query base para Servicio
     $query = Servicio::query();
@@ -28,11 +30,30 @@ public function index(Request $request)
     if ($search) {
         $query->where('nombre', 'ilike', "%{$search}%");
     }
+
+    // Filtro orden
+    switch ($sortBy) {
+        case 'asc':
+            $query->orderBy('nombre', 'asc');
+            break;
+        case 'desc':
+            $query->orderBy('nombre', 'desc');
+            break;
+        case 'price_asc':
+            $query->orderBy('precio', 'asc');
+            break;
+        case 'price_desc':
+            $query->orderBy('precio', 'desc');
+            break;
+        default:
+            $query->orderBy('id', 'desc');
+            break;
+    }
     
     // Obtenemos todos los servicios que cumplen con la condición
-    $servicios = $query->paginate(20); // Usamos paginate en lugar de get para incluir la estructura de paginación
+    $servicios = $query->paginate(20);
 
-    // Si el request espera una respuesta JSON, retornamos los servicios en formato JSON
+    // Si el request espera una respuesta JSON
     if ($request->wantsJson()) {
         return response()->json($servicios);
     }

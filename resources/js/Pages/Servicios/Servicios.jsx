@@ -14,7 +14,7 @@ export default function Servicios({ auth, servicios, search }) {
   const fetchServicios = debounce(async (search) => {
     try {
       const response = await axios.get(route('servicios.servicios'), {
-        params: { search }
+        params: { search, sortBy }
       });
       setFilteredServicios(response.data);
     } catch (error) {
@@ -23,7 +23,7 @@ export default function Servicios({ auth, servicios, search }) {
   }, 300);
 
   useEffect(() => {
-    if (searchTerm) {
+    if (searchTerm || sortBy) {
       fetchServicios(searchTerm);
     } else {
       setFilteredServicios(servicios);
@@ -32,10 +32,15 @@ export default function Servicios({ auth, servicios, search }) {
     return () => {
       fetchServicios.cancel();
     };
-  }, [searchTerm, servicios]);
+  }, [searchTerm, sortBy, servicios]);
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
+  };
+
+  const handleSortChange = (e) => {
+    const selectedSort = e.target.value;
+    setSortBy(selectedSort); // Actualizar el estado de sortBy
   };
 
   return (
@@ -51,6 +56,13 @@ export default function Servicios({ auth, servicios, search }) {
               placeholder="Buscar servicios..."
               className="p-2 border rounded-md w-3/4"
             />
+            <select onChange={handleSortChange} className="p-2 border rounded-md ml-4 w-52">
+              <option value="">Ordenar por...</option>
+              <option value="asc">A - Z</option>
+              <option value="desc">Z - A</option>
+              <option value="price_asc">Menor a mayor precio</option>
+              <option value="price_desc">Mayor a menor precio</option>
+            </select>
           </div>
           <GridServicios servicios={filteredServicios} />
         </AuthenticatedLayout>
@@ -65,6 +77,13 @@ export default function Servicios({ auth, servicios, search }) {
               placeholder="Buscar servicios..."
               className="p-2 border rounded-md w-1/4"
             />
+            <select onChange={handleSortChange} className="p-2 border rounded-md ml-4 w-52">
+              <option value="">Ordenar por...</option>
+              <option value="asc">A - Z</option>
+              <option value="desc">Z - A</option>
+              <option value="price_asc">Menor a mayor precio</option>
+              <option value="price_desc">Mayor a menor precio</option>
+            </select>
           </div>
           <GridServicios servicios={filteredServicios} />
         </GuestLayout>
