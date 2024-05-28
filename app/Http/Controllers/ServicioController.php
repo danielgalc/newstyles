@@ -19,17 +19,55 @@ class ServicioController extends Controller
 
 public function index(Request $request)
 {
-    $serviciosPrincipales = Servicio::where('clase', 'principal')->get();
-    $serviciosSecundarios = Servicio::where('clase', 'secundario')->get();
+    $search = $request->input('search');
+    $sortBy = $request->input('sortBy');
 
-    $peluqueros = User::where('rol', 'empleado')->get();
+    
+    // Construimos la query base para Servicio
+    $query = Servicio::query();
 
-    return Inertia::render('Servicios', [
-        'serviciosPrincipales' => $serviciosPrincipales,
-        'serviciosSecundarios' => $serviciosSecundarios,
+    $peluqueros = User::where('rol', 'peluquero')->get();
+    
+    // Si hay una búsqueda, agregamos la condición a la query
+    if ($search) {
+        $query->where('nombre', 'ilike', "%{$search}%");
+    }
+
+    // Filtro orden
+    switch ($sortBy) {
+        case 'asc':
+            $query->orderBy('nombre', 'asc');
+            break;
+        case 'desc':
+            $query->orderBy('nombre', 'desc');
+            break;
+        case 'price_asc':
+            $query->orderBy('precio', 'asc');
+            break;
+        case 'price_desc':
+            $query->orderBy('precio', 'desc');
+            break;
+        default:
+            $query->orderBy('id', 'desc');
+            break;
+    }
+    
+    // Obtenemos todos los servicios que cumplen con la condición
+    $servicios = $query->paginate(20);
+
+    // Si el request espera una respuesta JSON
+    if ($request->wantsJson()) {
+        return response()->json($servicios);
+    }
+
+    // Si no, renderizamos la vista con Inertia
+    return Inertia::render('Servicios/Servicios', [
+        'servicios' => $servicios,
+        'search' => $search,
         'peluqueros' => $peluqueros,
     ]);
 }
+
 
 
     /**

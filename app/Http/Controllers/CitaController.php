@@ -25,34 +25,43 @@ class CitaController extends Controller
     }
 
     public function historial()
-    {
-        // Obtiene el usuario actualmente autenticado
-        $user = auth()->user();
-    
-        // Obtiene la próxima cita (no finalizada)
-        $proximaCita = Cita::where('user_id', $user->id)
-            ->where('estado', '<>', 'finalizada')
+{
+    // Obtiene el usuario actualmente autenticado
+    $user = auth()->user();
+
+    // Obtiene la próxima cita activa (aceptada o pendiente)
+    $proximaCitaActiva = Cita::where('user_id', $user->id)
+        ->whereIn('estado', ['aceptada', 'pendiente'])
+        ->orderBy('fecha', 'asc')
+        ->orderBy('hora', 'asc')
+        ->first();
+
+    // Si no hay citas activas, obtiene la próxima cita inactiva (cancelada)
+    $proximaCitaInactiva = null;
+    if (!$proximaCitaActiva) {
+        $proximaCitaInactiva = Cita::where('user_id', $user->id)
+            ->where('estado', 'cancelada')
             ->orderBy('fecha', 'asc')
             ->orderBy('hora', 'asc')
             ->first();
-    
-        // Obtiene todas las citas finalizadas, ordenadas de más recientes a más antiguas
-        $citasFinalizadas = Cita::where('user_id', $user->id)
-            ->where('estado', 'finalizada')
-            ->orderBy('fecha', 'desc')
-            ->orderBy('hora', 'desc')
-            ->paginate(9);
-    
-        // Obtiene todos los peluqueros
-        $users = User::where('rol', 'peluquero')->get();
-    
-        return view('citas.historial-citas', [
-            'proximaCita' => $proximaCita,
-            'citasFinalizadas' => $citasFinalizadas,
-            'users' => $users,
-        ]);
     }
-    
+
+    // Obtiene todas las citas finalizadas o canceladas, ordenadas de más recientes a más antiguas
+    $citasFinalizadas = Cita::where('user_id', $user->id)
+        ->whereIn('estado', ['finalizada', 'cancelada'])
+        ->orderBy('fecha', 'desc')
+        ->orderBy('hora', 'desc')
+        ->get();
+
+    // Obtiene todos los peluqueros
+    $users = User::where('rol', 'peluquero')->get();
+
+    return view('citas.historial-citas', [
+        'proximaCita' => $proximaCitaActiva ? $proximaCitaActiva : $proximaCitaInactiva,
+        'citasFinalizadas' => $citasFinalizadas,
+        'users' => $users,
+    ]);
+}
 
     public function cancelar(Request $request, $id)
     {
@@ -104,6 +113,7 @@ class CitaController extends Controller
 
         // Obtener el nombre del servicio desde la solicitud
         $servicio = $request->input('servicio');
+
         //dd($servicioId);
 
         // Asociar el nombre del servicio a la relación "servicio"
@@ -121,10 +131,11 @@ class CitaController extends Controller
             return redirect('/admin/citas')->with('success', 'Cita añadida con éxito.');
         }
 
+        $cita->servicio = Servicio::findOrFail($servicio)->nombre; // Asigna el nombre del servicio a la cita
 
         $cita->save();
 
-        return redirect('/citas')->with('success', 'Cita añadida con éxito.');
+        return redirect('/historial-citas')->with('success', 'Cita añadida con éxito.');
     }
 
     /**
@@ -174,20 +185,20 @@ class CitaController extends Controller
     public function updateFromHistorial(Request $request, string $id)
     {
         $cita = Cita::findOrFail($id);
-    
+
         $newData = [
             'peluquero_id' => $request->input('peluquero_id'),
             'fecha' => $request->input('fecha'),
             'hora' => $request->input('hora'),
         ];
-    
+
         $cita->peluquero_id = $newData['peluquero_id'];
         $cita->fecha = $newData['fecha'];
         $cita->hora = $newData['hora'];
         $cita->estado = 'pendiente';
-    
+
         $cita->save();
-    
+
         return redirect()->route('historial-citas')->with('success', 'Cita modificada con éxito.');
     }
 

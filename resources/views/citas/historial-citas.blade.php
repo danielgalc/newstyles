@@ -1,11 +1,11 @@
 <x-app-layout>
     <div class="w-full h-24 flex items-center justify-center bg-teal-400 shadow-md">
-        <h2 class="font-righteous text-4xl text-gray-800 leading-tight">
+        <h2 class="text-4xl text-gray-800 leading-tight banner-text">
             {{ __('Historial de Citas') }}
         </h2>
     </div>
     <div class="container mx-auto mt-4">
-        @if($proximaCita && $proximaCita->estado == 'aceptada' || $proximaCita->estado == 'pendiente')
+        @if($proximaCita->estado=='aceptada' || $proximaCita->estado=='pendiente')
         <div class="proxima-cita bg-white p-4 rounded-md shadow-md mb-6 hover:bg-teal-100 cursor-pointer" data-modal-toggle="edit_cita_modal_{{ $proximaCita->id }}" data-modal-target="edit_cita_modal_{{ $proximaCita->id }}">
             <h2 class="text-xl font-semibold text-teal-600 mb-2">
                 Tu próxima cita es:
@@ -13,9 +13,10 @@
             <p><strong>Servicio:</strong> {{ $proximaCita->servicio }}</p>
             <p><strong>Fecha:</strong> {{ \Carbon\Carbon::parse($proximaCita->fecha)->format('d/m/Y') }}</p>
             <p><strong>Hora:</strong> {{ \Carbon\Carbon::parse($proximaCita->hora)->format('H:i') }}</p>
+            <p><strong>Peluquero:</strong> {{ $proximaCita->peluquero->name }}</p>
             <p><strong>Estado:</strong> {{ ucfirst($proximaCita->estado) }}</p>
         </div>
-        @elseif($proximaCita && $proximaCita->estado == 'cancelada' || $proximaCita->estado == 'pendiente' )
+        @elseif($proximaCita->estado == 'finalizada' || $proximaCita->estado == 'cancelada' )
         <div class="proxima-cita bg-white p-4 rounded-md shadow-md mb-6 hover:bg-teal-100">
             <h2 class="text-xl font-semibold text-teal-600 mb-2">
                 Tu última cita fue:
@@ -23,6 +24,7 @@
             <p><strong>Servicio:</strong> {{ $proximaCita->servicio }}</p>
             <p><strong>Fecha:</strong> {{ \Carbon\Carbon::parse($proximaCita->fecha)->format('d/m/Y') }}</p>
             <p><strong>Hora:</strong> {{ \Carbon\Carbon::parse($proximaCita->hora)->format('H:i') }}</p>
+            <p><strong>Peluquero:</strong> {{ $proximaCita->peluquero->name }}</p>
             <p><strong>Estado:</strong> {{ ucfirst($proximaCita->estado) }}</p>
         </div>
         @else
@@ -36,14 +38,15 @@
         @else
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             @foreach($citasFinalizadas as $cita)
-            <div class="cita-finalizada bg-white p-4 rounded-md shadow-md mb-4 hover:bg-teal-100 cursor-pointer" data-modal-toggle="edit_cita_modal_{{ $cita->id }}" data-modal-target="edit_cita_modal_{{ $cita->id }}">
+            <div class="cita-finalizada bg-white p-4 rounded-md shadow-md mb-4 hover:bg-teal-100" data-modal-toggle="edit_cita_modal_{{ $cita->id }}" data-modal-target="edit_cita_modal_{{ $cita->id }}">
                 <p><strong>Servicio:</strong> {{ $cita->servicio }}</p>
                 <p><strong>Fecha:</strong> {{ \Carbon\Carbon::parse($cita->fecha)->format('d/m/Y') }}</p>
                 <p><strong>Hora:</strong> {{ \Carbon\Carbon::parse($cita->hora)->format('H:i') }}</p>
+                <p><strong>Peluquero:</strong> {{ $cita->peluquero->name }}</p>
+                <p><strong>Estado:</strong> {{ ucfirst($cita->estado) }}</p>
             </div>
             @endforeach
         </div>
-        {{ $citasFinalizadas->links() }}
 
         @endif
     </div>
