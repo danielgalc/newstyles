@@ -42,8 +42,8 @@
                 <p><strong>Servicio:</strong> {{ $cita->servicio }}</p>
                 <p><strong>Fecha:</strong> {{ \Carbon\Carbon::parse($cita->fecha)->format('d/m/Y') }}</p>
                 <p><strong>Hora:</strong> {{ \Carbon\Carbon::parse($cita->hora)->format('H:i') }}</p>
-                <p><strong>Peluquero:</strong> {{ $proximaCita->peluquero->name }}</p>
-                <p><strong>Estado:</strong> {{ ucfirst($proximaCita->estado) }}</p>
+                <p><strong>Peluquero:</strong> {{ $cita->peluquero->name }}</p>
+                <p><strong>Estado:</strong> {{ ucfirst($cita->estado) }}</p>
             </div>
             @endforeach
         </div>
