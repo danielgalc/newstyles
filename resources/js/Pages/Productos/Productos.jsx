@@ -31,8 +31,10 @@ export default function Productos({ auth, productos, search }) {
     try {
       const response = await axios.get(route('productos.productos'), {
         params: { search, sortBy, category: selectedCategory }
-      }); // Agregar la categoría al filtrado
+      });
       setFilteredProductos(response.data.productos);
+      console.log(searchTerm);
+      console.log(filteredProductos);
     } catch (error) {
       console.error('Error fetching productos:', error);
     }

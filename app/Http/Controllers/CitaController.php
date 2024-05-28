@@ -29,16 +29,16 @@ class CitaController extends Controller
         // Obtiene el usuario actualmente autenticado
         $user = auth()->user();
     
-        // Obtiene la próxima cita (no finalizada)
+        // Obtiene la próxima cita (no finalizada ni cancelada)
         $proximaCita = Cita::where('user_id', $user->id)
-            ->where('estado', '<>', 'finalizada')
+            ->whereNotIn('estado', ['finalizada', 'cancelada'])
             ->orderBy('fecha', 'asc')
             ->orderBy('hora', 'asc')
             ->first();
     
-        // Obtiene todas las citas finalizadas, ordenadas de más recientes a más antiguas
+        // Obtiene todas las citas finalizadas o canceladas, ordenadas de más recientes a más antiguas
         $citasFinalizadas = Cita::where('user_id', $user->id)
-            ->where('estado', 'finalizada')
+            ->whereIn('estado', ['finalizada', 'cancelada'])
             ->orderBy('fecha', 'desc')
             ->orderBy('hora', 'desc')
             ->paginate(9);
@@ -52,6 +52,7 @@ class CitaController extends Controller
             'users' => $users,
         ]);
     }
+    
     
 
     public function cancelar(Request $request, $id)

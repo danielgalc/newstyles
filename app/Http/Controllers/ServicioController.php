@@ -19,17 +19,31 @@ class ServicioController extends Controller
 
 public function index(Request $request)
 {
-    $serviciosPrincipales = Servicio::where('clase', 'principal')->get();
-    $serviciosSecundarios = Servicio::where('clase', 'secundario')->get();
+    $search = $request->input('search');
+    
+    // Construimos la query base para Servicio
+    $query = Servicio::query();
+    
+    // Si hay una búsqueda, agregamos la condición a la query
+    if ($search) {
+        $query->where('nombre', 'ilike', "%{$search}%");
+    }
+    
+    // Obtenemos todos los servicios que cumplen con la condición
+    $servicios = $query->paginate(20); // Usamos paginate en lugar de get para incluir la estructura de paginación
 
-    $peluqueros = User::where('rol', 'empleado')->get();
+    // Si el request espera una respuesta JSON, retornamos los servicios en formato JSON
+    if ($request->wantsJson()) {
+        return response()->json($servicios);
+    }
 
-    return Inertia::render('Servicios', [
-        'serviciosPrincipales' => $serviciosPrincipales,
-        'serviciosSecundarios' => $serviciosSecundarios,
-        'peluqueros' => $peluqueros,
+    // Si no, renderizamos la vista con Inertia
+    return Inertia::render('Servicios/Servicios', [
+        'servicios' => $servicios,
+        'search' => $search,
     ]);
 }
+
 
 
     /**

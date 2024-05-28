@@ -36,7 +36,7 @@
         @else
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             @foreach($citasFinalizadas as $cita)
-            <div class="cita-finalizada bg-white p-4 rounded-md shadow-md mb-4 hover:bg-teal-100 cursor-pointer" data-modal-toggle="edit_cita_modal_{{ $cita->id }}" data-modal-target="edit_cita_modal_{{ $cita->id }}">
+            <div class="cita-finalizada bg-white p-4 rounded-md shadow-md mb-4 hover:bg-teal-100" data-modal-toggle="edit_cita_modal_{{ $cita->id }}" data-modal-target="edit_cita_modal_{{ $cita->id }}">
                 <p><strong>Servicio:</strong> {{ $cita->servicio }}</p>
                 <p><strong>Fecha:</strong> {{ \Carbon\Carbon::parse($cita->fecha)->format('d/m/Y') }}</p>
                 <p><strong>Hora:</strong> {{ \Carbon\Carbon::parse($cita->hora)->format('H:i') }}</p>

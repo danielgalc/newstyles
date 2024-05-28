@@ -61,7 +61,7 @@ Route::middleware('auth')->group(function () {
 // Rutas accesibles para usuarios no logueados
 
 Route::middleware('comprobarRol')->group(function () {
-    Route::get('/servicios', [ServicioController::class, 'index'])->name('servicios');
+    Route::get('/servicios', [ServicioController::class, 'index'])->name('servicios.servicios');
     Route::get('/productos', [ProductoController::class, 'index'])->name('productos.productos');
     Route::get('/quienes-somos', function () {
         return Inertia::render('QuienesSomos');
@@ -173,6 +173,7 @@ Route::get('/servicios/{id}/edit', [ServicioController::class, 'edit']);
 Route::put('/servicios/{id}', [ServicioController::class, 'update'])->name('servicios.update');
 
 Route::delete('/servicios/{id}', [ServicioController::class, 'destroy'])->name('servicios.destroy');
+
 
 // Rutas de citas
 
