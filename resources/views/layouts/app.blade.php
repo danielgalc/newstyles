@@ -8,7 +8,7 @@
 
     <!-- resources/views/layouts/app.blade.php -->
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'NewStyles') }}</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
