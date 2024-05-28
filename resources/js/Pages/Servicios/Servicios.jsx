@@ -1,3 +1,4 @@
+// Servicios.jsx
 import React, { useState, useEffect } from 'react';
 import Banner from '@/Components/Banner';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
@@ -6,7 +7,7 @@ import GridServicios from '@/Components/Servicios/GridServicios';
 import axios from 'axios';
 import debounce from 'lodash/debounce';
 
-export default function Servicios({ auth, servicios, search }) {
+export default function Servicios({ auth, servicios, search, peluqueros }) {
   const [searchTerm, setSearchTerm] = useState(search || '');
   const [sortBy, setSortBy] = useState(null); // Estado para el tipo de orden
   const [filteredServicios, setFilteredServicios] = useState(servicios);
@@ -49,7 +50,7 @@ export default function Servicios({ auth, servicios, search }) {
         <AuthenticatedLayout user={auth.user}>
           <Banner text="Listado de servicios" />
           <div className="flex justify-center items-center my-4">
-          <input
+            <input
               type="text"
               value={searchTerm}
               onChange={handleSearchChange}
@@ -64,7 +65,7 @@ export default function Servicios({ auth, servicios, search }) {
               <option value="price_desc">Mayor a menor precio</option>
             </select>
           </div>
-          <GridServicios servicios={filteredServicios} />
+          <GridServicios servicios={filteredServicios} userId={auth.user.id} peluqueros={peluqueros} />
         </AuthenticatedLayout>
       ) : (
         <GuestLayout>
@@ -85,9 +86,9 @@ export default function Servicios({ auth, servicios, search }) {
               <option value="price_desc">Mayor a menor precio</option>
             </select>
           </div>
-          <GridServicios servicios={filteredServicios} />
+          <GridServicios servicios={filteredServicios} userId={null} peluqueros={peluqueros} />
         </GuestLayout>
       )}
     </div>
   );
-};
+}

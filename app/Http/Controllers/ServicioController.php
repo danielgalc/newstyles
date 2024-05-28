@@ -25,6 +25,8 @@ public function index(Request $request)
     
     // Construimos la query base para Servicio
     $query = Servicio::query();
+
+    $peluqueros = User::where('rol', 'peluquero')->get();
     
     // Si hay una búsqueda, agregamos la condición a la query
     if ($search) {
@@ -62,6 +64,7 @@ public function index(Request $request)
     return Inertia::render('Servicios/Servicios', [
         'servicios' => $servicios,
         'search' => $search,
+        'peluqueros' => $peluqueros,
     ]);
 }
 
