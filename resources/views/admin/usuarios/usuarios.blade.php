@@ -199,18 +199,18 @@
             <form action="{{ route('users.store') }}" method="post" class="p-4 md:p-5">
                 @csrf
                 <div class="grid gap-4 mb-4 grid-cols-2">
-                    <div class="col-span-2">
+                    <div class="col-span-2 group">
                         <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre</label>
-                        <input type="text" name="name" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Escribe el nombre del usuario" required>
+                        <input type="text" name="name" id="nameCrear" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Escribe el nombre del usuario" required>
                     </div>
-                    <div class="col-span-2">
+                    <div class="col-span-2 group">
                         <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Correo
                             Electrónico</label>
-                        <input type="email" name="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Escribe el correo electrónico" required>
+                        <input type="email" name="email" id="emailCrear" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Escribe el correo electrónico" required>
                     </div>
-                    <div class="col-span-2">
+                    <div class="col-span-2 group">
                         <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Contraseña</label>
-                        <input type="password" name="password" id="password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Escribe la contraseña" required>
+                        <input type="password" name="password" id="passwordCrear" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Escribe la contraseña" required>
                     </div>
                     <div class="col-span-2">
                         <label for="rol" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Rol</label>
@@ -248,6 +248,91 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
+
+<!-- SCRIPT PARA VALIDAR LA CREACIÓN DE USUARIOS -->
+
+<script>
+    // VALIDACIÓN DEL FORMULARIO DE REGISTRO
+    const registerForm = document.querySelector('form[action="{{ route('users.store') }}"]');
+    registerForm.addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevenir el envío del formulario
+
+        const nameInput = document.getElementById('nameCrear');
+        const emailInput = document.getElementById('emailCrear');
+        const passwordInput = document.getElementById('passwordCrear');
+        let errors = false;
+
+        // Validar el nombre
+        if (nameInput.value.length < 3 || !nameInput.value) {
+            showError(nameInput, 'Nombre no válido. Introduce un nombre válido.');
+            errors = true;
+        } else if (!validarInput(nameInput.value)) {
+            showError(nameInput, 'Ni números ni símbolos especiales son válidos en este campo. Introduce un nombre válido, por favor.');
+            errors = true;
+        } else {
+            hideError(nameInput);
+        }
+
+        // Validar el email
+        if (!emailInput.value || !isValidEmail(emailInput.value)) {
+            showError(emailInput, 'Por favor, introduce una dirección de correo electrónico válida');
+            errors = true;
+        } else {
+            hideError(emailInput);
+        }
+
+        // Validar la contraseña
+        if (passwordInput.value.length < 8) {
+            showError(passwordInput, 'La contraseña debe tener al menos 8 caracteres.');
+            errors = true;
+        } else {
+            hideError(passwordInput);
+        }
+
+        if (!errors) {
+            registerForm.submit(); // Enviar el formulario si no hay errores
+        }
+    });
+
+    function showError(input, message) {
+        // Eliminar mensaje de error anterior si existe
+        const previousError = input.parentNode.querySelector('.help-block');
+        if (previousError) {
+            previousError.parentNode.removeChild(previousError);
+        }
+
+        const errorSpan = document.createElement('span');
+        errorSpan.classList.add('help-block', 'text-red-500', 'text-sm');
+        errorSpan.innerText = message;
+
+        input.parentNode.appendChild(errorSpan);
+
+        input.classList.add('border', 'border-red-500');
+    }
+
+    function hideError(input) {
+        const errorSpan = input.parentNode.querySelector('.help-block');
+
+        if (errorSpan) {
+            errorSpan.parentNode.removeChild(errorSpan);
+        }
+
+        input.classList.remove('border', 'border-red-500');
+    }
+
+    function isValidEmail(email) {
+        // Expresión regular para validar email
+        const emailRegex = /^[^\s@]{5,}@[^.\s@]{4,}\.[^.\s@]{2,}$/;
+        return emailRegex.test(email);
+    }
+
+    function validarInput(input) {
+        const regex = /^[a-zA-Z\s]+$/;
+        return regex.test(input);
+    }
+</script>
+
+
 
 @endsection
 
