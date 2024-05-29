@@ -130,11 +130,11 @@ public function index(Request $request)
 
         $servicio->nombre = $request->input('nombre');
         $servicio->precio = $request->input('precio');
-        $servicio->duracion = $request->input('duracion');
+        $servicio->duracion = $request->input('duracion') . " minutos";
 
         $servicio->save();
 
-        return redirect('/admin/lista_servicios')
+        return redirect('/admin/servicios')
             ->with('success', 'servicio modificado con éxito.');
     }
     
@@ -148,7 +148,7 @@ public function index(Request $request)
 
         $servicio->delete();
 
-        return redirect('/admin/lista_servicios')
+        return redirect('/admin/servicios')
             ->with('success', 'Servicio eliminado con éxito.');
     }
 }

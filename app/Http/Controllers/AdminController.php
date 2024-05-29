@@ -44,10 +44,18 @@ class AdminController extends Controller
         return view('admin.citas.gestionar_citas', compact('citas', 'servicios', 'users', 'estado'));
     }
 
-    public function listaServicios()
+    public function listaServicios(Request $request)
     {
-        $servicios = Servicio::orderBy('updated_at', 'desc')->paginate(8);
-        return view('admin.servicios.lista_servicios', compact('servicios'));
+        $clase = $request->input('clase');
+
+        // Aplicar filtro de rol si está presente
+        if ($clase) {
+            $servicios = Servicio::where('clase', $clase)->orderBy('updated_at', 'desc')->paginate(8);
+        } else {
+            $servicios = Servicio::orderBy('updated_at', 'desc')->paginate(8);
+        }
+
+        return view('admin.servicios.lista_servicios', compact('servicios', 'clase'));
     }
 
     public function listaProductos()

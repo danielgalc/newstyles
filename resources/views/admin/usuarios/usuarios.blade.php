@@ -99,7 +99,7 @@
             </div>
             <!-- Modal body -->
             <!-- Form Editar -->
-            <form action="{{ route('users.update', ['id' => $usuario->id]) }}" method="post" class="p-4 md:p-5">
+            <form action="{{ route('users.update', ['id' => $usuario->id]) }}" id="editForm" method="post" class="p-4 md:p-5">
                 @csrf
                 @method('PUT')
                 <div class="grid gap-4 mb-4 grid-cols-2">
@@ -249,12 +249,12 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 
-<!-- SCRIPT PARA VALIDAR LA CREACIÓN DE USUARIOS -->
+<!-- SCRIPTS PARA VALIDAR LA CREACIÓN Y MODIFICACION DE USUARIOS -->
 
 <script>
-    // VALIDACIÓN DEL FORMULARIO DE REGISTRO
-    const registerForm = document.querySelector('form[action="{{ route('users.store') }}"]');
-    registerForm.addEventListener('submit', function(event) {
+    // VALIDACIÓN DEL FORMULARIO DE CREAR
+    const crearForm = document.getElementById('crearForm');
+    crearForm.addEventListener('submit', function(event) {
         event.preventDefault(); // Prevenir el envío del formulario
 
         const nameInput = document.getElementById('nameCrear');
@@ -290,7 +290,79 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         if (!errors) {
-            registerForm.submit(); // Enviar el formulario si no hay errores
+            crearForm.submit(); // Enviar el formulario si no hay errores
+        }
+    });
+
+    function showError(input, message) {
+        // Eliminar mensaje de error anterior si existe
+        const previousError = input.parentNode.querySelector('.help-block');
+        if (previousError) {
+            previousError.parentNode.removeChild(previousError);
+        }
+
+        const errorSpan = document.createElement('span');
+        errorSpan.classList.add('help-block', 'text-red-500', 'text-sm');
+        errorSpan.innerText = message;
+
+        input.parentNode.appendChild(errorSpan);
+
+        input.classList.add('border', 'border-red-500');
+    }
+
+    function hideError(input) {
+        const errorSpan = input.parentNode.querySelector('.help-block');
+
+        if (errorSpan) {
+            errorSpan.parentNode.removeChild(errorSpan);
+        }
+
+        input.classList.remove('border', 'border-red-500');
+    }
+
+    function isValidEmail(email) {
+        // Expresión regular para validar email
+        const emailRegex = /^[^\s@]{5,}@[^.\s@]{4,}\.[^.\s@]{2,}$/;
+        return emailRegex.test(email);
+    }
+
+    function validarInput(input) {
+        const regex = /^[a-zA-Z\s]+$/;
+        return regex.test(input);
+    }
+</script>
+
+<script>
+    // VALIDACIÓN DEL FORMULARIO DE EDITAR
+    const editarForm = document.getElementById('editForm');
+    editarForm.addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevenir el envío del formulario
+
+        const nameInput = document.getElementById('name');
+        const emailInput = document.getElementById('email');
+        let errors = false;
+
+        // Validar el nombre
+        if (nameInput.value.length < 3 || !nameInput.value) {
+            showError(nameInput, 'Nombre no válido. Introduce un nombre válido.');
+            errors = true;
+        } else if (!validarInput(nameInput.value)) {
+            showError(nameInput, 'Ni números ni símbolos especiales son válidos en este campo. Introduce un nombre válido, por favor.');
+            errors = true;
+        } else {
+            hideError(nameInput);
+        }
+
+        // Validar el email
+        if (!emailInput.value || !isValidEmail(emailInput.value)) {
+            showError(emailInput, 'Por favor, introduce una dirección de correo electrónico válida');
+            errors = true;
+        } else {
+            hideError(emailInput);
+        }
+
+        if (!errors) {
+            editarForm.submit(); // Enviar el formulario si no hay errores
         }
     });
 

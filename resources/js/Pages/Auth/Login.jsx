@@ -60,7 +60,7 @@ export default function Login({ status, canResetPassword }) {
                     <h2 className="text-3xl text-white text-center mb-4 font-righteous">Login</h2>
                     <p className="text-white font-semibold text-center mb-8">¡Bienvenido a <span className='text-teal-500 font-semibold'>NewStyles</span>!</p>
                     
-                    {status && <div className="mb-4 font-medium text-sm text-green-600">{status}</div>}
+                    {status && <div className="mb-4 text-center font-medium text-sm text-green-600">Tu contraseña ha sido reestablecida.</div>}
 
                     <form onSubmit={submit}>
                         <div className="mb-2">

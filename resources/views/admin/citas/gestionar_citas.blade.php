@@ -92,7 +92,7 @@
             </div>
             <!-- Modal body -->
             <!-- Form Editar -->
-            <form action="{{ route('citas.update', ['id' => $cita->id]) }}" method="POST" class="p-4 md:p-5">
+            <form action="{{ route('citas.update', ['id' => $cita->id]) }}" id="editarForm" method="POST" class="p-4 md:p-5">
                 @csrf
                 @method('PUT')
                 <div class="grid gap-4 mb-4 grid-cols-2">
@@ -207,16 +207,16 @@
                 </button>
             </div>
             <!-- Modal body -->
-            <form action="{{ route('citas.store') }}" method="post" class="p-4 md:p-5">
+            <form action="{{ route('citas.store') }}" id="crearForm" method="post" class="p-4 md:p-5">
                 @csrf
                 <div class="grid gap-4 mb-4 grid-cols-2">
                     <div class="col-span-2">
                         <label for="user_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">ID Cliente</label>
-                        <input type="text" name="user_id" id="user_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Introduzca el ID del cliente" required>
+                        <input type="text" name="user_id" id="user_idCrear" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Introduzca el ID del cliente" required>
                     </div>
                     <div class="col-span-2">
                         <label for="peluquero_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Peluquero</label>
-                        <select name="peluquero_id" id="peluquero_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                        <select name="peluquero_id" id="peluquero_idCrear" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                             @foreach ($users as $user)
                             <option value="{{ $user->id }}">{{ $user->name }}</option>
                             @endforeach
@@ -225,15 +225,15 @@
                     {{-- TODO: FILTRADO DE HORAS SEGÚN DISPONIBILIDAD DEL PELUQUERO --}}
                     <div class="col-span-2">
                         <label for="fecha" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fecha</label>
-                        <input id="fecha" name="fecha" type="date" class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" required>
+                        <input id="fechaCrear" name="fecha" type="date" class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" required>
                     </div>
                     <div class="col-span-2">
                         <label for="hora" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Hora</label>
-                        <input id="hora" name="hora" type="time" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required>
+                        <input id="horaCrear" name="hora" type="time" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required>
                     </div>
                     <div class="col-span-2">
                         <label for="servicio" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Servicio</label>
-                        <select name="servicio" id="servicio" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                        <select name="servicio" id="servicioCrear" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                             @foreach ($servicios as $servicio)
                             <option value="{{ $servicio->id }}">{{ $servicio->nombre }}</option>
                             @endforeach
@@ -270,6 +270,162 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+</script>
+
+<!-- SCRIPTS PARA VALIDAR LA CREACIÓN Y MODIFICACION DE USUARIOS -->
+
+<script>
+    // VALIDACIÓN DEL FORMULARIO DE CREAR
+    const crearForm = document.getElementById('crearForm');
+    crearForm.addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevenir el envío del formulario
+
+        const usuarioInput = document.getElementById('user_idCrear');
+        const fechaInput = document.getElementById('fechaCrear');
+        const horaInput = document.getElementById('horaCrear');
+        const servicioInput = document.getElementById('servicioCrear');
+        let errors = false;
+
+        // Validar el nombre
+        if (nameInput.value.length < 3 || !nameInput.value) {
+            showError(nameInput, 'Nombre no válido. Introduce un nombre válido.');
+            errors = true;
+        } else if (!validarInput(nameInput.value)) {
+            showError(nameInput, 'Ni números ni símbolos especiales son válidos en este campo. Introduce un nombre válido, por favor.');
+            errors = true;
+        } else {
+            hideError(nameInput);
+        }
+
+        // Validar el email
+        if (!emailInput.value || !isValidEmail(emailInput.value)) {
+            showError(emailInput, 'Por favor, introduce una dirección de correo electrónico válida');
+            errors = true;
+        } else {
+            hideError(emailInput);
+        }
+
+        // Validar la contraseña
+        if (passwordInput.value.length < 8) {
+            showError(passwordInput, 'La contraseña debe tener al menos 8 caracteres.');
+            errors = true;
+        } else {
+            hideError(passwordInput);
+        }
+
+        if (!errors) {
+            crearForm.submit(); // Enviar el formulario si no hay errores
+        }
+    });
+
+    function showError(input, message) {
+        // Eliminar mensaje de error anterior si existe
+        const previousError = input.parentNode.querySelector('.help-block');
+        if (previousError) {
+            previousError.parentNode.removeChild(previousError);
+        }
+
+        const errorSpan = document.createElement('span');
+        errorSpan.classList.add('help-block', 'text-red-500', 'text-sm');
+        errorSpan.innerText = message;
+
+        input.parentNode.appendChild(errorSpan);
+
+        input.classList.add('border', 'border-red-500');
+    }
+
+    function hideError(input) {
+        const errorSpan = input.parentNode.querySelector('.help-block');
+
+        if (errorSpan) {
+            errorSpan.parentNode.removeChild(errorSpan);
+        }
+
+        input.classList.remove('border', 'border-red-500');
+    }
+
+    function isValidEmail(email) {
+        // Expresión regular para validar email
+        const emailRegex = /^[^\s@]{5,}@[^.\s@]{4,}\.[^.\s@]{2,}$/;
+        return emailRegex.test(email);
+    }
+
+    function validarInput(input) {
+        const regex = /^[a-zA-Z\s]+$/;
+        return regex.test(input);
+    }
+</script>
+
+<script>
+    // VALIDACIÓN DEL FORMULARIO DE EDITAR
+    const editarForm = document.getElementById('editForm');
+    editarForm.addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevenir el envío del formulario
+
+        const nameInput = document.getElementById('name');
+        const emailInput = document.getElementById('email');
+        let errors = false;
+
+        // Validar el nombre
+        if (nameInput.value.length < 3 || !nameInput.value) {
+            showError(nameInput, 'Nombre no válido. Introduce un nombre válido.');
+            errors = true;
+        } else if (!validarInput(nameInput.value)) {
+            showError(nameInput, 'Ni números ni símbolos especiales son válidos en este campo. Introduce un nombre válido, por favor.');
+            errors = true;
+        } else {
+            hideError(nameInput);
+        }
+
+        // Validar el email
+        if (!emailInput.value || !isValidEmail(emailInput.value)) {
+            showError(emailInput, 'Por favor, introduce una dirección de correo electrónico válida');
+            errors = true;
+        } else {
+            hideError(emailInput);
+        }
+
+        if (!errors) {
+            editarForm.submit(); // Enviar el formulario si no hay errores
+        }
+    });
+
+    function showError(input, message) {
+        // Eliminar mensaje de error anterior si existe
+        const previousError = input.parentNode.querySelector('.help-block');
+        if (previousError) {
+            previousError.parentNode.removeChild(previousError);
+        }
+
+        const errorSpan = document.createElement('span');
+        errorSpan.classList.add('help-block', 'text-red-500', 'text-sm');
+        errorSpan.innerText = message;
+
+        input.parentNode.appendChild(errorSpan);
+
+        input.classList.add('border', 'border-red-500');
+    }
+
+    function hideError(input) {
+        const errorSpan = input.parentNode.querySelector('.help-block');
+
+        if (errorSpan) {
+            errorSpan.parentNode.removeChild(errorSpan);
+        }
+
+        input.classList.remove('border', 'border-red-500');
+    }
+
+    function isValidEmail(email) {
+        // Expresión regular para validar email
+        const emailRegex = /^[^\s@]{5,}@[^.\s@]{4,}\.[^.\s@]{2,}$/;
+        return emailRegex.test(email);
+    }
+
+    function validarInput(input) {
+        const regex = /^[a-zA-Z\s]+$/;
+        return regex.test(input);
+    }
 </script>
 
 @endsection
