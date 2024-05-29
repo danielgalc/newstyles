@@ -59,14 +59,14 @@ export default function Register() {
     };
 
     return (
-        <div className="relative min-h-screen flex items-center justify-center bg-gray-800 pt-24"> 
+        <div className="relative min-h-screen flex items-center justify-center bg-gray-800 pt-24">
             <div className="absolute top-8 mt-10">
                 <Link href="/">
                     <img src="/images/Logo1Transparente.png" alt="Logo 1" className="w-44 h-30 mx-auto drop-shadow-md" />
                 </Link>
             </div>
 
-            <div className="relative backdrop-filter backdrop-blur-lg bg-white bg-opacity-10 border border-white border-opacity-20 shadow-lg rounded-lg p-8 mt-24 w-full max-w-md">
+            <div className="relative backdrop-filter backdrop-blur-lg bg-white bg-opacity-10 border border-white border-opacity-20 shadow-lg rounded-lg px-8 pt-8 pb-4 mt-24 w-full max-w-md">
                 <h2 className="text-3xl text-white text-center mb-4 font-righteous">Crear cuenta</h2>
                 <p className="text-white font-semibold text-center mb-8">¡Únete a <span className='text-teal-500 font-semibold'>Newstyles</span>!</p>
 
@@ -145,6 +145,9 @@ export default function Register() {
                         </PrimaryButton>
                     </div>
                 </form>
+                <div className='flex justify-center gap-1 text-sm items-center mt-4 text-gray-500'>
+                    ¿Ya tienes una cuenta?<a href="/login" className='text-teal-500'>Inicia sesión ahora</a>
+                </div>
             </div>
         </div>
     );

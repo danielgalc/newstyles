@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Checkbox from '@/Components/Checkbox';
 import GuestLayout from '@/Layouts/GuestLayout';
 import InputError from '@/Components/InputError';
@@ -14,6 +14,8 @@ export default function Login({ status, canResetPassword }) {
         remember: false,
     });
 
+    const [localErrors, setLocalErrors] = useState({});
+
     useEffect(() => {
         return () => {
             reset('password');
@@ -22,13 +24,32 @@ export default function Login({ status, canResetPassword }) {
 
     const submit = (e) => {
         e.preventDefault();
-        post(route('login'));
+        if (validateForm()) {
+            post(route('login'));
+        }
+    };
+
+    const validateForm = () => {
+        const errors = {};
+
+        if (!data.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
+            errors.email = 'Por favor, introduce una dirección de correo electrónico válida';
+        }
+
+        if (!data.password) {
+            errors.password = 'Por favor, introduce tu contraseña.';
+        } else if (data.password.length < 8) {
+            errors.password = 'La contraseña debe tener al menos 8 caracteres.';
+        }
+
+        setLocalErrors(errors);
+        return Object.keys(errors).length === 0;
     };
 
     return (
         <div>
             <Head title="Log in" />
-            <div className="relative min-h-screen flex items-center justify-center bg-gray-800">                
+            <div className="relative min-h-screen flex items-center justify-center bg-gray-800 pt-20">                
                 {/* Logo del sitio web */}
                 <div className="absolute top-8 mt-10">
                     <Link href="/">
@@ -44,7 +65,7 @@ export default function Login({ status, canResetPassword }) {
                     {status && <div className="mb-4 font-medium text-sm text-green-600">{status}</div>}
 
                     <form onSubmit={submit}>
-                        <div className="mb-4">
+                        <div className="mb-2">
                             <InputLabel htmlFor="email" value="Email" className="text-white" />
                             <div className="relative">
                                 <TextInput
@@ -58,10 +79,10 @@ export default function Login({ status, canResetPassword }) {
                                     onChange={(e) => setData('email', e.target.value)}
                                 />
                             </div>
-                            <InputError message={errors.email} className="mt-2 text-red-500" />
+                            <InputError message={errors.email || localErrors.email} className="mt-2 text-red-500" />
                         </div>
 
-                        <div className="mb-6">
+                        <div className="mb-2">
                             <InputLabel htmlFor="password" value="Contraseña" className="text-white" />
                             <div className="relative">
                                 <TextInput
@@ -74,7 +95,7 @@ export default function Login({ status, canResetPassword }) {
                                     onChange={(e) => setData('password', e.target.value)}
                                 />
                             </div>
-                            <InputError message={errors.password} className="mt-2 text-red-500" />
+                            <InputError message={errors.password || localErrors.password} className="mt-2 text-red-500" />
                         </div>
 
                         <div className="flex items-center justify-between mb-6">
