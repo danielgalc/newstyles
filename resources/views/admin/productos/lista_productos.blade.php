@@ -234,6 +234,21 @@ use Illuminate\Support\Str;
     </div>
 </div>
 
+<!-- ESTILO PARA OCULTAR LOS BOTONES DE LOS INPUTS NUMERICOS -->
+<style>
+    /* Ocultar los controles de número en Chrome, Safari, Edge y Opera */
+    .number-input::-webkit-outer-spin-button,
+    .number-input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    
+    /* Ocultar los controles de número en Firefox */
+    .number-input[type=number] {
+        -moz-appearance: textfield;
+    }
+    </style>
+
 <!-- SCRIPT PARA FILTRAR POR CATEGORIA -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
