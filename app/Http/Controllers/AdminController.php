@@ -30,17 +30,17 @@ class AdminController extends Controller
     public function gestionarCitas(Request $request)
     {
         $estado = $request->input('estado'); // Obtener el filtro de estado desde la solicitud
-    
+
         // Aplicar filtro de estado si está presente
         if ($estado) {
             $citas = Cita::where('estado', $estado)->orderBy('fecha', 'desc')->paginate(5);
         } else {
             $citas = Cita::orderBy('fecha', 'desc')->paginate(5);
         }
-    
+
         $servicios = Servicio::all();
         $users = User::where('rol', 'peluquero')->get();
-    
+
         return view('admin.citas.gestionar_citas', compact('citas', 'servicios', 'users', 'estado'));
     }
 
@@ -58,12 +58,20 @@ class AdminController extends Controller
         return view('admin.servicios.lista_servicios', compact('servicios', 'clase'));
     }
 
-    public function listaProductos()
+    public function listaProductos(Request $request)
     {
-        $productos = Producto::paginate(8);
-        return view('admin.productos.lista_productos', compact('productos'));
+        $categoria = $request->input('categoria'); // Obtener el filtro de categoría desde la solicitud
+
+        // Aplicar filtro de categoria si está presente
+        if ($categoria) {
+            $productos = Producto::where('categoria', $categoria)->orderBy('updated_at', 'desc')->paginate(8);
+        } else {
+            $productos = Producto::orderBy('updated_at', 'desc')->paginate(8);
+        }
+
+        return view('admin.productos.lista_productos', compact('productos', 'categoria'));
     }
-    
+
 
 
     public function mostrarDatos()
@@ -72,13 +80,13 @@ class AdminController extends Controller
         $citas = Cita::latest()->take(5)->get();
         $servicios = Servicio::latest()->take(5)->get();
         $productos = Producto::latest()->take(5)->get();
-        
+
         $citas->each(function ($cita) {
             $cita->hora = \Carbon\Carbon::parse($cita->hora);
         });
-    
+
         $citas->load('user', 'peluquero');
-    
+
         return Inertia::render('Admin/Admin', [
             'usuarios' => $usuarios,
             'citas' => $citas,

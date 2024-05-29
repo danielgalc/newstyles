@@ -34,7 +34,7 @@ export default function Register() {
 
         if (!data.name || data.name.length < 10) {
             errors.name = 'Nombre no válido. Introduce un nombre válido.';
-        } else if (!/^[a-zA-Z\s]+$/.test(data.name)) {
+        } else if (!/^[a-zA-ZáéíóúÁÉÍÓÚ\s]+$/.test(data.name)) {
             errors.name = 'Ni números ni símbolos especiales son válidos en este campo. Introduce un nombre válido, por favor.';
         }
 
