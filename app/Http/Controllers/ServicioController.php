@@ -92,7 +92,7 @@ public function index(Request $request)
 
         $servicio->nombre = $request->input('nombre');
         $servicio->precio = $request->input('precio');
-        $servicio->duracion = $request->input('duracion') . " minutos";
+        $servicio->duracion = $request->input('duracion');
         $servicio->clase = $request->input('clase');
     
         $servicio->save();
@@ -130,7 +130,7 @@ public function index(Request $request)
 
         $servicio->nombre = $request->input('nombre');
         $servicio->precio = $request->input('precio');
-        $servicio->duracion = $request->input('duracion') . " minutos";
+        $servicio->duracion = $request->input('duracion');
 
         $servicio->save();
 

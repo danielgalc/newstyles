@@ -42,8 +42,8 @@
                 <div>
                     <td class="px-6 py-4 whitespace-nowrap text-center">{{ $servicio->id }}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-center">{{ $servicio->nombre }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-center">{{ $servicio->precio }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-center">{{ $servicio->duracion }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-center">{{ $servicio->precio }} &euro;</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-center">{{ $servicio->duracion }} minutos</td>
                     <td class="px-6 py-4 whitespace-nowrap text-center">{{ $servicio->created_at }}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-center">{{ $servicio->updated_at }}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-center">{{ $servicio->clase == 'principal' ? 'Principal' : 'Secundario' }}</td>
@@ -187,7 +187,7 @@
                         <input type="number" name="precio" id="precioCrear" class="number-input bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="0.00 €" step="0.01" required>
                     </div>
                     <div class="col-span-2">
-                        <label for="duracionCrear" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Duración</label>
+                        <label for="duracionCrear" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Duración (en minutos)</label>
                         <input type="number" name="duracion" id="duracionCrear" class="number-input bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Escribe la duración del servicio" required>
                     </div>
                     <div class="col-span-2">
@@ -208,17 +208,17 @@
 
 <!-- SCRIPT PARA FILTRAR POR CLASE -->
 <style>
-/* Ocultar los controles de número en Chrome, Safari, Edge y Opera */
-.number-input::-webkit-outer-spin-button,
-.number-input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
+    /* Ocultar los controles de número en Chrome, Safari, Edge y Opera */
+    .number-input::-webkit-outer-spin-button,
+    .number-input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
 
-/* Ocultar los controles de número en Firefox */
-.number-input[type=number] {
-    -moz-appearance: textfield;
-}
+    /* Ocultar los controles de número en Firefox */
+    .number-input[type=number] {
+        -moz-appearance: textfield;
+    }
 </style>
 
 <script>
@@ -281,12 +281,16 @@
             }
 
             // Validar la duración
-            if (!duracionInput.value || !Number.isInteger(Number(duracionInput.value)) || duracionInput.value <= 0) {
-                showError(duracionInput, 'Por favor, introduce una duración válida (entero positivo).');
+            if (!duracionInput.value ||
+                !Number.isInteger(Number(duracionInput.value)) ||
+                duracionInput.value < 15 ||
+                duracionInput.value > 60) {
+                showError(duracionInput, 'Por favor, introduce una duración válida (entero positivo entre 15 y 60).');
                 errors = true;
             } else {
                 hideError(duracionInput);
             }
+
 
             if (!errors) {
                 form.submit(); // Enviar el formulario si no hay errores
