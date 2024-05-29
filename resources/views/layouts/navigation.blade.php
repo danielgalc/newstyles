@@ -50,7 +50,7 @@
         </div>
 
         <!-- Dropdown menu -->
-        <div id="dropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg pl-4 shadow w-44 text-gray-700">
+        <div id="dropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 text-gray-700">
             <ul class=" text-sm text-gray-900" aria-labelledby="dropdownDefaultButton">
                 <li>
                     <a href="('profile')" class="block px-4 py-2 hover:rounded-t-lg hover:bg-gray-100 dark:hover:bg-gray-200 ">Mi perfil</a>

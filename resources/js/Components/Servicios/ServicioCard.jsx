@@ -1,9 +1,6 @@
-// ServicioCard.jsx
 import React, { useState } from 'react';
 import ModalReserva from './ModalReserva';
 import ModalConfirmacion from './ModalConfirmacion'; // Importa el nuevo modal
-import { Tooltip } from 'react-tooltip'; // Asegúrate de tener una biblioteca de tooltips instalada o usa un simple div con CSS
-
 
 export default function ServicioCard({ servicio, userId, peluqueros }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -13,6 +10,8 @@ export default function ServicioCard({ servicio, userId, peluqueros }) {
   const handleReserveClick = () => {
     if (userId) {
       setIsModalOpen(true);
+    } else {
+      window.location.href = '/login'; // Redirige al usuario a la página de inicio de sesión
     }
   };
 
@@ -39,16 +38,10 @@ export default function ServicioCard({ servicio, userId, peluqueros }) {
         <div className="relative group w-full">
           <button
             onClick={handleReserveClick}
-            className={`bg-teal-400 text-white font-bold text-lg w-full py-1 text-center rounded-full ${!userId ? 'cursor-not-allowed' : ''}`}
-            disabled={!userId}
+            className="bg-teal-400 text-white font-bold text-lg w-full py-1 text-center rounded-full"
           >
             Reservar
           </button>
-          {!userId && (
-            <div className="absolute bottom-full w-full mb-2 hidden group-hover:block bg-gray-700 text-white text-sm rounded py-1 px-3">
-              Debes iniciar sesión para reservar
-            </div>
-          )}
         </div>
       </div>
       <ModalReserva

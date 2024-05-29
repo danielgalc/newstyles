@@ -38,8 +38,6 @@ export default function Login({ status, canResetPassword }) {
 
         if (!data.password) {
             errors.password = 'Por favor, introduce tu contraseña.';
-        } else if (data.password.length < 8) {
-            errors.password = 'La contraseña debe tener al menos 8 caracteres.';
         }
 
         setLocalErrors(errors);
