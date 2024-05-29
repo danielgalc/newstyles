@@ -1,4 +1,3 @@
-<!-- resources/views/admin/lista_servicios.blade.php -->
 @extends('layouts.admin_layout')
 
 @section('title', 'Lista de Servicios')
@@ -82,25 +81,25 @@
             </div>
             <!-- Modal body -->
             <!-- Form Editar -->
-            <form action="{{ route('servicios.update', ['id' => $servicio->id]) }}" id="editForm" method="post" class="p-4 md:p-5">
+            <form action="{{ route('servicios.update', ['id' => $servicio->id]) }}" id="editForm_{{ $servicio->id }}" data-edit-form method="post" class="p-4 md:p-5">
                 @csrf
                 @method('PUT')
                 <div class="grid gap-4 mb-4 grid-cols-2">
                     <div class="col-span-2">
-                        <label for="nombre" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre</label>
-                        <input type="text" name="nombre" id="nombreEditar" value="{{ $servicio->nombre }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required>
+                        <label for="nombre_{{ $servicio->id }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre</label>
+                        <input type="text" name="nombre" id="nombre_{{ $servicio->id }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ $servicio->nombre }}" required>
                     </div>
                     <div class="col-span-2">
-                        <label for="precio" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Precio</label>
-                        <input type="number" name="precio" id="precioEditar" value="{{ $servicio->precio }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="0.00 €" step="0.01" min="0" required>
+                        <label for="precio_{{ $servicio->id }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Precio</label>
+                        <input type="number" name="precio" id="precio_{{ $servicio->id }}" class="number-input bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ $servicio->precio }}" placeholder="0.00 €" step="0.01" required>
                     </div>
                     <div class="col-span-2">
-                        <label for="duracion" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Duración (en minutos)</label>
-                        <input type="number" name="duracion" id="duracionEditar" value="{{ $servicio->duracion }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Escribe la duración del servicio" required>
+                        <label for="duracion_{{ $servicio->id }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Duración (en minutos)</label>
+                        <input type="number" name="duracion" id="duracion_{{ $servicio->id }}" class="number-input bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ $servicio->duracion }}" placeholder="Escribe la duración del servicio" required>
                     </div>
                     <div class="col-span-2">
-                        <label for="clase" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Clase</label>
-                        <select name="clase" id="claseEditar" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                        <label for="clase_{{ $servicio->id }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Clase</label>
+                        <select name="clase" id="clase_{{ $servicio->id }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                             <option value="principal" {{ $servicio->clase == 'principal' ? 'selected' : '' }}>Principal</option>
                             <option value="secundario" {{ $servicio->clase == 'secundario' ? 'selected' : '' }}>Secundario</option>
                         </select>
@@ -176,23 +175,23 @@
                 </button>
             </div>
             <!-- Modal body -->
-            <form action="{{ route('servicios.store') }}" id="crearForm" method="post" class="p-4 md:p-5" id="crearForm">
+            <form action="{{ route('servicios.store') }}" id="crearForm" method="post" class="p-4 md:p-5">
                 @csrf
                 <div class="grid gap-4 mb-4 grid-cols-2">
                     <div class="col-span-2">
-                        <label for="nombre" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre del servicio</label>
+                        <label for="nombreCrear" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre del servicio</label>
                         <input type="text" name="nombre" id="nombreCrear" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Escribe el nombre del servicio" required>
                     </div>
                     <div class="col-span-2">
-                        <label for="precio" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Precio</label>
-                        <input type="number" name="precio" id="precioCrear" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="0.00 €" step="0.01" min="0" required>
+                        <label for="precioCrear" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Precio</label>
+                        <input type="number" name="precio" id="precioCrear" class="number-input bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="0.00 €" step="0.01" required>
                     </div>
                     <div class="col-span-2">
-                        <label for="duracion" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Duración</label>
-                        <input type="text" name="duracion" id="duracionCrear" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Escribe la duración del servicio" required>
+                        <label for="duracionCrear" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Duración</label>
+                        <input type="number" name="duracion" id="duracionCrear" class="number-input bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Escribe la duración del servicio" required>
                     </div>
                     <div class="col-span-2">
-                        <label for="clase" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Clase</label>
+                        <label for="claseCrear" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Clase</label>
                         <select name="clase" id="claseCrear" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                             <option value="principal" selected>Principal</option>
                             <option value="secundario">Secundario</option>
@@ -208,36 +207,61 @@
 </div>
 
 <!-- SCRIPT PARA FILTRAR POR CLASE -->
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    const filterSelect = document.getElementById('filtro-servicios');
-    const tableRows = document.querySelectorAll('#services-table .service-row');
+<style>
+/* Ocultar los controles de número en Chrome, Safari, Edge y Opera */
+.number-input::-webkit-outer-spin-button,
+.number-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
 
-    filterSelect.addEventListener('change', function () {
-        const filterValue = filterSelect.value;
-        tableRows.forEach(row => {
-            const clase = row.getAttribute('data-clase');
-            if (filterValue === "" || clase === filterValue) {
-                row.style.display = '';
-            } else {
-                row.style.display = 'none';
-            }
+/* Ocultar los controles de número en Firefox */
+.number-input[type=number] {
+    -moz-appearance: textfield;
+}
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const filterSelect = document.getElementById('filtro-servicios');
+        const tableRows = document.querySelectorAll('#services-table .service-row');
+
+        filterSelect.addEventListener('change', function() {
+            const filterValue = filterSelect.value;
+            tableRows.forEach(row => {
+                const clase = row.getAttribute('data-clase');
+                if (filterValue === "" || clase === filterValue) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
         });
     });
-});
 </script>
-
 
 <!-- SCRIPTS PARA VALIDAR LA CREACIÓN Y MODIFICACION DE SERVICIOS -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const crearForm = document.getElementById('crearForm');
-        crearForm.addEventListener('submit', function(event) {
+        // Validación del formulario de creación
+        document.getElementById('crearForm').addEventListener('submit', function(event) {
             event.preventDefault(); // Prevenir el envío del formulario
+            validateForm(event.target, 'nombreCrear', 'precioCrear', 'duracionCrear');
+        });
 
-            const nombreInput = document.getElementById('nombreCrear');
-            const precioInput = document.getElementById('precioCrear');
-            const duracionInput = document.getElementById('duracionCrear');
+        // Validación del formulario de edición
+        document.querySelectorAll('[data-edit-form]').forEach(form => {
+            form.addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevenir el envío del formulario
+                const id = form.id.split('_')[1];
+                validateForm(event.target, `nombre_${id}`, `precio_${id}`, `duracion_${id}`);
+            });
+        });
+
+        function validateForm(form, nombreId, precioId, duracionId) {
+            const nombreInput = document.getElementById(nombreId);
+            const precioInput = document.getElementById(precioId);
+            const duracionInput = document.getElementById(duracionId);
             let errors = false;
 
             // Validar el nombre
@@ -257,17 +281,17 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             // Validar la duración
-            if (!duracionInput.value || duracionInput.value.length < 3) {
-                showError(duracionInput, 'Por favor, introduce una duración válida.');
+            if (!duracionInput.value || !Number.isInteger(Number(duracionInput.value)) || duracionInput.value <= 0) {
+                showError(duracionInput, 'Por favor, introduce una duración válida (entero positivo).');
                 errors = true;
             } else {
                 hideError(duracionInput);
             }
 
             if (!errors) {
-                crearForm.submit(); // Enviar el formulario si no hay errores
+                form.submit(); // Enviar el formulario si no hay errores
             }
-        });
+        }
 
         function showError(input, message) {
             // Eliminar mensaje de error anterior si existe
@@ -295,72 +319,6 @@ document.addEventListener('DOMContentLoaded', function () {
             input.classList.remove('border', 'border-red-500');
         }
     });
-</script>
-
-<script>
-    const editarForm = document.getElementById('editForm');
-    editarForm.addEventListener('submit', function(event) {
-        event.preventDefault(); // Prevenir el envío del formulario
-
-        const nombreInput = document.getElementById('nombreEditar');
-        const precioInput = document.getElementById('precioEditar');
-        const duracionInput = document.getElementById('duracionEditar');
-        let errors = false;
-
-        // Validar el nombre
-        if (nombreInput.value.length < 3 || !nombreInput.value) {
-            showError(nombreInput, 'Nombre no válido. Introduce un nombre válido.');
-            errors = true;
-        } else {
-            hideError(nombreInput);
-        }
-
-        // Validar el precio
-        if (!precioInput.value || precioInput.value <= 0) {
-            showError(precioInput, 'Por favor, introduce un precio válido');
-            errors = true;
-        } else {
-            hideError(precioInput);
-        }
-
-        // Validar la duración
-        if (!duracionInput.value || !Number.isInteger(Number(duracionInput.value)) || duracionInput.value <= 0) {
-            showError(duracionInput, 'Por favor, introduce una duración válida (entero positivo).');
-            errors = true;
-        } else {
-            hideError(duracionInput);
-        }
-
-        if (!errors) {
-            editarForm.submit(); // Enviar el formulario si no hay errores
-        }
-    });
-
-    function showError(input, message) {
-        // Eliminar mensaje de error anterior si existe
-        const previousError = input.parentNode.querySelector('.help-block');
-        if (previousError) {
-            previousError.parentNode.removeChild(previousError);
-        }
-
-        const errorSpan = document.createElement('span');
-        errorSpan.classList.add('help-block', 'text-red-500', 'text-sm');
-        errorSpan.innerText = message;
-
-        input.parentNode.appendChild(errorSpan);
-
-        input.classList.add('border', 'border-red-500');
-    }
-
-    function hideError(input) {
-        const errorSpan = input.parentNode.querySelector('.help-block');
-
-        if (errorSpan) {
-            errorSpan.parentNode.removeChild(errorSpan);
-        }
-
-        input.classList.remove('border', 'border-red-500');
-    }
 </script>
 
 @endsection
