@@ -234,15 +234,15 @@ class CitaController extends Controller
      * Funciones del usuario peluquero
      */
 
-    public function obtenerCitas(Request $request): JsonResponse
-    {
-        $peluqueroId = $request->query('peluquero_id');
-        $citas = Cita::where('peluquero_id', $peluqueroId)
-            ->where('estado', 'aceptada')
-            ->get();
-
-        return response()->json($citas);
-    }
+     public function obtenerCitas(Request $request): JsonResponse
+     {
+         $peluqueroId = $request->query('peluquero_id');
+         $citas = Cita::where('peluquero_id', $peluqueroId)
+                       ->where('estado', 'aceptada')
+                       ->get();
+     
+         return response()->json($citas);
+     }
 
 
 

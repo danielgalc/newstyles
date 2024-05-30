@@ -186,6 +186,8 @@ Route::delete('/servicios/{id}', [ServicioController::class, 'destroy'])->name('
 // Rutas de citas
 
 Route::post('/admin/gestionar_citas', [CitaController::class, 'store'])->name('citas.store');
+Route::get('/admin/gestionar_citas/obtenerCitas', [CitaController::class, 'obtenerCitas'])->name('admin.citas.obtenerCitas');
+
 
 Route::get('/admin/gestionar_citas/{id}/edit', [CitaController::class, 'edit']);
 Route::put('/admin/gestionar_citas/{id}', [CitaController::class, 'update'])->name('citas.update');

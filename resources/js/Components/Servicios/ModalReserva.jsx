@@ -36,7 +36,17 @@ export default function ModalReserva({ servicio, isOpen, onClose, onSuccess, use
     return times;
   };
 
+  const getCurrentTime = () => {
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    return `${hours}:${minutes}:00`;
+  };
+
   const getAvailableTimes = () => {
+    const today = new Date().toISOString().split('T')[0];
+    const currentTime = getCurrentTime();
+
     if (!fecha) return generateTimeOptions();
 
     const occupiedTimes = citas
@@ -45,7 +55,13 @@ export default function ModalReserva({ servicio, isOpen, onClose, onSuccess, use
 
     console.log('Horas ocupadas:', occupiedTimes);
 
-    return generateTimeOptions().filter(time => !occupiedTimes.includes(time));
+    let availableTimes = generateTimeOptions().filter(time => !occupiedTimes.includes(time));
+
+    if (fecha === today) {
+      availableTimes = availableTimes.filter(time => time >= currentTime);
+    }
+
+    return availableTimes;
   };
 
   const isDayFullyBooked = (date) => {
@@ -158,27 +174,34 @@ export default function ModalReserva({ servicio, isOpen, onClose, onSuccess, use
             </select>
             {localErrors.peluqueroId && <span className="text-red-500 text-sm">{localErrors.peluqueroId}</span>}
           </div>
-          <div className="mb-4">
+          <div className="mb-4 relative group">
             <label htmlFor="fecha" className="block text-sm font-medium text-gray-700">Fecha</label>
             <input
               type="date"
               id="fecha"
               value={fecha}
               onChange={handleDateChange}
-              className="mt-1 p-2 block w-full border border-gray-300 rounded-md"
+              className={`mt-1 p-2 block w-full border border-gray-300 rounded-md ${!peluqueroId ? 'cursor-not-allowed' : ''}`}
               min={new Date().toISOString().split('T')[0]}
               required
+              disabled={!peluqueroId}
             />
+            {!peluqueroId && (
+              <div className="absolute top-full mt-1 bg-black text-white text-xs rounded py-1 px-2 z-10 w-56 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                Has de elegir peluquero antes de seleccionar una fecha
+              </div>
+            )}
             {localErrors.fecha && <span className="text-red-500 text-sm">{localErrors.fecha}</span>}
           </div>
-          <div className="mb-4">
+          <div className="mb-4 relative group">
             <label htmlFor="hora" className="block text-sm font-medium text-gray-700">Hora</label>
             <select
               id="hora"
               value={hora}
               onChange={(e) => setHora(e.target.value)}
-              className="mt-1 p-2 block w-full border border-gray-300 rounded-md"
+              className={`mt-1 p-2 block w-full border border-gray-300 rounded-md ${!fecha ? 'cursor-not-allowed' : ''}`}
               required
+              disabled={!fecha}
             >
               <option value="">Selecciona una hora</option>
               {getAvailableTimes().map((time) => (
@@ -187,6 +210,11 @@ export default function ModalReserva({ servicio, isOpen, onClose, onSuccess, use
                 </option>
               ))}
             </select>
+            {!fecha && (
+              <div className="absolute top-full mt-1 bg-black text-white text-xs rounded py-1 px-2 z-10 w-56 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                Has de seleccionar una fecha disponible antes de seleccionar la hora
+              </div>
+            )}
             {localErrors.hora && <span className="text-red-500 text-sm">{localErrors.hora}</span>}
           </div>
           <div className="flex justify-end">
