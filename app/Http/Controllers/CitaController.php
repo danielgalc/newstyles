@@ -8,6 +8,8 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class CitaController extends Controller
@@ -25,43 +27,43 @@ class CitaController extends Controller
     }
 
     public function historial()
-{
-    // Obtiene el usuario actualmente autenticado
-    $user = auth()->user();
+    {
+        // Obtiene el usuario actualmente autenticado
+        $user = auth()->user();
 
-    // Obtiene la próxima cita activa (aceptada o pendiente)
-    $proximaCitaActiva = Cita::where('user_id', $user->id)
-        ->whereIn('estado', ['aceptada', 'pendiente'])
-        ->orderBy('fecha', 'asc')
-        ->orderBy('hora', 'asc')
-        ->first();
-
-    // Si no hay citas activas, obtiene la próxima cita inactiva (cancelada)
-    $proximaCitaInactiva = null;
-    if (!$proximaCitaActiva) {
-        $proximaCitaInactiva = Cita::where('user_id', $user->id)
-            ->where('estado', 'cancelada')
+        // Obtiene la próxima cita activa (aceptada o pendiente)
+        $proximaCitaActiva = Cita::where('user_id', $user->id)
+            ->whereIn('estado', ['aceptada', 'pendiente'])
             ->orderBy('fecha', 'asc')
             ->orderBy('hora', 'asc')
             ->first();
+
+        // Si no hay citas activas, obtiene la próxima cita inactiva (cancelada)
+        $proximaCitaInactiva = null;
+        if (!$proximaCitaActiva) {
+            $proximaCitaInactiva = Cita::where('user_id', $user->id)
+                ->where('estado', 'cancelada')
+                ->orderBy('fecha', 'asc')
+                ->orderBy('hora', 'asc')
+                ->first();
+        }
+
+        // Obtiene todas las citas finalizadas o canceladas, ordenadas de más recientes a más antiguas
+        $citasFinalizadas = Cita::where('user_id', $user->id)
+            ->whereIn('estado', ['finalizada', 'cancelada'])
+            ->orderBy('fecha', 'desc')
+            ->orderBy('hora', 'desc')
+            ->get();
+
+        // Obtiene todos los peluqueros
+        $users = User::where('rol', 'peluquero')->get();
+
+        return view('citas.historial-citas', [
+            'proximaCita' => $proximaCitaActiva ? $proximaCitaActiva : $proximaCitaInactiva,
+            'citasFinalizadas' => $citasFinalizadas,
+            'users' => $users,
+        ]);
     }
-
-    // Obtiene todas las citas finalizadas o canceladas, ordenadas de más recientes a más antiguas
-    $citasFinalizadas = Cita::where('user_id', $user->id)
-        ->whereIn('estado', ['finalizada', 'cancelada'])
-        ->orderBy('fecha', 'desc')
-        ->orderBy('hora', 'desc')
-        ->get();
-
-    // Obtiene todos los peluqueros
-    $users = User::where('rol', 'peluquero')->get();
-
-    return view('citas.historial-citas', [
-        'proximaCita' => $proximaCitaActiva ? $proximaCitaActiva : $proximaCitaInactiva,
-        'citasFinalizadas' => $citasFinalizadas,
-        'users' => $users,
-    ]);
-}
 
     public function cancelar(Request $request, $id)
     {
@@ -226,5 +228,77 @@ class CitaController extends Controller
         $cita->save();
 
         return redirect()->back()->with('success', 'Estado de la cita actualizado con éxito.');
+    }
+
+    /**
+     * Funciones del usuario peluquero
+     */
+
+    public function obtenerCitas(Request $request): JsonResponse
+    {
+        $peluqueroId = $request->query('peluquero_id');
+        $citas = Cita::where('peluquero_id', $peluqueroId)
+            ->where('estado', 'aceptada')
+            ->get();
+
+        return response()->json($citas);
+    }
+
+
+
+    public function gestionarCitas()
+    {
+        $user = Auth::user();
+
+        if ($user->rol != 'peluquero' || !str_ends_with($user->email, '@peluquero.com')) {
+            return redirect()->route('home');
+        }
+
+        $citasPendientes = Cita::where('peluquero_id', $user->id)->where('estado', 'pendiente')->get();
+        $citasAceptadas = Cita::where('peluquero_id', $user->id)->where('estado', 'aceptada')->get();
+
+        // Debugging
+        // dd($citasPendientes, $citasAceptadas);
+
+        return view('peluquero.citas', compact('citasPendientes', 'citasAceptadas'));
+    }
+
+
+    public function aceptarCita($id)
+    {
+        $cita = Cita::find($id);
+        $peluqueroId = Auth::id();
+
+        if ($cita->peluquero_id != $peluqueroId || $cita->estado != 'pendiente') {
+            return redirect()->back();
+        }
+
+        DB::transaction(function () use ($cita, $peluqueroId) {
+            Cita::where('peluquero_id', $peluqueroId)
+                ->where('fecha', $cita->fecha)
+                ->where('hora', $cita->hora)
+                ->where('estado', 'pendiente')
+                ->update(['estado' => 'cancelada']);
+
+            $cita->estado = 'aceptada';
+            $cita->save();
+        });
+
+        return redirect()->route('peluquero.citas');
+    }
+
+    public function cancelarCita($id)
+    {
+        $cita = Cita::find($id);
+        $peluqueroId = Auth::id();
+
+        if ($cita->peluquero_id != $peluqueroId || ($cita->estado != 'pendiente' && $cita->estado != 'aceptada')) {
+            return redirect()->back();
+        }
+
+        $cita->estado = 'cancelada';
+        $cita->save();
+
+        return redirect()->route('peluquero.citas');
     }
 }

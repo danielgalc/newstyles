@@ -1,4 +1,3 @@
-// ModalReserva.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
@@ -6,6 +5,74 @@ export default function ModalReserva({ servicio, isOpen, onClose, onSuccess, use
   const [peluqueroId, setPeluqueroId] = useState('');
   const [fecha, setFecha] = useState('');
   const [hora, setHora] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [citas, setCitas] = useState([]);
+
+  useEffect(() => {
+    if (peluqueroId) {
+      axios.get(route('citas.obtenerCitas', { peluquero_id: peluqueroId }))
+        .then(response => {
+          console.log('Citas obtenidas:', response.data);
+          setCitas(response.data);
+        })
+        .catch(error => console.error('Error obteniendo citas:', error));
+    }
+  }, [peluqueroId]);
+
+  const generateTimeOptions = () => {
+    const times = [];
+    const timeRanges = [
+      { start: 10, end: 13 },
+      { start: 16, end: 20 }
+    ];
+
+    timeRanges.forEach(range => {
+      for (let i = range.start; i <= range.end; i++) {
+        times.push(`${String(i).padStart(2, '0')}:00:00`); // Asegurarse de que el formato de la hora es HH:MM:SS
+      }
+    });
+
+    return times;
+  };
+
+  const getAvailableTimes = () => {
+    if (!fecha) return generateTimeOptions();
+
+    const occupiedTimes = citas
+      .filter(cita => cita.fecha === fecha)
+      .map(cita => `${cita.hora}`);
+
+    console.log('Horas ocupadas:', occupiedTimes);
+
+    return generateTimeOptions().filter(time => !occupiedTimes.includes(time));
+  };
+
+  const isDayFullyBooked = (date) => {
+    const formattedDate = date.toISOString().split('T')[0];
+    const times = generateTimeOptions();
+
+    const bookedTimes = citas
+      .filter(cita => cita.fecha === formattedDate)
+      .map(cita => `${cita.hora}`);
+
+    return times.every(time => bookedTimes.includes(time));
+  };
+
+  const handleDateChange = (e) => {
+    const selectedDate = new Date(e.target.value);
+    const day = selectedDate.getUTCDay();
+
+    if (day === 6 || day === 0) {
+      setErrorMessage('No se pueden seleccionar fines de semana. Por favor, elige otro día.');
+      setFecha('');
+    } else if (isDayFullyBooked(selectedDate)) {
+      setErrorMessage('No hay disponibilidad para esta fecha. Por favor, elige otro día.');
+      setFecha('');
+    } else {
+      setErrorMessage('');
+      setFecha(e.target.value);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -62,21 +129,29 @@ export default function ModalReserva({ servicio, isOpen, onClose, onSuccess, use
               type="date"
               id="fecha"
               value={fecha}
-              onChange={(e) => setFecha(e.target.value)}
+              onChange={handleDateChange}
               className="mt-1 p-2 block w-full border border-gray-300 rounded-md"
+              min={new Date().toISOString().split('T')[0]}
               required
             />
+            {errorMessage && <span className="text-red-500 text-sm">{errorMessage}</span>}
           </div>
           <div className="mb-4">
             <label htmlFor="hora" className="block text-sm font-medium text-gray-700">Hora</label>
-            <input
-              type="time"
+            <select
               id="hora"
               value={hora}
               onChange={(e) => setHora(e.target.value)}
               className="mt-1 p-2 block w-full border border-gray-300 rounded-md"
               required
-            />
+            >
+              <option value="">Selecciona una hora</option>
+              {getAvailableTimes().map((time) => (
+                <option key={time} value={time}>
+                  {time.slice(0, 5)} {/* Mostrar solo HH:MM en el select */}
+                </option>
+              ))}
+            </select>
           </div>
           <div className="flex justify-end">
             <button type="submit" className="bg-teal-400 text-white py-2 px-4 rounded-lg">Reservar</button>

@@ -19,6 +19,7 @@
             <select class="rounded" name="estado" id="filtro-citas" onchange="document.getElementById('filter-form').submit();">
                 <option value="" {{ request('estado') == '' ? 'selected' : '' }}>Mostrar todo</option>
                 <option value="aceptada" {{ request('estado') == 'aceptada' ? 'selected' : '' }}>Aceptada</option>
+                <option value="pendiente" {{ request('estado') == 'pendiente' ? 'selected' : '' }}>Pendiente</option>
                 <option value="cancelada" {{ request('estado') == 'cancelada' ? 'selected' : '' }}>Cancelada</option>
                 <option value="finalizada" {{ request('estado') == 'finalizada' ? 'selected' : '' }}>Finalizada</option>
             </select>

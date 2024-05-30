@@ -108,6 +108,7 @@ Route::middleware('auth', 'verified', 'comprobarRol')->group(function () {
     Route::post('/citas', [CitaController::class, 'store'])->name('citas.store');
     Route::get('/historial-citas', [CitaController::class, 'historial'])->name('historial-citas');
     Route::put('/citas/updateFromHistorial/{id}', [CitaController::class, 'updateFromHistorial'])->name('citas.updateFromHistorial');
+    Route::get('/citas/obtenerCitas', [CitaController::class, 'obtenerCitas'])->name('citas.obtenerCitas');
 
     Route::put('/citas/{id}/cancelar', [CitaController::class, 'cancelar'])->name('citas.cancelar');
 
@@ -120,6 +121,16 @@ Route::middleware('auth', 'verified', 'comprobarRol')->group(function () {
 });
 
 require __DIR__ . '/auth.php';
+
+// Rutas accesibles para el usuario peluquero
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/peluquero/citas', [CitaController::class, 'gestionarCitas'])->name('peluquero.citas');
+    Route::put('/citas/{id}/aceptar', [CitaController::class, 'aceptarCita'])->name('citas.aceptar');
+    Route::put('/citas/{id}/cancelar', [CitaController::class, 'cancelarCita'])->name('citas.cancelar');
+    Route::post('/citas/bloquear', [CitaController::class, 'bloquearFecha'])->name('citas.bloquear');
+});
+
 
 // Rutas accesibles para el usuario administrador
 
@@ -153,9 +164,6 @@ Route::put('/productos/{id}', [ProductoController::class, 'update'])
 Route::delete('/productos/{id}', [ProductoController::class, 'destroy'])->name('productos.destroy');
 
 Route::get('/categorias', [ProductoController::class, 'categorias'])->name('categorias'); // Obtener las categorías de los productos para luego mapearlas en el filtro
-
-
-
 
 // Rutas de usuarios
 

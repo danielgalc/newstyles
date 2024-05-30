@@ -18,6 +18,10 @@
   box-shadow: 4px 4px 4px 0 rgb(10, 162, 154);
 }
 
+.delete-shadow {
+  box-shadow: 4px 4px 4px 0 rgb(228, 38, 0);
+}
+
 .circle-shadow {
   box-shadow: 4px 4px 4px 0 rgb(21, 21, 21);
 }
