@@ -9,11 +9,10 @@ import debounce from 'lodash/debounce';
 export default function Productos({ auth, productos, search }) {
   const [searchTerm, setSearchTerm] = useState(search || '');
   const [filteredProductos, setFilteredProductos] = useState(productos);
-  const [sortBy, setSortBy] = useState(null); // Estado para el tipo de orden
+  const [sortBy, setSortBy] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [categorias, setCategorias] = useState([]);
 
-  // useEffect para obtener las categorías cuando el componente se monta
   useEffect(() => {
     const fetchCategorias = async () => {
       try {
@@ -33,14 +32,11 @@ export default function Productos({ auth, productos, search }) {
         params: { search, sortBy, category: selectedCategory }
       });
       setFilteredProductos(response.data.productos);
-      console.log(searchTerm);
-      console.log(filteredProductos);
     } catch (error) {
       console.error('Error fetching productos:', error);
     }
   }, 300);
 
-  // useEffect para actualizar la lista de productos cuando cambian searchTerm, sortBy o selectedCategory
   useEffect(() => {
     if (searchTerm || sortBy || selectedCategory) {
       fetchProductos(searchTerm);
@@ -59,12 +55,12 @@ export default function Productos({ auth, productos, search }) {
 
   const handleSortChange = (e) => {
     const selectedSort = e.target.value;
-    setSortBy(selectedSort); // Actualizar el estado de sortBy
+    setSortBy(selectedSort);
   };
 
   const handleCategoryChange = (e) => {
     const selectedCategory = e.target.value;
-    setSelectedCategory(selectedCategory); // Actualizar la categoría seleccionada
+    setSelectedCategory(selectedCategory);
   };
 
   return (
@@ -87,15 +83,20 @@ export default function Productos({ auth, productos, search }) {
               <option value="price_asc">Menor a mayor precio</option>
               <option value="price_desc">Mayor a menor precio</option>
             </select>
-            <select onChange={handleSortChange} className="p-2 border rounded-md ml-4 w-52">
+            <select onChange={handleCategoryChange} className="p-2 border rounded-md ml-4 w-52">
               <option value="">Seleccionar categoría...</option>
-              {/* Mapea sobre el estado 'categorias' para generar las opciones del select */}
               {categorias.map((categoria, index) => (
                 <option key={index} value={categoria}>{categoria}</option>
               ))}
             </select>
           </div>
-          <Grid productos={filteredProductos} />
+          <Grid 
+            productos={filteredProductos} 
+            setFilteredProductos={setFilteredProductos}
+            searchTerm={searchTerm} 
+            sortBy={sortBy} 
+            selectedCategory={selectedCategory} 
+          />
         </AuthenticatedLayout>
       ) : (
         <GuestLayout>
@@ -117,13 +118,18 @@ export default function Productos({ auth, productos, search }) {
             </select>
             <select onChange={handleCategoryChange} className="p-2 border rounded-md ml-4 w-52">
               <option value="" selected disabled>Seleccionar categoría...</option>
-              {/* Mapea sobre el estado 'categorias' para generar las opciones del select */}
               {categorias.map((categoria, index) => (
                 <option key={index} value={categoria}>{categoria}</option>
               ))}
             </select>
           </div>
-          <Grid productos={filteredProductos} />
+          <Grid 
+            productos={filteredProductos} 
+            setFilteredProductos={setFilteredProductos}
+            searchTerm={searchTerm} 
+            sortBy={sortBy} 
+            selectedCategory={selectedCategory} 
+          />
         </GuestLayout>
       )}
     </div>

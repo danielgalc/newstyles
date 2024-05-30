@@ -1,13 +1,23 @@
 import React from 'react';
 import ProductoCard from './ProductoCard';
 import Paginacion from '@/Components/Paginacion';
-import { Inertia } from '@inertiajs/inertia';
+import axios from 'axios';
 
-export default function Grid({ productos }) {
-    const handlePageChange = (page) => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const search = urlParams.get('search') || '';
-        Inertia.get(`${productos.path}`, { page, search }, { preserveState: true, replace: true });
+export default function Grid({ productos, setFilteredProductos, searchTerm, sortBy, selectedCategory }) {
+    const handlePageChange = async (page) => {
+        try {
+            const response = await axios.get(route('productos.productos'), {
+                params: { 
+                    page, 
+                    search: searchTerm, 
+                    sortBy, 
+                    category: selectedCategory 
+                }
+            });
+            setFilteredProductos(response.data.productos);
+        } catch (error) {
+            console.error('Error fetching productos:', error);
+        }
     };
 
     return (

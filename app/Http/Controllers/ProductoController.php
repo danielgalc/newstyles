@@ -13,7 +13,7 @@ class ProductoController extends Controller
     {
         $search = $request->input('search');
         $sortBy = $request->input('sortBy');
-        $category = $request->input('category'); // Obtener la categoría seleccionada
+        $category = $request->input('category');
 
         $query = Producto::query();
 
@@ -23,7 +23,7 @@ class ProductoController extends Controller
         }
 
         if ($category) {
-            $query->where('categoria', $category); // Filtrar por categoría
+            $query->where('categoria', $category);
         }
 
         switch ($sortBy) {
@@ -55,6 +55,8 @@ class ProductoController extends Controller
         return Inertia::render('Productos/Productos', [
             'productos' => $productos,
             'search' => $search,
+            'sortBy' => $sortBy,
+            'category' => $category,
         ]);
     }
 
