@@ -3,6 +3,7 @@
 @section('title', 'Lista de Servicios')
 
 @section('content')
+
 <div class="p-4">
     <div class="flex justify-between pb-4">
         <h2 class="text-4xl font-bold mb-4">Gestionar de Servicios</h2>
@@ -23,43 +24,10 @@
         </form>
     </div>
 
-    @if ($servicios->count() > 0)
-    <table class="min-w-full divide-y divide-gray-200 rounded-lg overflow-hidden" id="services-table">
-        <thead class="bg-gray-50">
-            <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">ID</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Nombre</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Precio</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Duración</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Creado en</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Actualizado en</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Clase</th>
-            </tr>
-        </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
-            @foreach ($servicios as $servicio)
-            <tr class="hover:bg-teal-200 cursor-pointer w-full service-row" data-clase="{{ $servicio->clase }}" data-modal-toggle="edit_servicio_modal_{{ $servicio->id }}" data-modal-target="edit_servicio_modal_{{ $servicio->id }}">
-                <div>
-                    <td class="px-6 py-4 whitespace-nowrap text-center">{{ $servicio->id }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-center">{{ $servicio->nombre }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-center">{{ $servicio->precio }} &euro;</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-center">{{ $servicio->duracion }} minutos</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-center">{{ $servicio->created_at }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-center">{{ $servicio->updated_at }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-center">{{ $servicio->clase == 'principal' ? 'Principal' : 'Secundario' }}</td>
-                </div>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
-
-    <!-- Mostrar enlaces de paginación -->
-    {{ $servicios->links() }}
-    @else
-    <p>No hay servicios disponibles.</p>
-    @endif
+    <div id="servicios-content">
+        @include('admin.servicios.partials.servicios_list', ['servicios' => $servicios])
+    </div>
 </div>
-
 
 <!-- MODAL PARA EDITAR SERVICIOS -->
 @foreach ($servicios as $servicio)
@@ -221,23 +189,30 @@
     }
     </style>
 
-<!-- SCRIPT PARA FILTRAR POR CLASE -->
+<!-- SCRIPT PARA FILTRAR Y PAGINAR POR AJAX -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const filterSelect = document.getElementById('filtro-servicios');
-        const tableRows = document.querySelectorAll('#services-table .service-row');
+    $(document).ready(function() {
+        $(document).on('click', '.pagination a', function(event) {
+            event.preventDefault();
+            var page = $(this).attr('href').split('page=')[1];
+            var clase = $('#filtro-servicios').val();
+            fetchServicios(page, clase);
+        });
 
-        filterSelect.addEventListener('change', function() {
-            const filterValue = filterSelect.value;
-            tableRows.forEach(row => {
-                const clase = row.getAttribute('data-clase');
-                if (filterValue === "" || clase === filterValue) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
+        $('#filtro-servicios').on('change', function() {
+            var clase = $(this).val();
+            fetchServicios(1, clase); // Reiniciar a la primera página al cambiar el filtro
+        });
+
+        function fetchServicios(page, clase) {
+            $.ajax({
+                url: "/admin/servicios?page=" + page + "&clase=" + clase,
+                success: function(data) {
+                    $('#servicios-content').html(data);
                 }
             });
-        });
+        }
     });
 </script>
 

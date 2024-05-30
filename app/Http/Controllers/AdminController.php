@@ -12,7 +12,6 @@ use Inertia\Inertia;
 
 class AdminController extends Controller
 {
-
     public function usuarios(Request $request)
     {
         $rol = $request->input('rol'); // Obtener el filtro de rol desde la solicitud
@@ -22,6 +21,10 @@ class AdminController extends Controller
             $usuarios = User::where('rol', $rol)->orderBy('updated_at', 'desc')->paginate(8);
         } else {
             $usuarios = User::orderBy('updated_at', 'desc')->paginate(8);
+        }
+
+        if ($request->ajax()) {
+            return view('admin.usuarios.partials.usuarios_list', compact('usuarios'))->render();
         }
 
         return view('admin.usuarios.usuarios', compact('usuarios', 'rol'));
@@ -47,14 +50,18 @@ class AdminController extends Controller
     public function listaServicios(Request $request)
     {
         $clase = $request->input('clase');
-
-        // Aplicar filtro de rol si está presente
+    
+        // Aplicar filtro de clase si está presente
         if ($clase) {
             $servicios = Servicio::where('clase', $clase)->orderBy('updated_at', 'desc')->paginate(8);
         } else {
             $servicios = Servicio::orderBy('updated_at', 'desc')->paginate(8);
         }
-
+    
+        if ($request->ajax()) {
+            return view('admin.servicios.partials.servicios_list', compact('servicios'))->render();
+        }
+    
         return view('admin.servicios.lista_servicios', compact('servicios', 'clase'));
     }
 
