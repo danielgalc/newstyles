@@ -26,51 +26,9 @@
         </form>
     </div>
     
-    @if ($citas->count() > 0)
-    <table class="min-w-full divide-y divide-gray-200 rounded-lg overflow-hidden">
-        <thead class="bg-gray-50">
-            <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">ID</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Usuario</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Peluquero</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Servicio</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Fecha</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Hora</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Estado</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Cambiar estado</th>
-            </tr>
-        </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
-            @foreach ($citas as $cita)
-            <tr class="hover:bg-teal-200 cursor-pointer w-full cita-row" data-estado="{{ $cita->estado }}">
-                <td class="px-6 py-4 whitespace-nowrap text-center" data-modal-toggle="edit_cita_modal_{{ $cita->id }}" data-modal-target="edit_cita_modal_{{ $cita->id }}">{{ $cita->id }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-center" data-modal-toggle="edit_cita_modal_{{ $cita->id }}" data-modal-target="edit_cita_modal_{{ $cita->id }}">{{ $cita->user->name }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-center" data-modal-toggle="edit_cita_modal_{{ $cita->id }}" data-modal-target="edit_cita_modal_{{ $cita->id }}">{{ $cita->peluquero->name }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-center" data-modal-toggle="edit_cita_modal_{{ $cita->id }}" data-modal-target="edit_cita_modal_{{ $cita->id }}">{{ $cita->servicio }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-center" data-modal-toggle="edit_cita_modal_{{ $cita->id }}" data-modal-target="edit_cita_modal_{{ $cita->id }}">{{ $cita->fecha }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-center" data-modal-toggle="edit_cita_modal_{{ $cita->id }}" data-modal-target="edit_cita_modal_{{ $cita->id }}">{{ $cita->hora }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-center" data-modal-toggle="edit_cita_modal_{{ $cita->id }}" data-modal-target="edit_cita_modal_{{ $cita->id }}">{{ $cita->estado }}</td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                    <form action="{{ route('citas.actualizar_estado', ['id' => $cita->id]) }}" method="POST">
-                        @csrf
-                        @method('PUT')
-                        <select name="estado" onchange="this.form.submit()" class="bg-gray-50 border border-gray-300 text-gray-900 text-md rounded-lg focus:ring-teal-500 focus:border-teal-500 block w-full text-center p-2.5">
-                            <option value="" selected>Elegir estado</option>    
-                            <option value="aceptada" {{ $cita->estado == 'aceptada' ? '' : '' }}>Aceptada</option>
-                            <option value="cancelada" {{ $cita->estado == 'cancelada' ? '' : '' }}>Cancelada</option>
-                            <option value="finalizada" {{ $cita->estado == 'finalizada' ? '' : '' }}>Finalizada</option>
-                        </select>
-                    </form>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
-    <!-- Mostrar enlaces de paginación -->
-    {{ $citas->links() }}
-    @else
-    <p>No hay citas disponibles.</p>
-    @endif
+    <div id="citas-content">
+        @include('admin.citas.partials.citas_list', ['citas' => $citas])
+    </div>
 </div>
 
 <!-- MODAL PARA EDITAR CITAS -->
@@ -253,24 +211,31 @@
     </div>
 </div>
 
-<!-- SCRIPT PARA FILTRAR POR ESTADOS -->
+<!-- SCRIPT PARA FILTRAR Y PAGINAR POR AJAX -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const filterSelect = document.getElementById('filtro-citas');
-    const tableRows = document.querySelectorAll('.cita-row');
-
-    filterSelect.addEventListener('change', function () {
-        const filterValue = filterSelect.value;
-        tableRows.forEach(row => {
-            const estado = row.getAttribute('data-estado');
-            if (filterValue === "" || estado === filterValue) {
-                row.style.display = '';
-            } else {
-                row.style.display = 'none';
-            }
+    $(document).ready(function() {
+        $(document).on('click', '.pagination a', function(event) {
+            event.preventDefault();
+            var page = $(this).attr('href').split('page=')[1];
+            var estado = $('#filtro-citas').val();
+            fetchCitas(page, estado);
         });
+
+        $('#filtro-citas').on('change', function() {
+            var estado = $(this).val();
+            fetchCitas(1, estado); // Reiniciar a la primera página al cambiar el filtro
+        });
+
+        function fetchCitas(page, estado) {
+            $.ajax({
+                url: "/admin/citas?page=" + page + "&estado=" + estado,
+                success: function(data) {
+                    $('#citas-content').html(data);
+                }
+            });
+        }
     });
-});
 </script>
 
 @endsection

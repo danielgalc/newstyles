@@ -33,19 +33,24 @@ class AdminController extends Controller
     public function gestionarCitas(Request $request)
     {
         $estado = $request->input('estado'); // Obtener el filtro de estado desde la solicitud
-
+    
         // Aplicar filtro de estado si está presente
         if ($estado) {
             $citas = Cita::where('estado', $estado)->orderBy('fecha', 'desc')->paginate(5);
         } else {
             $citas = Cita::orderBy('fecha', 'desc')->paginate(5);
         }
-
+    
         $servicios = Servicio::all();
         $users = User::where('rol', 'peluquero')->get();
-
+    
+        if ($request->ajax()) {
+            return view('admin.citas.partials.citas_list', compact('citas'))->render();
+        }
+    
         return view('admin.citas.gestionar_citas', compact('citas', 'servicios', 'users', 'estado'));
     }
+    
 
     public function listaServicios(Request $request)
     {
@@ -82,8 +87,6 @@ class AdminController extends Controller
     
         return view('admin.productos.lista_productos', compact('productos', 'categoria'));
     }
-    
-
 
 
     public function mostrarDatos()
