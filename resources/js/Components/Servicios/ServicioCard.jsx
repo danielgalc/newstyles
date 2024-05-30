@@ -2,14 +2,17 @@ import React, { useState } from 'react';
 import ModalReserva from './ModalReserva';
 import ModalConfirmacion from './ModalConfirmacion'; // Importa el nuevo modal
 
-export default function ServicioCard({ servicio, userId, peluqueros }) {
+export default function ServicioCard({ servicio, userId, peluqueros, emailVerified }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false); // Estado para el modal de confirmación
   const [reservaInfo, setReservaInfo] = useState(null); // Estado para la información de la reserva
 
   const handleReserveClick = () => {
-    if (userId) {
+    console.log(userId);
+    if (userId && emailVerified) {
       setIsModalOpen(true);
+    } else if (userId && !emailVerified) {
+      window.location.href = '/verify-email'; // Redirige al usuario a la página de inicio de sesión
     } else {
       window.location.href = '/login'; // Redirige al usuario a la página de inicio de sesión
     }
