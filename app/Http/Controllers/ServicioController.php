@@ -97,7 +97,7 @@ public function index(Request $request)
     
         $servicio->save();
     
-        return redirect('/admin/lista_servicios')
+        return redirect('/admin/servicios')
             ->with('success', 'Servicio añadido con éxito.');
     }
 
@@ -134,7 +134,7 @@ public function index(Request $request)
 
         $servicio->save();
 
-        return redirect('/admin/lista_servicios')
+        return redirect('/admin/servicios')
             ->with('success', 'servicio modificado con éxito.');
     }
     
@@ -148,7 +148,7 @@ public function index(Request $request)
 
         $servicio->delete();
 
-        return redirect('/admin/lista_servicios')
+        return redirect('/admin/servicios')
             ->with('success', 'Servicio eliminado con éxito.');
     }
 }

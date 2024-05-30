@@ -2,21 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cita;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(){
+    public function index()
+    {
         $users = User::all()->where('id', Auth::user()->id)->first();
         return view('perfil.index', [
             'users' => $users,
         ]);
-
     }
 
     /**
@@ -79,19 +81,19 @@ class UserController extends Controller
     public function update(Request $request, string $id)
     {
         $user = User::findOrFail($id);
-    
+
         $user->name = $request->input('name');
         $user->email = $request->input('email');
         $user->rol = $request->input('rol', 'cliente');
-    
+
         // Verificamos si se proporcionó una nueva contraseña 
         if ($request->filled('password')) {
             // Si es así, encriptamos la contraseña
             $user->password = bcrypt($request->input('password'));
         }
-    
+
         $user->save();
-    
+
         return redirect('/admin/usuarios')
             ->with('success', 'Usuario modificado con éxito.');
     }

@@ -37,12 +37,13 @@ export default function LoggedLogos() {
                     >
                         <Menu.Item>
                             {({ active }) => (
-                                <button
+                                <a
                                     className={`${active ? 'bg-gray-100' : ''
                                         } block px-4 py-2 text-sm text-gray-700 w-full text-left`}
+                                    href='/profile'
                                 >
                                     Perfil
-                                </button>
+                                </a>
                             )}
                         </Menu.Item>
                         <Menu.Item>

@@ -23,7 +23,7 @@ const TablaAdmin = ({ titulo, subtitulo, columnas, datos, link }) => (
       </thead>
       <tbody className="bg-white divide-y divide-gray-200">
         {datos.map((fila, index) => (
-          <tr key={index}>
+          <tr key={index} class="hover:bg-teal-100">
             {Object.values(fila).map((valor, i) => (
               <td key={i} className="px-6 py-4 whitespace-nowrap">
                 {valor}

@@ -115,7 +115,7 @@
                         @foreach ($servicios as $servicio)
                             <tr>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ $servicio->nombre }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $servicio->precio }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $servicio->precio }} &euro;</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ $servicio->duracion }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     @if ($servicio->clase == 'principal')

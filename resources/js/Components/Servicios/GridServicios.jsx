@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import ServicioCard from './ServicioCard';
 
-export default function GridServicios({ servicios, userId, peluqueros }) {
+export default function GridServicios({ servicios, userId, peluqueros, emailVerified }) {
     const [showSecundarios, setShowSecundarios] = useState(false);
     const [serviciosPrincipales, setServiciosPrincipales] = useState([]);
     const [serviciosSecundarios, setServiciosSecundarios] = useState([]);
@@ -22,7 +22,7 @@ export default function GridServicios({ servicios, userId, peluqueros }) {
                 <>
                     <div className="grid grid-cols-2 gap-x-8 gap-y-8 mb-4">
                         {serviciosPrincipales.map((servicio) => (
-                            <ServicioCard key={servicio.id} servicio={servicio} userId={userId} peluqueros={peluqueros} />
+                            <ServicioCard key={servicio.id} servicio={servicio} userId={userId} emailVerified={emailVerified} peluqueros={peluqueros} />
                         ))}
                     </div>
 
@@ -44,7 +44,7 @@ export default function GridServicios({ servicios, userId, peluqueros }) {
                             {serviciosSecundarios.length > 0 ? (
                                 <div className="grid grid-cols-2 gap-x-8 gap-y-8">
                                     {serviciosSecundarios.map((servicio) => (
-                                        <ServicioCard key={servicio.id} servicio={servicio} userId={userId} peluqueros={peluqueros} />
+                                        <ServicioCard key={servicio.id} servicio={servicio} userId={userId} emailVerified={emailVerified} peluqueros={peluqueros} />
                                     ))}
                                 </div>
                             ) : (

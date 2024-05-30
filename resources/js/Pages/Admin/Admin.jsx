@@ -32,7 +32,7 @@ const Admin = ({ auth, usuarios, citas, servicios, productos }) => {
             peluquero: cita.peluquero.name,
             servicio: cita.servicio,
             fecha: cita.fecha,
-            hora: cita.hora,
+            hora: new Date(cita.hora).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }),
             estado: cita.estado,
             updated_at: new Date(cita.updated_at).toLocaleString('es-ES')
           }))}
@@ -46,8 +46,8 @@ const Admin = ({ auth, usuarios, citas, servicios, productos }) => {
           columnas={['Servicio', 'Precio', 'Duración', 'Clase', 'Fecha de creación', 'Última modificación']}
           datos={servicios.map(servicio => ({
             nombre: servicio.nombre,
-            precio: servicio.precio,
-            duracion: servicio.duracion,
+            precio: `${servicio.precio}€`,
+            duracion: `${servicio.duracion} minutos`,
             clase: servicio.clase === 'principal' ? 'Principal' : 'Secundario',
             created_at: new Date(servicio.created_at).toLocaleString('es-ES'),
             updated_at: new Date(servicio.updated_at).toLocaleString('es-ES')
@@ -62,7 +62,7 @@ const Admin = ({ auth, usuarios, citas, servicios, productos }) => {
           columnas={['Producto', 'Precio', 'Stock', 'Fecha de creación', 'Última modificación']}
           datos={productos.map(producto => ({
             nombre: producto.nombre,
-            precio: producto.precio,
+            precio: `${producto.precio}€`,
             stock: producto.stock,
             created_at: new Date(producto.created_at).toLocaleString('es-ES'),
             updated_at: new Date(producto.updated_at).toLocaleString('es-ES')

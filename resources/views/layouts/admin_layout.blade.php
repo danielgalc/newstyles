@@ -7,6 +7,7 @@
     <title>@yield('title', 'Admin Dashboard')</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     @vite('resources/css/app.css')
 </head>
 
@@ -70,7 +71,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" width="34" height="30" fill="currentColor" class="tijeras-icon mr-2 pb-1" viewBox="0 0 16 16">
                                 <path d="M3.5 3.5c-.614-.884-.074-1.962.858-2.5L8 7.226 11.642 1c.932.538 1.472 1.616.858 2.5L8.81 8.61l1.556 2.661a2.5 2.5 0 1 1-.794.637L8 9.73l-1.572 2.177a2.5 2.5 0 1 1-.794-.637L7.19 8.61 3.5 3.5zm2.5 10a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0zm7 0a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0z" />
                             </svg>
-                            Lista de servicios
+                            Gestionar servicios
                         </a>
                     </li>
                     <li class="transition-all duration-150 hover:scale-105">
@@ -91,7 +92,7 @@
                                     </g>
                                 </g>
                             </svg>
-                            Lista de productos
+                            Gestionar productos
                         </a>
                     </li>
                 </ul>

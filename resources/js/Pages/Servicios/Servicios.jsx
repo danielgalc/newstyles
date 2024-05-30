@@ -65,7 +65,7 @@ export default function Servicios({ auth, servicios, search, peluqueros }) {
               <option value="price_desc">Mayor a menor precio</option>
             </select>
           </div>
-          <GridServicios servicios={filteredServicios} userId={auth.user.id} peluqueros={peluqueros} />
+          <GridServicios servicios={filteredServicios} userId={auth.user.id} emailVerified={auth.user.email_verified_at} peluqueros={peluqueros} />
         </AuthenticatedLayout>
       ) : (
         <GuestLayout>

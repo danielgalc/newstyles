@@ -1,4 +1,3 @@
-<!-- resources/views/admin/usuarios.blade.php -->
 @extends('layouts.admin_layout')
 
 @section('title', 'Lista de Usuarios')
@@ -22,61 +21,12 @@
                 <option value="cliente" {{ request('rol') == 'cliente' ? 'selected' : '' }}>Clientes</option>
                 <option value="peluquero" {{ request('rol') == 'peluquero' ? 'selected' : '' }}>Peluqueros</option>
             </select>
-        </form>    
+        </form>
     </div>
 
-    @if ($usuarios->count() > 0)
-    <table class="min-w-full divide-y divide-gray-200 rounded-lg overflow-hidden" id="users-table">
-        <thead class="bg-gray-50">
-            <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Nombre
-                </th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Email
-                </th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Rol</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">
-                    Verificado</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Última
-                    Modificación</th>
-            </tr>
-        </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
-            @foreach ($usuarios as $usuario)
-            <tr class="hover:bg-teal-200 cursor-pointer w-full" data-modal-toggle="edit_user_modal_{{ $usuario->id }}" data-modal-target="edit_user_modal_{{ $usuario->id }}">
-                <div>
-
-                    <td class="px-6 py-4 whitespace-nowrap text-center">{{ $usuario->name }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-center">{{ $usuario->email }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-center">
-                        @if($usuario->rol === 'cliente')
-                        Cliente
-                        @elseif($usuario->rol === 'admin')
-                        Admin
-                        @else
-                        Peluquero
-                        @endif
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowraptext-center text-center">
-                        @if ($usuario->email_verified_at)
-                        Verificado
-                        @else
-                        No verificado
-                        @endif
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-center">{{ $usuario->updated_at }}</td>
-
-                </div>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
-
-    <!-- Mostrar enlaces de paginación -->
-    {{ $usuarios->links() }}
-    @else
-    <p>No hay usuarios disponibles.</p>
-    @endif
-
+    <div id="usuarios-content">
+        @include('admin.usuarios.partials.usuarios_list', ['usuarios' => $usuarios])
+    </div>
 </div>
 
 <!-- MODAL PARA EDITAR USUARIOS -->
@@ -99,24 +49,22 @@
             </div>
             <!-- Modal body -->
             <!-- Form Editar -->
-            <form action="{{ route('users.update', ['id' => $usuario->id]) }}" method="post" class="p-4 md:p-5">
+            <form action="{{ route('users.update', ['id' => $usuario->id]) }}" id="editForm_{{ $usuario->id }}" data-edit-form method="post" class="p-4 md:p-5">
                 @csrf
                 @method('PUT')
                 <div class="grid gap-4 mb-4 grid-cols-2">
                     <div class="col-span-2">
-                        <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre</label>
-                        <input type="text" name="name" id="name" value="{{ $usuario->name }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required>
+                        <label for="name_{{ $usuario->id }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre</label>
+                        <input type="text" name="name" id="name_{{ $usuario->id }}" value="{{ $usuario->name }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required>
                     </div>
                     <div class="col-span-2">
-                        <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Correo
-                            Electrónico</label>
-                        <input type="email" name="email" id="email" value="{{ $usuario->email }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required>
+                        <label for="email_{{ $usuario->id }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Correo Electrónico</label>
+                        <input type="email" name="email" id="email_{{ $usuario->id }}" value="{{ $usuario->email }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required>
                     </div>
                     <div class="col-span-2">
-                        <label for="rol" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Rol</label>
-                        <select name="rol" id="rol" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                            <option value="cliente" {{ $usuario->rol == 'cliente' ? 'selected' : '' }}>Cliente
-                            </option>
+                        <label for="rol_{{ $usuario->id }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Rol</label>
+                        <select name="rol" id="rol_{{ $usuario->id }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                            <option value="cliente" {{ $usuario->rol == 'cliente' ? 'selected' : '' }}>Cliente</option>
                             <option value="peluquero" {{ $usuario->rol == 'peluquero' }}>Peluquero</option>
                             <option value="admin" {{ $usuario->rol == 'admin' }}>Administrador</option>
                         </select>
@@ -199,18 +147,18 @@
             <form action="{{ route('users.store') }}" method="post" class="p-4 md:p-5">
                 @csrf
                 <div class="grid gap-4 mb-4 grid-cols-2">
-                    <div class="col-span-2">
+                    <div class="col-span-2 group">
                         <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre</label>
-                        <input type="text" name="name" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Escribe el nombre del usuario" required>
+                        <input type="text" name="name" id="nameCrear" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Escribe el nombre del usuario" required>
                     </div>
-                    <div class="col-span-2">
+                    <div class="col-span-2 group">
                         <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Correo
                             Electrónico</label>
-                        <input type="email" name="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Escribe el correo electrónico" required>
+                        <input type="email" name="email" id="emailCrear" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Escribe el correo electrónico" required>
                     </div>
-                    <div class="col-span-2">
+                    <div class="col-span-2 group">
                         <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Contraseña</label>
-                        <input type="password" name="password" id="password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Escribe la contraseña" required>
+                        <input type="password" name="password" id="passwordCrear" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Escribe la contraseña" required>
                     </div>
                     <div class="col-span-2">
                         <label for="rol" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Rol</label>
@@ -229,25 +177,136 @@
     </div>
 </div>
 
-<!-- SCRIPT PARA FILTRAR POR ROLES -->
+<!-- SCRIPT PARA FILTRAR Y PAGINAR POR AJAX -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const filterSelect = document.getElementById('filtro-users');
-    const tableRows = document.querySelectorAll('#users-table .user-row');
-
-    filterSelect.addEventListener('change', function () {
-        const filterValue = filterSelect.value;
-        tableRows.forEach(row => {
-            const rol = row.getAttribute('data-rol');
-            if (filterValue === "" || rol === filterValue) {
-                row.style.display = '';
-            } else {
-                row.style.display = 'none';
-            }
+    $(document).ready(function() {
+        $(document).on('click', '.pagination a', function(event) {
+            event.preventDefault();
+            var page = $(this).attr('href').split('page=')[1];
+            var rol = $('#filtro-users').val();
+            fetchUsuarios(page, rol);
         });
+
+        $('#filtro-users').on('change', function() {
+            var rol = $(this).val();
+            fetchUsuarios(1, rol); // Reiniciar a la primera página al cambiar el filtro
+        });
+
+        function fetchUsuarios(page, rol) {
+            $.ajax({
+                url: "/admin/usuarios?page=" + page + "&rol=" + rol,
+                success: function(data) {
+                    $('#usuarios-content').html(data);
+                }
+            });
+        }
     });
-});
+</script>
+
+
+<!-- SCRIPTS PARA VALIDAR LA CREACIÓN Y MODIFICACION DE USUARIOS -->
+
+<script>
+    // VALIDACIÓN DE LOS FORMULARIOS DE CREAR Y EDITAR USUARIOS
+    document.addEventListener('DOMContentLoaded', function() {
+        const crearForm = document.querySelector('form[action="{{ route('users.store') }}"]');
+        const editarForm = document.querySelector('form[action^="{{ route('users.update', '') }}"]');
+
+        if (crearForm) {
+            crearForm.addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevenir el envío del formulario
+                validateForm(crearForm, 'nameCrear', 'emailCrear', 'passwordCrear');
+            });
+        }
+
+        // Validación del formulario de edición
+        document.querySelectorAll('[data-edit-form]').forEach(form => {
+            form.addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevenir el envío del formulario
+                const id = form.id.split('_')[1];
+                validateForm(event.target, `name_${id}`, `email_${id}`, `password_${id}`);
+            });
+        });
+
+        function validateForm(form, nameId, emailId, passwordId) {
+            const nameInput = document.getElementById(nameId);
+            const emailInput = document.getElementById(emailId);
+            const passwordInput = passwordId ? document.getElementById(passwordId) : null;
+            let errors = false;
+
+            // Validar el nombre
+            if (nameInput.value.length < 3 || !nameInput.value) {
+                showError(nameInput, 'Nombre no válido. Introduce un nombre válido.');
+                errors = true;
+            } else if (!validarInput(nameInput.value)) {
+                showError(nameInput, 'Ni números ni símbolos especiales son válidos en este campo. Introduce un nombre válido, por favor.');
+                errors = true;
+            } else {
+                hideError(nameInput);
+            }
+
+            // Validar el email
+            if (!emailInput.value || !isValidEmail(emailInput.value)) {
+                showError(emailInput, 'Por favor, introduce una dirección de correo electrónico válida');
+                errors = true;
+            } else {
+                hideError(emailInput);
+            }
+
+            // Validar la contraseña (solo para crear)
+            if (passwordInput) {
+                const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+                if (passwordInput.value.length < 8 || !passwordRegex.test(passwordInput.value)) {
+                    showError(passwordInput, 'La contraseña debe tener al menos 8 caracteres, incluyendo una letra mayúscula, una letra minúscula, un número y un carácter especial.');
+                    errors = true;
+                } else {
+                    hideError(passwordInput);
+                }
+            }
+
+            if (!errors) {
+                form.submit(); // Enviar el formulario si no hay errores
+            }
+        }
+
+        function showError(input, message) {
+            // Eliminar mensaje de error anterior si existe
+            const previousError = input.parentNode.querySelector('.help-block');
+            if (previousError) {
+                previousError.parentNode.removeChild(previousError);
+            }
+
+            const errorSpan = document.createElement('span');
+            errorSpan.classList.add('help-block', 'text-red-500', 'text-sm');
+            errorSpan.innerText = message;
+
+            input.parentNode.appendChild(errorSpan);
+
+            input.classList.add('border', 'border-red-500');
+        }
+
+        function hideError(input) {
+            const errorSpan = input.parentNode.querySelector('.help-block');
+
+            if (errorSpan) {
+                errorSpan.parentNode.removeChild(errorSpan);
+            }
+
+            input.classList.remove('border', 'border-red-500');
+        }
+
+        function isValidEmail(email) {
+            // Expresión regular para validar email
+            const emailRegex = /^[^\s@]{5,}@[^.\s@]{4,}\.[^.\s@]{2,}$/;
+            return emailRegex.test(email);
+        }
+
+        function validarInput(input) {
+            const regex = /^[a-zA-ZáéíóúÁÉÍÓÚ\s]+$/;
+            return regex.test(input);
+        }
+    });
 </script>
 
 @endsection
-
