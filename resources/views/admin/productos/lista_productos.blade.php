@@ -1,4 +1,3 @@
-<!-- resources/views/admin/lista_productos.blade.php -->
 @extends('layouts.admin_layout')
 
 @section('title', 'Lista de Productos')
@@ -29,48 +28,9 @@ use Illuminate\Support\Str;
         </form>
     </div>
 
-    @if ($productos->count() > 0)
-    <table class="min-w-full divide-y divide-gray-200 rounded-lg overflow-hidden" id="productos-table">
-        <thead class="bg-gray-50">
-            <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">ID</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Nombre
-                </th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">
-                    Descripción</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Precio
-                </th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Imagen
-                </th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Stock
-                </th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Categoría
-                </th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">
-                    Actualizado en</th>
-            </tr>
-        </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
-            @foreach ($productos as $producto)
-            <tr class="hover:bg-teal-200 cursor-pointer w-full producto-row" data-categoria="{{ $producto->categoria }}" data-modal-toggle="edit_producto_modal_{{ $producto->id }}" data-modal-target="edit_producto_modal_{{ $producto->id }}">
-                <td class="px-6 py-4 whitespace-nowrap text-center">{{ $producto->id }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-center">{{ $producto->nombre }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-center">{{ Str::limit($producto->descripcion, $limit = 20, $end = '...') }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-center">{{ $producto->precio }} &euro;</td>
-                <td class="px-6 py-4 whitespace-nowrap text-center">{{ $producto->imagen }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-center">{{ $producto->stock }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-center">{{ $producto->categoria }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-center">{{ $producto->updated_at }}</td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
-    <!-- Mostrar enlaces de paginación -->
-    {{ $productos->links() }}
-
-    @else
-    <p>No hay productos disponibles.</p>
-    @endif
+    <div id="productos-content">
+        @include('admin.productos.partials.productos_list', ['productos' => $productos])
+    </div>
 </div>
 
 <!-- MODAL PARA EDITAR PRODUCTOS -->
@@ -249,23 +209,30 @@ use Illuminate\Support\Str;
     }
     </style>
 
-<!-- SCRIPT PARA FILTRAR POR CATEGORIA -->
+<!-- SCRIPT PARA FILTRAR Y PAGINAR POR AJAX -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const filterSelect = document.getElementById('filtro-productos');
-        const tableRows = document.querySelectorAll('#productos-table .producto-row');
+    $(document).ready(function() {
+        $(document).on('click', '.pagination a', function(event) {
+            event.preventDefault();
+            var page = $(this).attr('href').split('page=')[1];
+            var categoria = $('#filtro-productos').val();
+            fetchProductos(page, categoria);
+        });
 
-        filterSelect.addEventListener('change', function() {
-            const filterValue = filterSelect.value;
-            tableRows.forEach(row => {
-                const categoria = row.getAttribute('data-categoria');
-                if (filterValue === "" || categoria === filterValue) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
+        $('#filtro-productos').on('change', function() {
+            var categoria = $(this).val();
+            fetchProductos(1, categoria); // Reiniciar a la primera página al cambiar el filtro
+        });
+
+        function fetchProductos(page, categoria) {
+            $.ajax({
+                url: "/admin/productos?page=" + page + "&categoria=" + categoria,
+                success: function(data) {
+                    $('#productos-content').html(data);
                 }
             });
-        });
+        }
     });
 </script>
 

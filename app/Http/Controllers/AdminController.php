@@ -68,16 +68,21 @@ class AdminController extends Controller
     public function listaProductos(Request $request)
     {
         $categoria = $request->input('categoria'); // Obtener el filtro de categoría desde la solicitud
-
+    
         // Aplicar filtro de categoria si está presente
         if ($categoria) {
             $productos = Producto::where('categoria', $categoria)->orderBy('updated_at', 'desc')->paginate(8);
         } else {
             $productos = Producto::orderBy('updated_at', 'desc')->paginate(8);
         }
-
+    
+        if ($request->ajax()) {
+            return view('admin.productos.partials.productos_list', compact('productos'))->render();
+        }
+    
         return view('admin.productos.lista_productos', compact('productos', 'categoria'));
     }
+    
 
 
 
