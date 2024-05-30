@@ -63,7 +63,7 @@ export default function ForgotPassword({ status }) {
                                 ENVIAR CORREO DE RESTABLECIMIENTO
                             </PrimaryButton>
                             <Link
-                            href={route('landing')}
+                            href={route('login')}
                             className="text-sm mt-2 -mb-3 text-center text-gray-500 underline hover:text-red-500"
                         >
                             No quiero restablecer mi contraseña ahora

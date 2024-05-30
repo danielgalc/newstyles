@@ -127,7 +127,7 @@ require __DIR__ . '/auth.php';
 Route::middleware(['auth'])->group(function () {
     Route::get('/peluquero/citas', [CitaController::class, 'gestionarCitas'])->name('peluquero.citas');
     Route::put('/citas/{id}/aceptar', [CitaController::class, 'aceptarCita'])->name('citas.aceptar');
-    Route::put('/citas/{id}/cancelar', [CitaController::class, 'cancelarCita'])->name('citas.cancelar');
+    //Route::put('/citas/{id}/cancelar', [CitaController::class, 'cancelarCita'])->name('citas.cancelar');
     Route::post('/citas/bloquear', [CitaController::class, 'bloquearFecha'])->name('citas.bloquear');
 });
 

@@ -117,7 +117,7 @@ export default function Productos({ auth, productos, search }) {
               <option value="price_desc">Mayor a menor precio</option>
             </select>
             <select onChange={handleCategoryChange} className="p-2 border rounded-md ml-4 w-52">
-              <option value="" selected disabled>Seleccionar categoría...</option>
+              <option value="" selected>Seleccionar categoría...</option>
               {categorias.map((categoria, index) => (
                 <option key={index} value={categoria}>{categoria}</option>
               ))}
