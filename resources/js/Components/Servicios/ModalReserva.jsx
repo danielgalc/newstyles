@@ -6,6 +6,7 @@ export default function ModalReserva({ servicio, isOpen, onClose, onSuccess, use
   const [fecha, setFecha] = useState('');
   const [hora, setHora] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [localErrors, setLocalErrors] = useState({});
   const [citas, setCitas] = useState([]);
 
   useEffect(() => {
@@ -63,19 +64,52 @@ export default function ModalReserva({ servicio, isOpen, onClose, onSuccess, use
     const day = selectedDate.getUTCDay();
 
     if (day === 6 || day === 0) {
-      setErrorMessage('No se pueden seleccionar fines de semana. Por favor, elige otro día.');
+      setLocalErrors({ fecha: 'No se pueden seleccionar fines de semana. Por favor, elige otro día.' });
       setFecha('');
     } else if (isDayFullyBooked(selectedDate)) {
-      setErrorMessage('No hay disponibilidad para esta fecha. Por favor, elige otro día.');
+      setLocalErrors({ fecha: 'No hay disponibilidad para esta fecha. Por favor, elige otro día.' });
       setFecha('');
     } else {
-      setErrorMessage('');
+      setLocalErrors({});
       setFecha(e.target.value);
     }
   };
 
+  const validateForm = () => {
+    const errors = {};
+
+    if (!peluqueroId) {
+      errors.peluqueroId = 'Por favor, selecciona un peluquero.';
+    }
+
+    if (!fecha) {
+      errors.fecha = 'Por favor, selecciona una fecha válida.';
+    } else {
+      const selectedDate = new Date(fecha);
+      const day = selectedDate.getUTCDay();
+
+      if (day === 6 || day === 0) {
+        errors.fecha = 'No se pueden seleccionar fines de semana. Por favor, elige otro día.';
+      } else if (isDayFullyBooked(selectedDate)) {
+        errors.fecha = 'No hay disponibilidad para esta fecha. Por favor, elige otro día.';
+      }
+    }
+
+    if (!hora) {
+      errors.hora = 'Por favor, selecciona una hora válida.';
+    }
+
+    setLocalErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
+
     try {
       const response = await axios.post(route('citas.store'), {
         user_id: userId,
@@ -122,6 +156,7 @@ export default function ModalReserva({ servicio, isOpen, onClose, onSuccess, use
                 </option>
               ))}
             </select>
+            {localErrors.peluqueroId && <span className="text-red-500 text-sm">{localErrors.peluqueroId}</span>}
           </div>
           <div className="mb-4">
             <label htmlFor="fecha" className="block text-sm font-medium text-gray-700">Fecha</label>
@@ -134,7 +169,7 @@ export default function ModalReserva({ servicio, isOpen, onClose, onSuccess, use
               min={new Date().toISOString().split('T')[0]}
               required
             />
-            {errorMessage && <span className="text-red-500 text-sm">{errorMessage}</span>}
+            {localErrors.fecha && <span className="text-red-500 text-sm">{localErrors.fecha}</span>}
           </div>
           <div className="mb-4">
             <label htmlFor="hora" className="block text-sm font-medium text-gray-700">Hora</label>
@@ -152,6 +187,7 @@ export default function ModalReserva({ servicio, isOpen, onClose, onSuccess, use
                 </option>
               ))}
             </select>
+            {localErrors.hora && <span className="text-red-500 text-sm">{localErrors.hora}</span>}
           </div>
           <div className="flex justify-end">
             <button type="submit" className="bg-teal-400 text-white py-2 px-4 rounded-lg">Reservar</button>
