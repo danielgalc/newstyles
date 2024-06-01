@@ -27,7 +27,7 @@
                         @csrf
                         @method('PUT')
                         <select name="estado" onchange="this.form.submit()" class="bg-gray-50 border border-gray-300 text-gray-900 text-md rounded-lg focus:ring-teal-500 focus:border-teal-500 block w-full text-center p-2.5">
-                            <option value="" selected>Elegir estado</option>    
+                            <option value="" selected disabled>Elegir estado</option>    
                             <option value="aceptada" {{ $cita->estado == 'aceptada' ? '' : '' }}>Aceptada</option>
                             <option value="cancelada" {{ $cita->estado == 'cancelada' ? '' : '' }}>Cancelada</option>
                             <option value="finalizada" {{ $cita->estado == 'finalizada' ? '' : '' }}>Finalizada</option>

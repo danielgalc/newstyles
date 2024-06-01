@@ -105,40 +105,52 @@ class CitaController extends Controller
 
     public function store(Request $request)
     {
+        // Validar los datos de la solicitud
+        $validatedData = $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'peluquero_id' => 'required|exists:users,id',
+            'fecha' => 'required|date|after_or_equal:today',
+            'hora' => 'required|date_format:H:i',
+            'servicio' => 'required|exists:servicios,id',
+        ], [
+            'user_id.required' => 'El campo ID Cliente es obligatorio.',
+            'user_id.exists' => 'El cliente seleccionado no es válido.',
+            'peluquero_id.required' => 'El campo Peluquero es obligatorio.',
+            'peluquero_id.exists' => 'El peluquero seleccionado no es válido.',
+            'fecha.required' => 'El campo Fecha es obligatorio.',
+            'fecha.date' => 'La fecha no es válida.',
+            'fecha.after_or_equal' => 'La fecha no puede ser anterior a hoy.',
+            'hora.required' => 'El campo Hora es obligatorio.',
+            'hora.date_format' => 'La hora no es válida.',
+            'servicio.required' => 'El campo Servicio es obligatorio.',
+            'servicio.exists' => 'El servicio seleccionado no es válido.',
+        ]);
+
+        // Crear una nueva instancia de Cita
         $cita = new Cita();
-
-        // Otros campos de la cita
-        $cita->user_id = $request->input('user_id');
-        $cita->peluquero_id = $request->input('peluquero_id');
-        $cita->fecha = $request->input('fecha');
-        $cita->hora = $request->input('hora');
-
-        // Obtener el nombre del servicio desde la solicitud
-        $servicio = $request->input('servicio');
-
-        //dd($servicioId);
+        $cita->user_id = $validatedData['user_id'];
+        $cita->peluquero_id = $validatedData['peluquero_id'];
+        $cita->fecha = $validatedData['fecha'];
+        $cita->hora = $validatedData['hora'];
 
         // Asociar el nombre del servicio a la relación "servicio"
-        $cita->servicio = $servicio;
+        $servicio = Servicio::findOrFail($validatedData['servicio']);
+        $cita->servicio = $servicio->nombre;
 
         // Verifica si el usuario que crea la cita es un administrador
         $user = $request->user();
         if ($user->rol == 'admin') {
-            $cita->servicio = Servicio::findOrFail($servicio)->nombre; // Asigna el nombre del servicio a la cita
             $cita->estado = 'aceptada';
-
             $cita->save();
-
 
             return redirect('/admin/citas')->with('success', 'Cita añadida con éxito.');
         }
-
-        $cita->servicio = Servicio::findOrFail($servicio)->nombre; // Asigna el nombre del servicio a la cita
 
         $cita->save();
 
         return redirect('/historial-citas')->with('success', 'Cita añadida con éxito.');
     }
+
 
     /**
      * Display the specified resource.
@@ -204,6 +216,18 @@ class CitaController extends Controller
         return redirect()->route('historial-citas')->with('success', 'Cita modificada con éxito.');
     }
 
+    public function buscarUsuarios(Request $request)
+    {
+        $query = $request->get('query');
+        $users = User::where('name', 'like', "%{$query}%")
+            ->orWhere('id', 'like', "%{$query}%")
+            ->orderBy('id')
+            ->get(['id', 'name']);
+
+        return response()->json($users);
+    }
+
+
 
     /**
      * Remove the specified resource from storage.
@@ -234,16 +258,16 @@ class CitaController extends Controller
      * Funciones del usuario peluquero
      */
 
-     public function obtenerCitas(Request $request): JsonResponse
-     {
-         $peluqueroId = $request->query('peluquero_id');
-         $citas = Cita::where('peluquero_id', $peluqueroId)
-                       ->where('estado', 'aceptada')
-                       ->get();
-     
-         return response()->json($citas);
-     }
-    
+    public function obtenerCitas(Request $request): JsonResponse
+    {
+        $peluqueroId = $request->query('peluquero_id');
+        $citas = Cita::where('peluquero_id', $peluqueroId)
+            ->where('estado', 'aceptada')
+            ->get();
+
+        return response()->json($citas);
+    }
+
     public function gestionarCitas()
     {
         $user = Auth::user();

@@ -164,19 +164,19 @@
             fechaInput.setAttribute('min', today);
 
             // Función para deshabilitar el input de hora
-            function disableHoraInput() {
+            function deshabilitarHoraInput() {
                 horaInput.disabled = true;
                 horaInput.classList.add('cursor-not-allowed');
             }
 
             // Función para habilitar el input de hora
-            function enableHoraInput() {
+            function habilitarHoraInput() {
                 horaInput.disabled = false;
                 horaInput.classList.remove('cursor-not-allowed');
             }
 
             // Generar opciones de tiempo disponibles
-            function generateTimeOptions() {
+            function generarHorasOptions() {
                 const times = [];
                 const timeRanges = [{
                         start: 10,
@@ -198,7 +198,7 @@
             }
 
             // Obtener la hora actual en formato HH:MM:SS
-            function getCurrentTime() {
+            function getHoraActual() {
                 const now = new Date();
                 const hours = String(now.getHours()).padStart(2, '0');
                 const minutes = String(now.getMinutes()).padStart(2, '0');
@@ -206,7 +206,7 @@
             }
 
             // Validar la fecha seleccionada
-            function validateDate() {
+            function validarFecha() {
                 const selectedDate = new Date(fechaInput.value);
                 const day = selectedDate.getUTCDay();
 
@@ -214,17 +214,17 @@
                     fechaInput.value = ''; // Resetear el campo de fecha
                     errorMessage.textContent = 'No se pueden seleccionar fines de semana. Por favor, elige otro día.';
                     errorMessage.style.display = 'block';
-                    disableHoraInput(); // Deshabilitar el input de hora
+                    deshabilitarHoraInput(); // Deshabilitar el input de hora
                     return;
                 } else if (fechaInput.value === '') {
                     errorMessage.textContent = 'Selecciona una fecha antes de elegir una hora';
                     errorMessage.style.display = 'block';
-                    disableHoraInput(); // Deshabilitar el input de hora
+                    deshabilitarHoraInput(); // Deshabilitar el input de hora
                     return;
                 }
 
                 errorMessage.style.display = 'none';
-                enableHoraInput(); // Habilitar el input de hora
+                habilitarHoraInput(); // Habilitar el input de hora
                 obtenerCitas(peluqueroInput.value, fechaInput.value);
             }
 
@@ -255,9 +255,9 @@
                     .filter(cita => cita.fecha === fecha) // Cambio: filtro por fecha específica
                     .map(cita => `${cita.hora}`);
                 console.log('Horas ocupadas:', occupiedTimes);
-                const availableTimes = generateTimeOptions().filter(time => !occupiedTimes.includes(time));
+                const horasDisponibles = generarHorasOptions().filter(time => !occupiedTimes.includes(time));
 
-                availableTimes.forEach(time => {
+                horasDisponibles.forEach(time => {
                     const option = document.createElement('option');
                     option.value = time.slice(0, 5); // Mostrar solo HH:MM
                     option.textContent = time.slice(0, 5);
@@ -267,7 +267,7 @@
                 // Deshabilitar horas pasadas si la fecha es hoy
                 const today = new Date().toISOString().split('T')[0];
                 if (fechaInput.value === today) {
-                    const currentTime = getCurrentTime();
+                    const currentTime = getHoraActual();
                     horaInput.querySelectorAll('option').forEach(option => {
                         if (option.value && option.value < currentTime.slice(0, 5)) {
                             option.disabled = true;
@@ -275,7 +275,7 @@
                     });
                 }
 
-                console.log('Horas disponibles:', availableTimes);
+                console.log('Horas disponibles:', horasDisponibles);
             }
 
             // Event listener para el cambio de peluquero
@@ -287,16 +287,16 @@
 
             // Agregar el listener al campo de fecha
             fechaInput.addEventListener('input', function() {
-                validateDate();
+                validarFecha();
             });
 
             // Deshabilitar el input de hora al cargar la página si no hay fecha seleccionada
             if (!fechaInput.value) {
-                disableHoraInput();
+                deshabilitarHoraInput();
             }
 
             // Validar la fecha al cargar la página
-            validateDate();
+            validarFecha();
         });
     </script>
 
@@ -317,7 +317,7 @@
             const textoCambio = document.getElementById('texto_cambio_{{ $proximaCita->id }}');
             const textoHora = document.getElementById('texto_hora_{{ $proximaCita->id }}');
 
-            function checkTimeRestriction() {
+            function comprobRestricionHora() {
                 const now = new Date();
                 const citaFecha = new Date(form.fecha.value + 'T' + form.hora.value);
                 const diff = citaFecha - now;
@@ -337,7 +337,7 @@
                     originalData.fecha !== newData.fecha ||
                     originalData.hora !== newData.hora;
 
-                const isTimeRestricted = checkTimeRestriction();
+                const isTimeRestricted = comprobRestricionHora();
 
                 submitButton.disabled = !isChanged || isTimeRestricted;
                 submitButton.classList.toggle('bg-blue-700', isChanged && !isTimeRestricted);
