@@ -193,9 +193,13 @@ Route::get('/admin/gestionar_citas/{id}/edit', [CitaController::class, 'edit']);
 Route::put('/admin/gestionar_citas/{id}', [CitaController::class, 'update'])->name('citas.update');
 
 Route::delete('/admin/gestionar_citas/{id}', [CitaController::class, 'destroy'])->name('citas.destroy');
+Route::get('/admin/gestionar_citas/obtenerCitas', [CitaController::class, 'obtenerCitas'])->name('admin.citas.obtenerCitas');
 
 
 Route::put('admin/gestionar_citas/{id}/actualizar-estado', [CitaController::class, 'actualizar_estado'])->name('citas.actualizar_estado');
+
+
+
 
 
 require __DIR__ . '/auth.php';

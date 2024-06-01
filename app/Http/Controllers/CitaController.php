@@ -243,9 +243,7 @@ class CitaController extends Controller
      
          return response()->json($citas);
      }
-
-
-
+    
     public function gestionarCitas()
     {
         $user = Auth::user();
