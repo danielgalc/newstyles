@@ -60,7 +60,7 @@
             <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
                 <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                        Editar Cita: <span class="italic text-teal-600">#{{ $proximaCita->id }}</span>
+                        Editar Cita:</span>
                     </h3>
                     <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="edit_cita_modal_{{ $proximaCita->id }}">
                         <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
@@ -87,7 +87,7 @@
                         </div>
                         <div class="col-span-2">
                             <label for="hora_{{ $proximaCita->id }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Hora</label>
-                            <select id="hora_{{ $proximaCita->id }}" name="hora" class="mt-1 p-2 block w-full border border-gray-300 rounded-md cursor-not-allowed" required disabled>
+                            <select id="hora_{{ $proximaCita->id }}" name="hora" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 cursor-not-allowed" required disabled>
                                 <option value="">Selecciona una hora</option>
                             </select>
                         </div>

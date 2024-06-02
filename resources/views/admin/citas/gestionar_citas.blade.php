@@ -345,7 +345,7 @@
                                 div.textContent = `${user.name} (${user.id})`;
                                 div.addEventListener('click', function() {
                                     userIdInput.value = user.id;
-                                    userSearchInput.value = `${user.name} (${user.id})`;
+                                    userSearchInput.value = `${user.name}`;
                                     userSearchResults.innerHTML = '';
                                     userSearchResults.style.display = 'none';
                                 });

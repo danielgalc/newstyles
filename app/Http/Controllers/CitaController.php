@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cita;
 use App\Models\Servicio;
 use App\Models\User;
+use App\Rules\HoraValida;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -103,53 +104,45 @@ class CitaController extends Controller
      * Store a newly created resource in storage.
      */
 
-    public function store(Request $request)
-    {
-        // Validar los datos de la solicitud
-        $validatedData = $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'peluquero_id' => 'required|exists:users,id',
-            'fecha' => 'required|date|after_or_equal:today',
-            'hora' => 'required|date_format:H:i',
-            'servicio' => 'required|exists:servicios,id',
-        ], [
-            'user_id.required' => 'El campo ID Cliente es obligatorio.',
-            'user_id.exists' => 'El cliente seleccionado no es válido.',
-            'peluquero_id.required' => 'El campo Peluquero es obligatorio.',
-            'peluquero_id.exists' => 'El peluquero seleccionado no es válido.',
-            'fecha.required' => 'El campo Fecha es obligatorio.',
-            'fecha.date' => 'La fecha no es válida.',
-            'fecha.after_or_equal' => 'La fecha no puede ser anterior a hoy.',
-            'hora.required' => 'El campo Hora es obligatorio.',
-            'hora.date_format' => 'La hora no es válida.',
-            'servicio.required' => 'El campo Servicio es obligatorio.',
-            'servicio.exists' => 'El servicio seleccionado no es válido.',
-        ]);
-
-        // Crear una nueva instancia de Cita
-        $cita = new Cita();
-        $cita->user_id = $validatedData['user_id'];
-        $cita->peluquero_id = $validatedData['peluquero_id'];
-        $cita->fecha = $validatedData['fecha'];
-        $cita->hora = $validatedData['hora'];
-
-        // Asociar el nombre del servicio a la relación "servicio"
-        $servicio = Servicio::findOrFail($validatedData['servicio']);
-        $cita->servicio = $servicio->nombre;
-
-        // Verifica si el usuario que crea la cita es un administrador
-        $user = $request->user();
-        if ($user->rol == 'admin') {
-            $cita->estado = 'aceptada';
-            $cita->save();
-
-            return redirect('/admin/citas')->with('success', 'Cita añadida con éxito.');
-        }
-
-        $cita->save();
-
-        return redirect('/historial-citas')->with('success', 'Cita añadida con éxito.');
-    }
+     public function store(Request $request)
+     {
+         $request->validate([
+             'user_id' => 'required|integer|exists:users,id',
+             'peluquero_id' => 'required|integer|exists:users,id',
+             'fecha' => 'required|date',
+             'hora' => 'required',
+             'servicio' => 'required|integer|exists:servicios,id',
+         ]);
+     
+         $hora = $request->input('hora');
+         // Convertir "H:i" a "H:i:s" si es necesario
+         if (preg_match('/^\d{2}:\d{2}$/', $hora)) {
+             $hora .= ':00';
+         }
+     
+         $cita = new Cita();
+         $cita->user_id = $request->input('user_id');
+         $cita->peluquero_id = $request->input('peluquero_id');
+         $cita->fecha = $request->input('fecha');
+         $cita->hora = $hora;
+         $servicio = Servicio::findOrFail($request->input('servicio'));
+         $cita->servicio = $servicio->nombre;
+     
+         // Verifica si el usuario que crea la cita es un administrador
+         $user = $request->user();
+         if ($user->rol == 'admin') {
+             $cita->estado = 'aceptada';
+             $cita->save();
+     
+             return redirect('/admin/citas')->with('success', 'Cita añadida con éxito.');
+         }
+     
+         $cita->save();
+     
+         return redirect('/historial-citas')->with('success', 'Cita añadida con éxito.');
+     }
+     
+    
 
 
     /**
