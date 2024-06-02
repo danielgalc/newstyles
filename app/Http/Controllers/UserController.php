@@ -35,21 +35,44 @@ class UserController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     */
+     */    
     public function store(Request $request)
     {
+        // Validar los datos de entrada
+        $request->validate([
+            'name' => ['required', 'string', 'min:3', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚ\s]+$/'],
+            'email' => ['required', 'email', 'unique:users,email'],
+            'password' => ['required', 'string', 'min:8', 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/'],
+            'rol' => ['required', 'in:cliente,peluquero,admin'],
+        ], [
+            'name.required' => 'El nombre es obligatorio.',
+            'name.string' => 'El nombre debe ser una cadena de texto.',
+            'name.min' => 'El nombre debe tener al menos 3 caracteres.',
+            'name.regex' => 'El nombre solo puede contener letras y espacios.',
+            'email.required' => 'El correo electrónico es obligatorio.',
+            'email.email' => 'El correo electrónico debe ser una dirección de correo válida.',
+            'email.unique' => 'El correo electrónico ya está registrado.',
+            'password.required' => 'La contraseña es obligatoria.',
+            'password.string' => 'La contraseña debe ser una cadena de texto.',
+            'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
+            'password.regex' => 'La contraseña debe contener al menos una letra minúscula, una letra mayúscula, un número y un carácter especial.',
+            'rol.required' => 'El rol es obligatorio.',
+            'rol.in' => 'El rol debe ser uno de los siguientes: cliente, peluquero, admin.',
+        ]);
+    
+        // Crear un nuevo usuario
         $user = new User();
-
         $user->name = $request->input('name');
         $user->email = $request->input('email');
         $user->password = bcrypt($request->input('password'));
         $user->rol = $request->input('rol', 'cliente'); // Valor por defecto si no se proporciona
-
+    
         $user->save();
-
+    
         return redirect('/admin/usuarios')
             ->with('success', 'Usuario añadido con éxito.');
     }
+    
 
     /**
      * Display the specified resource.
@@ -78,25 +101,46 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
+        // Obtener el usuario
         $user = User::findOrFail($id);
-
+    
+        // Validar los datos de entrada
+        $request->validate([
+            'name' => ['required', 'string', 'min:3', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚ\s]+$/'],
+            'email' => ['required', 'email', 'unique:users,email,' . $user->id],
+            'password' => ['nullable', 'string', 'min:8', 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/'],
+            'rol' => ['required', 'in:cliente,peluquero,admin'],
+        ], [
+            'name.required' => 'El nombre es obligatorio.',
+            'name.string' => 'El nombre debe ser una cadena de texto.',
+            'name.min' => 'El nombre debe tener al menos 3 caracteres.',
+            'name.regex' => 'El nombre solo puede contener letras y espacios.',
+            'email.required' => 'El correo electrónico es obligatorio.',
+            'email.email' => 'El correo electrónico debe ser una dirección de correo válida.',
+            'email.unique' => 'El correo electrónico ya está registrado.',
+            'password.string' => 'La contraseña debe ser una cadena de texto.',
+            'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
+            'password.regex' => 'La contraseña debe contener al menos una letra minúscula, una letra mayúscula, un número y un carácter especial.',
+            'rol.required' => 'El rol es obligatorio.',
+            'rol.in' => 'El rol debe ser uno de los siguientes: cliente, peluquero, admin.',
+        ]);
+    
+        // Actualizar los datos del usuario
         $user->name = $request->input('name');
         $user->email = $request->input('email');
-        $user->rol = $request->input('rol', 'cliente');
-
-        // Verificamos si se proporcionó una nueva contraseña 
         if ($request->filled('password')) {
-            // Si es así, encriptamos la contraseña
             $user->password = bcrypt($request->input('password'));
         }
-
+        $user->rol = $request->input('rol', 'cliente'); // Valor por defecto si no se proporciona
+    
         $user->save();
-
+    
         return redirect('/admin/usuarios')
-            ->with('success', 'Usuario modificado con éxito.');
+            ->with('success', 'Usuario actualizado con éxito.');
     }
+    
 
     /**
      * Remove the specified resource from storage.

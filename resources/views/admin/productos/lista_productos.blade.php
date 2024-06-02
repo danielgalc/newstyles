@@ -12,19 +12,21 @@ use Illuminate\Support\Str;
     <div class="flex justify-between pb-4">
         <h2 class="text-4xl font-bold mb-4">Gestionar Productos</h2>
         <!-- Modal toggle -->
-        <button data-modal-target="crud-modal" data-modal-toggle="crud-modal" class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 h-10 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
+        <button data-modal-target="crud-modal" data-modal-toggle="crud-modal" class="block text-white bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 h-10 text-center bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-800" type="button">
             Añadir nuevo producto
         </button>
     </div>
 
-    <!-- FILTRO POR CATEGORIA -->
-    <div class="mb-4">
-        <form method="GET" action="{{ route('admin.productos') }}" id="filter-form">
-            <select class="rounded" name="categoria" id="filtro-productos" onchange="document.getElementById('filter-form').submit();">
+    <!-- FILTRO POR CATEGORIA Y BÚSQUEDA -->
+    <div class="mb-4 flex items-center">
+        <form method="GET" action="{{ route('admin.productos') }}" id="filter-form" class="flex items-center">
+            <select class="rounded mr-2" name="categoria" id="filtro-productos" onchange="document.getElementById('filter-form').submit();">
                 <option value="" {{ request('categoria') == '' ? 'selected' : '' }}>Mostrar todo</option>
                 <option value="categoria1" {{ request('categoria') == 'categoria1' ? 'selected' : '' }}>Categoría 1</option>
                 <option value="categoria2" {{ request('categoria') == 'categoria2' ? 'selected' : '' }}>Categoría 2</option>
             </select>
+            <input type="text" name="buscar" placeholder="Buscar productos..." class="rounded border-gray-300 mr-2" value="{{ request('buscar') }}">
+            <button type="submit" class="ml-2 text-white bg-teal-500 hover:bg-teal-800 focus:ring-4 focus:outline-none focus:ring-teal-300 font-medium rounded-lg text-sm px-4 h-10 text-center dark:bg-teal-600 dark:hover:bg-teal-700 dark:focus:ring-teal-800">Buscar</button>
         </form>
     </div>
 
@@ -85,7 +87,7 @@ use Illuminate\Support\Str;
                         </select>
                     </div>
                 </div>
-                <button type="submit" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                <button type="submit" class="text-white inline-flex items-center bg-teal-500 hover:bg-teal-800 focus:ring-4 focus:outline-none focus:ring-teal-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-teal-600 dark:hover:bg-teal-700 dark:focus:ring-teal-800">
                     Guardar cambios
                 </button>
 
@@ -217,17 +219,17 @@ use Illuminate\Support\Str;
             event.preventDefault();
             var page = $(this).attr('href').split('page=')[1];
             var categoria = $('#filtro-productos').val();
-            fetchProductos(page, categoria);
+            var buscar = $('input[name="buscar"]').val();
+            fetchProductos(page, categoria, buscar);
         });
 
         $('#filtro-productos').on('change', function() {
-            var categoria = $(this).val();
-            fetchProductos(1, categoria); // Reiniciar a la primera página al cambiar el filtro
+            $('#filter-form').submit();
         });
 
-        function fetchProductos(page, categoria) {
+        function fetchProductos(page, categoria, buscar) {
             $.ajax({
-                url: "/admin/productos?page=" + page + "&categoria=" + categoria,
+                url: "/admin/productos?page=" + page + "&categoria=" + categoria + "&buscar=" + buscar,
                 success: function(data) {
                     $('#productos-content').html(data);
                 }
@@ -250,7 +252,7 @@ use Illuminate\Support\Str;
             form.addEventListener('submit', function(event) {
                 event.preventDefault(); // Prevenir el envío del formulario
                 const id = form.id.split('_')[1];
-                validateForm(event.target, `nombre_${id}`, `precio_${id}`, `descripcion_${id}`, `stock_${id}`);
+                validateForm(event.target, `nombre_${id}`, `precio_${id}`, `descripcion_${id}`, `stock_${id}`, `categoria_${id}`);
             });
         });
 
@@ -259,6 +261,7 @@ use Illuminate\Support\Str;
             const precioInput = document.getElementById(precioId);
             const descripcionInput = document.getElementById(descripcionId);
             const stockInput = document.getElementById(stockId);
+            const categoriaInput = document.getElementById(categoriaId);
             let errors = false;
 
             // Validar el nombre
@@ -294,6 +297,14 @@ use Illuminate\Support\Str;
                 errors = true;
             } else {
                 hideError(stockInput);
+            }
+
+            // Validar la categoría
+            if (!categoriaInput.value) {
+                showError(categoriaInput, 'Por favor, selecciona una categoría');
+                errors = true;
+            } else {
+                hideError(categoriaInput);
             }
 
             if (!errors) {

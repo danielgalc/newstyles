@@ -13,14 +13,16 @@
         </button>
     </div>
 
-    <!-- FILTRO POR CLASE -->
+    <!-- FILTRO POR CLASE Y BÚSQUEDA -->
     <div class="mb-4">
-        <form method="GET" action="{{ route('admin.servicios') }}" id="filter-form">
-            <select class="rounded" name="clase" id="filtro-servicios" onchange="document.getElementById('filter-form').submit();">
+        <form method="GET" action="{{ route('admin.servicios') }}" id="filter-form" class="flex items-center">
+            <select class="rounded mr-2" name="clase" id="filtro-servicios" onchange="document.getElementById('filter-form').submit();">
                 <option value="" {{ request('clase') == '' ? 'selected' : '' }}>Mostrar todo</option>
                 <option value="principal" {{ request('clase') == 'principal' ? 'selected' : '' }}>Principal</option>
                 <option value="secundario" {{ request('clase') == 'secundario' ? 'selected' : '' }}>Secundario</option>
             </select>
+            <input type="text" name="buscar" placeholder="Buscar servicios..." class="rounded border-gray-300 ml-2" value="{{ request('buscar') }}">
+            <button type="submit" class="ml-2 text-white bg-teal-500 hover:bg-teal-800 focus:ring-4 focus:outline-none focus:ring-teal-300 font-medium rounded-lg text-sm px-4 h-10 text-center dark:bg-teal-600 dark:hover:bg-teal-700 dark:focus:ring-teal-800">Buscar</button>
         </form>
     </div>
 
@@ -73,7 +75,7 @@
                         </select>
                     </div>
                 </div>
-                <button type="submit" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                <button type="submit" class="text-white inline-flex items-center bg-teal-500 hover:bg-teal-800 focus:ring-4 focus:outline-none focus:ring-teal-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-teal-600 dark:hover:bg-teal-700 dark:focus:ring-teal-800">
                     Guardar cambios
                 </button>
 
@@ -197,17 +199,19 @@
             event.preventDefault();
             var page = $(this).attr('href').split('page=')[1];
             var clase = $('#filtro-servicios').val();
-            fetchServicios(page, clase);
+            var buscar = $('input[name="buscar"]').val();
+            fetchServicios(page, clase, buscar);
         });
 
         $('#filtro-servicios').on('change', function() {
             var clase = $(this).val();
-            fetchServicios(1, clase); // Reiniciar a la primera página al cambiar el filtro
+            var buscar = $('input[name="buscar"]').val();
+            fetchServicios(1, clase, buscar); // Reiniciar a la primera página al cambiar el filtro
         });
 
-        function fetchServicios(page, clase) {
+        function fetchServicios(page, clase, buscar) {
             $.ajax({
-                url: "/admin/servicios?page=" + page + "&clase=" + clase,
+                url: "/admin/servicios?page=" + page + "&clase=" + clase + "&buscar=" + buscar,
                 success: function(data) {
                     $('#servicios-content').html(data);
                 }
@@ -269,7 +273,6 @@
             } else {
                 hideError(duracionInput);
             }
-
 
             if (!errors) {
                 form.submit(); // Enviar el formulario si no hay errores

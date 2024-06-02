@@ -57,7 +57,7 @@
                 <div class="grid gap-4 mb-4 grid-cols-2">
                     <div class="col-span-2">
                         <label for="user_search_edit_{{ $cita->id }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Buscar Cliente</label>
-                        <input type="text" id="user_search_edit_{{ $cita->id }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Busca por nombre o ID" required />
+                        <input type="text" value="{{ $cita->user->name }}" id="user_search_edit_{{ $cita->id }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Busca por nombre o ID" required />
                         <div id="user_search_results_edit_{{ $cita->id }}" class="absolute z-10 bg-white border border-gray-300 w-3/4 mt-1 rounded-lg shadow-lg hidden overflow-y-auto max-h-40"></div>
                         <input type="hidden" name="user_id" id="user_id_edit_{{ $cita->id }}" value="{{ $cita->user_id }}" />
                     </div>
@@ -97,7 +97,7 @@
                     </div>
                 </div>
                 <div class="flex justify-between">
-                    <button type="submit" id="submit_button_edit_{{ $cita->id }}" class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 h-10 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Guardar cambios</button>
+                    <button type="submit" id="submit_button_edit_{{ $cita->id }}" class="text-white inline-flex items-center bg-teal-500 hover:bg-teal-800 focus:ring-4 focus:outline-none focus:ring-teal-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-teal-600 dark:hover:bg-teal-700 dark:focus:ring-teal-800">Guardar cambios</button>
                     <button type="button" class="text-white bg-red-600 hover:bg-red-700 inline-flex items-center font-medium rounded-lg text-sm px-5 py-2.5 text-center" data-modal-hide="edit_cita_modal_{{ $cita->id }}" data-modal-target="confirm_delete_modal_{{ $cita->id }}" data-modal-toggle="confirm_delete_modal_{{ $cita->id }}">Eliminar cita</button>
                 </div>
             </form>
