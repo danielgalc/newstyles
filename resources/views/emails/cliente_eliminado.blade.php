@@ -1,15 +1,14 @@
-{{-- resources/views/emails/contacto.blade.php --}}
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Contact Message</title>
+    <title>Cuenta Eliminada</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Righteous&display=swap');
 
         body {
             font-family: Arial, sans-serif;
-            background-color: #99a7ad;
+            background-color: rgb(45 212 191);
             margin: 0;
             padding: 20px;
         }
@@ -55,14 +54,15 @@
 </head>
 <body>
     <div class="container flex flex-col items-center justify-center">
-        <h1>Nuevo Mensaje de Contacto</h1>
-        <p><span class="label">Nombre:</span> {{ $name }}</p>
-        <p><span class="label">Correo electrónico:</span> {{ $email }}</p>
-        <p><span class="label">Asunto:</span> {{ $subject }}</p>
-        <div class="message">
-            <p><span class="label">Mensaje:</span></p>
-            <p>{!! nl2br(e($content)) !!}</p>
+        <div class="logo">
+            <img src="{{ asset('images/Logo1Transparente.png') }}" alt="Logo">
         </div>
+        <h1>Cuenta Eliminada</h1>
+        <p>Hola <span class="label">{{ $user->name }}</span>,</p>
+        <p>Te informamos que tu cuenta ha sido eliminada permanentemente. Además, todas tus citas han sido canceladas.</p>
+        <p>Si tienes alguna pregunta o necesitas más información, por favor contáctanos.</p>
+        <p>Gracias,</p>
+        <p>Equipo de NewStyles</p>
     </div>
 </body>
 </html>

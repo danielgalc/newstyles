@@ -76,7 +76,7 @@
                     <div class="col-span-2">
                         <label for="hora_edit_{{ $cita->id }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Hora</label>
                         <select id="hora_edit_{{ $cita->id }}" name="hora" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 cursor-not-allowed" required disabled>
-                            <option value="">Selecciona una hora</option>
+                            <option value="{{$cita->hora}}">Selecciona una hora</option>
                         </select>
                     </div>
                     <div class="col-span-2">
@@ -218,229 +218,234 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-    function iniciarScriptsModales(modalId) {
-        const fechaInput = document.getElementById('fecha_' + modalId);
-        const peluqueroInput = document.getElementById('peluquero_id_' + modalId);
-        const horaInput = document.getElementById('hora_' + modalId);
-        const errorMessage = document.createElement('p');
-        errorMessage.className = 'text-red-500 text-xs italic mb-2 mt-2';
-        errorMessage.style.display = 'none';
-        fechaInput.parentNode.insertBefore(errorMessage, fechaInput.nextSibling);
+        function iniciarScriptsModales(modalId, currentHour = null, currentDate = null) {
+            const fechaInput = document.getElementById('fecha_' + modalId);
+            const peluqueroInput = document.getElementById('peluquero_id_' + modalId);
+            const horaInput = document.getElementById('hora_' + modalId);
+            const userSearchInput = document.getElementById('user_search_' + modalId);
+            const userSearchResults = document.getElementById('user_search_results_' + modalId);
+            const userIdInput = document.getElementById('user_id_' + modalId);
 
-        // Buscador de usuarios
-        const userSearchInput = document.getElementById('user_search_' + modalId);
-        const userSearchResults = document.getElementById('user_search_results_' + modalId);
-        const userIdInput = document.getElementById('user_id_' + modalId);
-        const userErrorMessage = document.createElement('p');
-        userErrorMessage.className = 'text-red-500 text-xs italic mb-2 mt-2';
-        userErrorMessage.style.display = 'none';
-        userSearchInput.parentNode.insertBefore(userErrorMessage, userSearchInput.nextSibling);
-
-        const form = document.getElementById(modalId === 'crear' ? 'crearForm' : 'edit_cita_form_' + modalId.split('_')[1]);
-
-        const today = new Date().toISOString().split('T')[0];
-        fechaInput.setAttribute('min', today);
-
-        function deshabilitarHoraInput() {
-            horaInput.disabled = true;
-            horaInput.classList.add('cursor-not-allowed');
-        }
-
-        function habilitarHoraInput() {
-            horaInput.disabled = false;
-            horaInput.classList.remove('cursor-not-allowed');
-        }
-
-        function generarHorasOptions() {
-            const times = [];
-            const timeRanges = [{
-                    start: 10,
-                    end: 13
-                },
-                {
-                    start: 16,
-                    end: 20
-                }
-            ];
-
-            timeRanges.forEach(range => {
-                for (let i = range.start; i <= range.end; i++) {
-                    times.push(`${String(i).padStart(2, '0')}:00:00`);
-                }
-            });
-
-            return times;
-        }
-
-        function getHoraActual() {
-            const now = new Date();
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            return `${hours}:${minutes}:00`;
-        }
-
-        function validarFecha(showError = false) {
-            const selectedDate = new Date(fechaInput.value);
-            const day = selectedDate.getUTCDay();
-
-            if (day === 0 || day === 6) {
-                fechaInput.value = '';
-                if (showError) {
-                    errorMessage.textContent = 'No se pueden seleccionar fines de semana. Por favor, elige otro día.';
-                    errorMessage.style.display = 'block';
-                }
-                deshabilitarHoraInput();
-                return false;
-            } else if (fechaInput.value === '') {
-                if (showError) {
-                    errorMessage.textContent = 'Selecciona una fecha antes de elegir una hora';
-                    errorMessage.style.display = 'block';
-                }
-                deshabilitarHoraInput();
-                return false;
-            }
-
+            const errorMessage = document.createElement('p');
+            errorMessage.className = 'text-red-500 text-xs italic mb-2 mt-2';
             errorMessage.style.display = 'none';
-            habilitarHoraInput();
-            obtenerCitas(peluqueroInput.value, fechaInput.value);
-            return true;
-        }
+            fechaInput.parentNode.insertBefore(errorMessage, fechaInput.nextSibling);
 
-        function validarUserSearchInput(input) {
-            const regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s]*$/;
-            if (!input || !regex.test(input)) {
-                userErrorMessage.textContent = 'Introduce un nombre o ID válido. Sólo se permiten letras, números y tildes.';
-                userErrorMessage.style.display = 'block';
-                return false;
-            }
-            userErrorMessage.style.display = 'none';
-            return true;
-        }
-
-        userSearchInput.addEventListener('input', function() {
-            const query = userSearchInput.value;
-            if (!validarUserSearchInput(query)) {
-                userSearchResults.innerHTML = '';
-                userSearchResults.style.display = 'none';
-                return;
-            }
-
-            if (query.length === 0) {
-                userSearchResults.innerHTML = '';
-                userSearchResults.style.display = 'none';
-            } else if (query.length >= 1) {
-                fetch(`/admin/gestionar_citas/buscar_usuarios?query=${query}`)
-                    .then(response => response.json())
-                    .then(users => {
-                        userSearchResults.innerHTML = '';
-                        if (users.length === 0) {
-                            const div = document.createElement('div');
-                            div.classList.add('p-2', 'text-gray-500', 'cursor-default');
-                            div.textContent = 'No se encontraron resultados';
-                            userSearchResults.appendChild(div);
-                        } else {
-                            users.forEach(user => {
-                                const div = document.createElement('div');
-                                div.classList.add('p-2', 'hover:bg-gray-200', 'hover:rounded-lg', 'cursor-pointer');
-                                div.textContent = `${user.name} (${user.id})`;
-                                div.addEventListener('click', function() {
-                                    userIdInput.value = user.id;
-                                    userSearchInput.value = `${user.name}`;
-                                    userSearchResults.innerHTML = '';
-                                    userSearchResults.style.display = 'none';
-                                });
-                                userSearchResults.appendChild(div);
-                            });
-                        }
-                        userSearchResults.style.display = 'block';
-                    });
-            } else {
-                userSearchResults.innerHTML = '';
-                userSearchResults.style.display = 'none';
-            }
-        });
-
-        form.addEventListener('submit', function(event) {
-            const query = userSearchInput.value;
-            if (!validarUserSearchInput(query) || !validarFecha(true)) {
-                event.preventDefault();
-            }
-        });
-
-        function obtenerCitas(peluqueroId, fecha) {
-            if (!peluqueroId || !fecha) {
-                horaInput.innerHTML = '<option value="" disabled selected>Selecciona una hora</option>';
-                return;
-            }
-
-            console.log('Obteniendo citas para peluquero:', peluqueroId, 'en la fecha:', fecha);
-
-            fetch(`/admin/gestionar_citas/obtenerCitas?peluquero_id=${peluqueroId}&fecha=${fecha}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(citas => {
-                    actualizarHorasDisponibles(citas, fecha);
-                })
-                .catch(error => {
-                    console.error('Error obteniendo citas:', error);
-                });
-        }
-
-        function actualizarHorasDisponibles(citas, fecha) {
-            horaInput.innerHTML = '<option value="" disabled selected>Selecciona una hora</option>';
-            const occupiedTimes = citas
-                .filter(cita => cita.fecha === fecha)
-                .map(cita => `${cita.hora}`);
-            const horasDisponibles = generarHorasOptions().filter(time => !occupiedTimes.includes(time));
-
-            console.log('Horas ocupadas:', occupiedTimes);
-
-            horasDisponibles.forEach(time => {
-                const option = document.createElement('option');
-                option.value = time.slice(0, 5);
-                option.textContent = time.slice(0, 5);
-                horaInput.appendChild(option);
-            });
+            const form = document.getElementById(modalId === 'crear' ? 'crearForm' : 'edit_cita_form_' + modalId.split('_')[1]);
 
             const today = new Date().toISOString().split('T')[0];
-            if (fechaInput.value === today) {
-                const currentTime = getHoraActual();
-                horaInput.querySelectorAll('option').forEach(option => {
-                    if (option.value && option.value < currentTime.slice(0, 5)) {
-                        option.disabled = true;
+            fechaInput.setAttribute('min', today);
+
+            function deshabilitarHoraInput() {
+                horaInput.disabled = true;
+                horaInput.classList.add('cursor-not-allowed');
+            }
+
+            function habilitarHoraInput() {
+                horaInput.disabled = false;
+                horaInput.classList.remove('cursor-not-allowed');
+            }
+
+            function generarHorasOptions() {
+                const times = [];
+                const timeRanges = [{
+                        start: 10,
+                        end: 13
+                    },
+                    {
+                        start: 16,
+                        end: 20
+                    }
+                ];
+
+                timeRanges.forEach(range => {
+                    for (let i = range.start; i <= range.end; i++) {
+                        times.push(`${String(i).padStart(2, '0')}:00:00`);
                     }
                 });
+
+                return times;
             }
+
+            function getHoraActual() {
+                const now = new Date();
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                return `${hours}:${minutes}:00`;
+            }
+
+            function validarFecha(showError = false) {
+                const selectedDate = new Date(fechaInput.value);
+                const day = selectedDate.getUTCDay();
+
+                if (day === 0 || day === 6) {
+                    fechaInput.value = '';
+                    if (showError) {
+                        errorMessage.textContent = 'No se pueden seleccionar fines de semana. Por favor, elige otro día.';
+                        errorMessage.style.display = 'block';
+                    }
+                    deshabilitarHoraInput();
+                    return false;
+                } else if (fechaInput.value === '') {
+                    if (showError) {
+                        errorMessage.textContent = 'Selecciona una fecha antes de elegir una hora';
+                        errorMessage.style.display = 'block';
+                    }
+                    deshabilitarHoraInput();
+                    return false;
+                }
+
+                errorMessage.style.display = 'none';
+                habilitarHoraInput();
+                obtenerCitas(peluqueroInput.value, fechaInput.value, currentHour);
+                return true;
+            }
+
+            function obtenerCitas(peluqueroId, fecha, currentHour = null) {
+                if (!peluqueroId || !fecha) {
+                    horaInput.innerHTML = '<option value="" disabled selected>Selecciona una hora</option>';
+                    return;
+                }
+
+                console.log('Obteniendo citas para peluquero:', peluqueroId, 'en la fecha:', fecha);
+
+                fetch(`/admin/gestionar_citas/obtenerCitas?peluquero_id=${peluqueroId}&fecha=${fecha}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(citas => {
+                        actualizarHorasDisponibles(citas, fecha, currentHour);
+                    })
+                    .catch(error => {
+                        console.error('Error obteniendo citas:', error);
+                    });
+            }
+
+            function actualizarHorasDisponibles(citas, fecha, currentHour = null) {
+                horaInput.innerHTML = '<option value="" disabled selected>Selecciona una hora</option>';
+                const occupiedTimes = citas
+                    .filter(cita => cita.fecha === fecha)
+                    .map(cita => `${cita.hora}`);
+                const horasDisponibles = generarHorasOptions().filter(time => !occupiedTimes.includes(time));
+
+                console.log('Horas ocupadas:', occupiedTimes);
+
+                if (currentHour && fecha === currentDate) {
+                    horasDisponibles.push(currentHour);
+                }
+
+                horasDisponibles.forEach(time => {
+                    const option = document.createElement('option');
+                    option.value = time.slice(0, 5);
+                    if (currentHour && time === currentHour) {
+                        option.textContent = `${time.slice(0, 5)} - Hora seleccionada`;
+                    } else {
+                        option.textContent = time.slice(0, 5);
+                    }
+                    horaInput.appendChild(option);
+                });
+
+                const today = new Date().toISOString().split('T')[0];
+                if (fechaInput.value === today) {
+                    const currentTime = getHoraActual();
+                    horaInput.querySelectorAll('option').forEach(option => {
+                        if (option.value && option.value < currentTime.slice(0, 5)) {
+                            option.disabled = true;
+                        }
+                    });
+                }
+
+                if (currentHour && fecha === currentDate) {
+                    horaInput.value = currentHour.slice(0, 5);
+                }
+            }
+
+            function validarUserSearchInput(input) {
+                const regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s]*$/;
+                if (!input || !regex.test(input)) {
+                    userSearchResults.innerHTML = '';
+                    userSearchResults.style.display = 'none';
+                    return false;
+                }
+                return true;
+            }
+
+            userSearchInput.addEventListener('input', function() {
+                const query = userSearchInput.value;
+                if (!validarUserSearchInput(query)) {
+                    return;
+                }
+
+                if (query.length === 0) {
+                    userSearchResults.innerHTML = '';
+                    userSearchResults.style.display = 'none';
+                } else if (query.length >= 1) {
+                    fetch(`/admin/gestionar_citas/buscar_usuarios?query=${query}`)
+                        .then(response => response.json())
+                        .then(users => {
+                            userSearchResults.innerHTML = '';
+                            if (users.length === 0) {
+                                const div = document.createElement('div');
+                                div.classList.add('p-2', 'text-gray-500', 'cursor-default');
+                                div.textContent = 'No se encontraron resultados';
+                                userSearchResults.appendChild(div);
+                            } else {
+                                users.forEach(user => {
+                                    const div = document.createElement('div');
+                                    div.classList.add('p-2', 'hover:bg-gray-200', 'hover:rounded-lg', 'cursor-pointer');
+                                    div.textContent = `${user.name} (${user.id})`;
+                                    div.addEventListener('click', function() {
+                                        userIdInput.value = user.id;
+                                        userSearchInput.value = `${user.name}`;
+                                        userSearchResults.innerHTML = '';
+                                        userSearchResults.style.display = 'none';
+                                    });
+                                    userSearchResults.appendChild(div);
+                                });
+                            }
+                            userSearchResults.style.display = 'block';
+                        });
+                } else {
+                    userSearchResults.innerHTML = '';
+                    userSearchResults.style.display = 'none';
+                }
+            });
+
+            form.addEventListener('submit', function(event) {
+                const query = userSearchInput.value;
+                if (!validarUserSearchInput(query) || !validarFecha(true)) {
+                    event.preventDefault();
+                }
+            });
+
+            peluqueroInput.addEventListener('change', function() {
+                if (fechaInput.value) {
+                    obtenerCitas(this.value, fechaInput.value, currentHour);
+                }
+            });
+
+            fechaInput.addEventListener('input', function() {
+                validarFecha(true);
+            });
+
+            if (!fechaInput.value) {
+                deshabilitarHoraInput();
+            }
+
+            validarFecha(false);
         }
 
-        peluqueroInput.addEventListener('change', function() {
-            if (fechaInput.value) {
-                obtenerCitas(this.value, fechaInput.value);
-            }
-        });
+        @foreach($citas as $cita)
+        iniciarScriptsModales('edit_{{ $cita->id }}', '{{ $cita->hora }}', '{{ $cita->fecha }}');
+        @endforeach
 
-        fechaInput.addEventListener('input', function() {
-            validarFecha(true);
-        });
-
-        if (!fechaInput.value) {
-            deshabilitarHoraInput();
-        }
-
-        validarFecha(false);
-    }
-
-    @foreach($citas as $cita)
-    iniciarScriptsModales('edit_{{ $cita->id }}');
-    @endforeach
-
-    iniciarScriptsModales('crear');
-});
+        iniciarScriptsModales('crear');
+    });
 </script>
+
 
 
 

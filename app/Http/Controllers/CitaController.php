@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\CitaCancelada;
 use App\Models\Cita;
 use App\Models\Servicio;
 use App\Models\User;
@@ -12,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class CitaController extends Controller
 {
@@ -71,6 +73,9 @@ class CitaController extends Controller
         $cita = Cita::findOrFail($id);
         $cita->estado = 'cancelada';
         $cita->save();
+
+        // Enviar correo de cancelación
+        Mail::to($cita->user->email)->send(new CitaCancelada($cita));
 
         return redirect()->route('historial-citas')->with('success', 'Cita cancelada con éxito.');
     }
@@ -191,7 +196,7 @@ class CitaController extends Controller
             'fecha' => 'required|date',
             'hora' => ['required', 'regex:/^\d{2}:\d{2}(:\d{2})?$/'],
             'servicio' => 'required|integer|exists:servicios,id',
-            'estado' => 'required|in:pendiente,aceptada,cancelada,finalizada',
+            'estado' => 'required|in:pendiente,aceptada,finalizada,cancelada',
         ], [
             'user_id.required' => 'El campo usuario es obligatorio.',
             'user_id.integer' => 'El ID del usuario debe ser un número entero.',
@@ -218,6 +223,8 @@ class CitaController extends Controller
 
         $cita = Cita::findOrFail($id);
 
+        $estadoAnterior = $cita->estado;
+
         $cita->user_id = $request->input('user_id');
         $cita->peluquero_id = $request->input('peluquero_id');
         $cita->fecha = $request->input('fecha');
@@ -227,6 +234,11 @@ class CitaController extends Controller
         $cita->estado = $request->input('estado');
 
         $cita->save();
+
+        // Enviar correo de cancelación solo si el nuevo estado es "cancelada"
+        if ($estadoAnterior !== 'cancelada' && $cita->estado === 'cancelada') {
+            Mail::to($cita->user->email)->send(new CitaCancelada($cita));
+        }
 
         return redirect('/admin/citas')
             ->with('success', 'Cita modificada con éxito.');
@@ -286,7 +298,10 @@ class CitaController extends Controller
      */
     public function destroy(string $id)
     {
-        $cita = Cita::FindOrFail($id);
+        $cita = Cita::findOrFail($id);
+
+        // Enviar correo de cancelación
+        Mail::to($cita->user->email)->send(new CitaCancelada($cita));
 
         $cita->delete();
 
@@ -298,10 +313,16 @@ class CitaController extends Controller
     {
         $cita = Cita::findOrFail($id);
 
+        $estadoAnterior = $cita->estado;
+
         // Actualiza solo el estado de la cita
         $cita->estado = $request->input('estado');
-
         $cita->save();
+
+        // Enviar correo de cancelación solo si el nuevo estado es "cancelada"
+        if ($estadoAnterior !== 'cancelada' && $cita->estado === 'cancelada') {
+            Mail::to($cita->user->email)->send(new CitaCancelada($cita));
+        }
 
         return redirect()->back()->with('success', 'Estado de la cita actualizado con éxito.');
     }
@@ -313,12 +334,16 @@ class CitaController extends Controller
     public function obtenerCitas(Request $request): JsonResponse
     {
         $peluqueroId = $request->query('peluquero_id');
+        $fecha = $request->query('fecha');
+
         $citas = Cita::where('peluquero_id', $peluqueroId)
-            ->where('estado', 'aceptada')
+            ->where('fecha', $fecha)
+            ->whereIn('estado', ['aceptada', 'pendiente'])
             ->get();
 
         return response()->json($citas);
     }
+
 
     public function gestionarCitas()
     {
@@ -336,7 +361,6 @@ class CitaController extends Controller
 
         return view('peluquero.citas', compact('citasPendientes', 'citasAceptadas'));
     }
-
 
     public function aceptarCita($id)
     {
@@ -372,6 +396,9 @@ class CitaController extends Controller
 
         $cita->estado = 'cancelada';
         $cita->save();
+
+        // Enviar correo de cancelación
+        Mail::to($cita->user->email)->send(new CitaCancelada($cita));
 
         return redirect()->route('peluquero.citas');
     }

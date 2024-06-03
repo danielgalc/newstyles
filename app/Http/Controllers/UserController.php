@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\CitaCancelada;
+use App\Mail\ClienteEliminado;
 use App\Models\Cita;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
@@ -145,13 +148,46 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
+    
     public function destroy(string $id)
     {
         $user = User::findOrFail($id);
-
+    
+        if ($user->rol === 'peluquero') {
+            // Obtener todas las citas del peluquero
+            $citas = Cita::where('peluquero_id', $user->id)->get();
+    
+            // Enviar correo a cada cliente y eliminar las citas
+            foreach ($citas as $cita) {
+                // Obtener el cliente de la cita
+                $cliente = User::find($cita->user_id);
+    
+                // Enviar correo de cancelación
+                Mail::to($cliente->email)->send(new CitaCancelada($cita));
+    
+                // Eliminar la cita
+                $cita->delete();
+            }
+        }
+    
+        if ($user->rol === 'cliente') {
+            // Obtener todas las citas del cliente
+            $citas = Cita::where('user_id', $user->id)->get();
+    
+            // Eliminar las citas del cliente
+            foreach ($citas as $cita) {
+                $cita->delete();
+            }
+    
+            // Enviar correo de notificación de eliminación de cuenta
+            Mail::to($user->email)->send(new ClienteEliminado($user));
+        }
+    
+        // Eliminar el usuario
         $user->delete();
-
+    
         return redirect('/admin/usuarios')
             ->with('success', 'Usuario eliminado con éxito.');
     }
+    
 }

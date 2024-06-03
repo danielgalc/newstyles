@@ -1,15 +1,14 @@
-{{-- resources/views/emails/contacto.blade.php --}}
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Contact Message</title>
+    <title>Cita Cancelada</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Righteous&display=swap');
 
         body {
             font-family: Arial, sans-serif;
-            background-color: #99a7ad;
+            background-color: rgb(45 212 191);
             margin: 0;
             padding: 20px;
         }
@@ -55,14 +54,15 @@
 </head>
 <body>
     <div class="container flex flex-col items-center justify-center">
-        <h1>Nuevo Mensaje de Contacto</h1>
-        <p><span class="label">Nombre:</span> {{ $name }}</p>
-        <p><span class="label">Correo electrónico:</span> {{ $email }}</p>
-        <p><span class="label">Asunto:</span> {{ $subject }}</p>
-        <div class="message">
-            <p><span class="label">Mensaje:</span></p>
-            <p>{!! nl2br(e($content)) !!}</p>
+        <div class="logo">
+            <img src="{{ asset('images/Logo1Transparente.png') }}" alt="Logo">
         </div>
+        <h1>Cita Cancelada</h1>
+        <p>Hola <span class="label">{{ $cita->user->name }}</span>,</p>
+        <p>Lamentamos informarte que tu cita para el servicio de <span class="label">{{ $cita->servicio }}</span> con el peluquero <span class="label">{{ $cita->peluquero->name }}</span> el día <span class="label">{{ $cita->fecha }}</span> a las <span class="label">{{ $cita->hora }}</span> ha sido cancelada.</p>
+        <p>Por favor, contacta con nosotros para más información.</p>
+        <p>Gracias,</p>
+        <p>Equipo de NewStyles</p>
     </div>
 </body>
 </html>
