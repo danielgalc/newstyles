@@ -75,18 +75,50 @@ class ProductoController extends Controller
      */
     public function store(Request $request)
     {
+        // Validar los datos de entrada
+        $request->validate([
+            'nombre' => ['required', 'string', 'min:3', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚ\s]+$/'],
+            'descripcion' => ['required', 'string', 'min:5'],
+            'precio' => ['required', 'numeric', 'min:0.01'],
+            'imagen' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'stock' => ['required', 'integer', 'min:0'],
+            'categoria' => ['required', 'string'],
+        ], [
+            'nombre.required' => 'El nombre del producto es obligatorio.',
+            'nombre.string' => 'El nombre del producto debe ser una cadena de texto.',
+            'nombre.min' => 'El nombre del producto debe tener al menos 3 caracteres.',
+            'nombre.regex' => 'El nombre del producto solo puede contener letras y espacios.',
+            'descripcion.required' => 'La descripción del producto es obligatoria.',
+            'descripcion.string' => 'La descripción del producto debe ser una cadena de texto.',
+            'descripcion.min' => 'La descripción del producto debe tener al menos 5 caracteres.',
+            'precio.required' => 'El precio del producto es obligatorio.',
+            'precio.numeric' => 'El precio del producto debe ser un número.',
+            'precio.min' => 'El precio del producto debe ser mayor que cero.',
+            'imagen.image' => 'El archivo debe ser una imagen.',
+            'imagen.mimes' => 'La imagen debe ser un archivo de tipo: jpeg, png, jpg, gif, svg.',
+            'imagen.max' => 'La imagen no debe ser mayor a 2048 kilobytes.',
+            'stock.required' => 'El stock del producto es obligatorio.',
+            'stock.integer' => 'El stock del producto debe ser un número entero.',
+            'stock.min' => 'El stock del producto no puede ser negativo.',
+            'categoria.required' => 'La categoría del producto es obligatoria.',
+            'categoria.string' => 'La categoría del producto debe ser una cadena de texto.',
+        ]);
+    
         $producto = new Producto();
-
+    
         $producto->nombre = $request->input('nombre');
         $producto->descripcion = $request->input('descripcion');
         $producto->precio = $request->input('precio');
-        $producto->imagen = $request->input('imagen');
+        if ($request->hasFile('imagen')) {
+            $filePath = $request->file('imagen')->store('imagenes_productos', 'public');
+            $producto->imagen = $filePath;
+        }
         $producto->stock = $request->input('stock');
         $producto->categoria = $request->input('categoria');
-
+    
         $producto->save();
-
-        return redirect('/admin/lista_productos')
+    
+        return redirect('/admin/productos')
             ->with('success', 'Producto añadido con éxito.');
     }
 
@@ -116,17 +148,49 @@ class ProductoController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $producto = Producto::FindOrFail($id);
-
+        $producto = Producto::findOrFail($id);
+    
+        // Validar los datos de entrada
+        $request->validate([
+            'nombre' => ['required', 'string', 'min:3', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚ\s]+$/'],
+            'descripcion' => ['required', 'string', 'min:5'],
+            'precio' => ['required', 'numeric', 'min:0.01'],
+            'imagen' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'stock' => ['required', 'integer', 'min:0'],
+            'categoria' => ['required', 'string'],
+        ], [
+            'nombre.required' => 'El nombre del producto es obligatorio.',
+            'nombre.string' => 'El nombre del producto debe ser una cadena de texto.',
+            'nombre.min' => 'El nombre del producto debe tener al menos 3 caracteres.',
+            'nombre.regex' => 'El nombre del producto solo puede contener letras y espacios.',
+            'descripcion.required' => 'La descripción del producto es obligatoria.',
+            'descripcion.string' => 'La descripción del producto debe ser una cadena de texto.',
+            'descripcion.min' => 'La descripción del producto debe tener al menos 5 caracteres.',
+            'precio.required' => 'El precio del producto es obligatorio.',
+            'precio.numeric' => 'El precio del producto debe ser un número.',
+            'precio.min' => 'El precio del producto debe ser mayor que cero.',
+            'imagen.image' => 'El archivo debe ser una imagen.',
+            'imagen.mimes' => 'La imagen debe ser un archivo de tipo: jpeg, png, jpg, gif, svg.',
+            'imagen.max' => 'La imagen no debe ser mayor a 2048 kilobytes.',
+            'stock.required' => 'El stock del producto es obligatorio.',
+            'stock.integer' => 'El stock del producto debe ser un número entero.',
+            'stock.min' => 'El stock del producto no puede ser negativo.',
+            'categoria.required' => 'La categoría del producto es obligatoria.',
+            'categoria.string' => 'La categoría del producto debe ser una cadena de texto.',
+        ]);
+    
         $producto->nombre = $request->input('nombre');
         $producto->descripcion = $request->input('descripcion');
         $producto->precio = $request->input('precio');
-        $producto->imagen = $request->input('imagen');
+        if ($request->hasFile('imagen')) {
+            $filePath = $request->file('imagen')->store('imagenes_productos', 'public');
+            $producto->imagen = $filePath;
+        }
         $producto->stock = $request->input('stock');
         $producto->categoria = $request->input('categoria');
-
+    
         $producto->save();
-
+    
         return redirect('/admin/productos')
             ->with('success', 'Producto modificado con éxito.');
     }
@@ -140,7 +204,7 @@ class ProductoController extends Controller
 
         $producto->delete();
 
-        return redirect('/admin/lista_productos')
+        return redirect('/admin/productos')
             ->with('success', 'Producto eliminado con éxito.');
     }
 }

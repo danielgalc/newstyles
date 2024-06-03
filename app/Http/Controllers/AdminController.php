@@ -12,23 +12,37 @@ use Inertia\Inertia;
 
 class AdminController extends Controller
 {
-    public function usuarios(Request $request)
-    {
-        $rol = $request->input('rol'); // Obtener el filtro de rol desde la solicitud
+public function usuarios(Request $request)
+{
+    $rol = $request->input('rol'); // Obtener el filtro de rol desde la solicitud
+    $buscar = $request->input('buscar'); // Obtener el término de búsqueda desde la solicitud
 
-        // Aplicar filtro de rol si está presente
-        if ($rol) {
-            $usuarios = User::where('rol', $rol)->orderBy('updated_at', 'desc')->paginate(8);
-        } else {
-            $usuarios = User::orderBy('updated_at', 'desc')->paginate(8);
-        }
+    $query = User::query();
 
-        if ($request->ajax()) {
-            return view('admin.usuarios.partials.usuarios_list', compact('usuarios'))->render();
-        }
-
-        return view('admin.usuarios.usuarios', compact('usuarios', 'rol'));
+    // Aplicar búsqueda si está presente
+    if ($buscar) {
+        $query->where(function ($q) use ($buscar) {
+            $q->where('name', 'LIKE', "%{$buscar}%")
+              ->orWhere('email', 'LIKE', "%{$buscar}%")
+              ->orWhere('id', 'LIKE', "%{$buscar}%");
+        });
     }
+
+    // Aplicar filtro de rol si está presente
+    if ($rol) {
+        $query->where('rol', $rol);
+    }
+
+    $usuarios = $query->orderBy('updated_at', 'desc')->paginate(8);
+
+    if ($request->ajax()) {
+        return view('admin.usuarios.partials.usuarios_list', compact('usuarios'))->render();
+    }
+
+    return view('admin.usuarios.usuarios', compact('usuarios', 'rol', 'buscar'));
+}
+
+    
 
     public function gestionarCitas(Request $request)
     {
@@ -54,14 +68,25 @@ class AdminController extends Controller
 
     public function listaServicios(Request $request)
     {
-        $clase = $request->input('clase');
+        $clase = $request->input('clase'); // Obtener el filtro de clase desde la solicitud
+        $buscar = $request->input('buscar'); // Obtener el término de búsqueda desde la solicitud
+    
+        $query = Servicio::query();
     
         // Aplicar filtro de clase si está presente
         if ($clase) {
-            $servicios = Servicio::where('clase', $clase)->orderBy('updated_at', 'desc')->paginate(8);
-        } else {
-            $servicios = Servicio::orderBy('updated_at', 'desc')->paginate(8);
+            $query->where('clase', $clase);
         }
+    
+        // Aplicar búsqueda si está presente
+        if ($buscar) {
+            $query->where(function ($q) use ($buscar) {
+                $q->where('nombre', 'LIKE', "%{$buscar}%")
+                  ->orWhere('id', 'LIKE', "%{$buscar}%");
+            });
+        }
+    
+        $servicios = $query->orderBy('updated_at', 'desc')->paginate(8);
     
         if ($request->ajax()) {
             return view('admin.servicios.partials.servicios_list', compact('servicios'))->render();
@@ -69,24 +94,38 @@ class AdminController extends Controller
     
         return view('admin.servicios.lista_servicios', compact('servicios', 'clase'));
     }
+    
+    
 
     public function listaProductos(Request $request)
     {
         $categoria = $request->input('categoria'); // Obtener el filtro de categoría desde la solicitud
+        $buscar = $request->input('buscar'); // Obtener el término de búsqueda desde la solicitud
     
-        // Aplicar filtro de categoria si está presente
+        $query = Producto::query();
+    
+        // Aplicar filtro de categoría si está presente
         if ($categoria) {
-            $productos = Producto::where('categoria', $categoria)->orderBy('updated_at', 'desc')->paginate(8);
-        } else {
-            $productos = Producto::orderBy('updated_at', 'desc')->paginate(8);
+            $query->where('categoria', $categoria);
         }
+    
+        // Aplicar búsqueda si está presente
+        if ($buscar) {
+            $query->where(function ($q) use ($buscar) {
+                $q->where('nombre', 'LIKE', "%{$buscar}%")
+                  ->orWhere('descripcion', 'LIKE', "%{$buscar}%");
+            });
+        }
+    
+        $productos = $query->orderBy('updated_at', 'desc')->paginate(8);
     
         if ($request->ajax()) {
             return view('admin.productos.partials.productos_list', compact('productos'))->render();
         }
     
-        return view('admin.productos.lista_productos', compact('productos', 'categoria'));
+        return view('admin.productos.lista_productos', compact('productos', 'categoria', 'buscar'));
     }
+    
 
 
     public function mostrarDatos()

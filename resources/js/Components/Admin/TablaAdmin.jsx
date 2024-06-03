@@ -12,10 +12,10 @@ const TablaAdmin = ({ titulo, subtitulo, columnas, datos, link }) => (
       </div>
     </div>
     <table className="min-w-full divide-y divide-gray-200 rounded-lg overflow-hidden">
-      <thead className="bg-gray-50">
+      <thead className="bg-teal-600">
         <tr>
           {columnas.map((columna, index) => (
-            <th key={index} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <th key={index} className="px-6 py-3 text-left text-xs font-medium text-gray-100 uppercase tracking-wider">
               {columna}
             </th>
           ))}

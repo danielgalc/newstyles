@@ -13,16 +13,19 @@
         </button>
     </div>
 
-    <!-- FILTRO POR ROLES -->
-    <div class="mb-4 ">
-        <form method="GET" action="{{ route('admin.usuarios') }}" id="filter-form">
-            <select class="rounded" name="rol" id="filtro-users" onchange="document.getElementById('filter-form').submit();">
+    <!-- FILTRO POR ROLES Y BÚSQUEDA -->
+    <div class="mb-4 flex items-center">
+        <form method="GET" action="{{ route('admin.usuarios') }}" id="filter-form" class="flex items-center">
+            <select class="rounded mr-2" name="rol" id="filtro-users" onchange="document.getElementById('filter-form').submit();">
                 <option value="" {{ request('rol') == '' ? 'selected' : '' }}>Mostrar todo</option>
                 <option value="cliente" {{ request('rol') == 'cliente' ? 'selected' : '' }}>Clientes</option>
                 <option value="peluquero" {{ request('rol') == 'peluquero' ? 'selected' : '' }}>Peluqueros</option>
             </select>
+            <input type="text" name="buscar" placeholder="Buscar usuarios..." class="rounded border-gray-300 mr-2" value="{{ request('buscar') }}">
+            <button type="submit" class="ml-2 text-white bg-teal-500 hover:bg-teal-800 focus:ring-4 focus:outline-none focus:ring-teal-300 font-medium rounded-lg text-sm px-4 h-10 text-center dark:bg-teal-600 dark:hover:bg-teal-700 dark:focus:ring-teal-800">Buscar</button>
         </form>
     </div>
+
 
     <div id="usuarios-content">
         @include('admin.usuarios.partials.usuarios_list', ['usuarios' => $usuarios])
@@ -70,7 +73,7 @@
                         </select>
                     </div>
                 </div>
-                <button type="submit" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                <button type="submit" class="text-white inline-flex items-center bg-teal-500 hover:bg-teal-800 focus:ring-4 focus:outline-none focus:ring-teal-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-teal-600 dark:hover:bg-teal-700 dark:focus:ring-teal-800">
                     Guardar cambios
                 </button>
 
@@ -102,7 +105,7 @@
             </div>
             <!-- Modal body -->
             <div class="p-4 md:p-5">
-                <p>¿Estás seguro de que quieres eliminar este usuario? ID: {{ $usuario->id }}</p>
+                <p class="dark:text-white">¿Estás seguro de que quieres eliminar este usuario? <br> <span class="text-teal-400 italic">ID: {{ $usuario->id }} ({{ $usuario->name }})</span></p>
                 <div class="flex justify-end items-center mt-4">
                     <form action="{{ route('users.destroy', ['id' => $usuario->id]) }}" method="post" class="p-4 md:p-5">
                         @csrf
@@ -113,7 +116,7 @@
                         </button>
                     </form>
 
-                    <button type="button" class="h-10 text-gray-600 bg-gray-200 hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800" data-modal-toggle="confirm_delete_modal_{{ $usuario->id }}" data-delete-route="{{ route('users.destroy', ['id' => $usuario->id]) }}">
+                    <button type="button" class="h-10 text-gray-900 bg-gray-200 hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-100 dark:hover:bg-gray-300 dark:focus:ring-gray-800" data-modal-toggle="confirm_delete_modal_{{ $usuario->id }}" data-delete-route="{{ route('users.destroy', ['id' => $usuario->id]) }}">
                         Cancelar
                     </button>
                 </div>
@@ -185,17 +188,19 @@
             event.preventDefault();
             var page = $(this).attr('href').split('page=')[1];
             var rol = $('#filtro-users').val();
-            fetchUsuarios(page, rol);
+            var buscar = $('#buscar-input').val(); // Obtener el valor del campo de búsqueda
+            fetchUsuarios(page, rol, buscar);
         });
 
         $('#filtro-users').on('change', function() {
             var rol = $(this).val();
-            fetchUsuarios(1, rol); // Reiniciar a la primera página al cambiar el filtro
+            var buscar = $('#buscar-input').val(); // Obtener el valor del campo de búsqueda
+            fetchUsuarios(1, rol, buscar); // Reiniciar a la primera página al cambiar el filtro
         });
 
-        function fetchUsuarios(page, rol) {
+        function fetchUsuarios(page, rol, buscar) {
             $.ajax({
-                url: "/admin/usuarios?page=" + page + "&rol=" + rol,
+                url: "/admin/usuarios?page=" + page + "&rol=" + rol + "&buscar=" + buscar, // Incluir el término de búsqueda en la URL
                 success: function(data) {
                     $('#usuarios-content').html(data);
                 }
@@ -205,13 +210,15 @@
 </script>
 
 
+
 <!-- SCRIPTS PARA VALIDAR LA CREACIÓN Y MODIFICACION DE USUARIOS -->
 
 <script>
     // VALIDACIÓN DE LOS FORMULARIOS DE CREAR Y EDITAR USUARIOS
     document.addEventListener('DOMContentLoaded', function() {
         const crearForm = document.querySelector('form[action="{{ route('users.store') }}"]');
-        const editarForm = document.querySelector('form[action^="{{ route('users.update', '') }}"]');
+        const editarForm = document.querySelector('form[action^="{{ route('users.update', '
+            ') }}"]');
 
         if (crearForm) {
             crearForm.addEventListener('submit', function(event) {

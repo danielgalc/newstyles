@@ -10,6 +10,7 @@ use App\Http\Controllers\ServicioController;
 use App\Http\Controllers\CitaController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\ContactoController;
 use App\Http\Controllers\UserController;
 
 /*
@@ -109,6 +110,7 @@ Route::middleware('auth', 'verified', 'comprobarRol')->group(function () {
     Route::get('/historial-citas', [CitaController::class, 'historial'])->name('historial-citas');
     Route::put('/citas/updateFromHistorial/{id}', [CitaController::class, 'updateFromHistorial'])->name('citas.updateFromHistorial');
     Route::get('/citas/obtenerCitas', [CitaController::class, 'obtenerCitas'])->name('citas.obtenerCitas');
+    Route::get('/citas/obtenerCitasReserva', [CitaController::class, 'obtenerCitasReserva'])->name('citas.obtenerCitasReserva');
 
     Route::put('/citas/{id}/cancelar', [CitaController::class, 'cancelar'])->name('citas.cancelar');
 
@@ -186,16 +188,23 @@ Route::delete('/servicios/{id}', [ServicioController::class, 'destroy'])->name('
 // Rutas de citas
 
 Route::post('/admin/gestionar_citas', [CitaController::class, 'store'])->name('citas.store');
-Route::get('/admin/gestionar_citas/obtenerCitas', [CitaController::class, 'obtenerCitas'])->name('admin.citas.obtenerCitas');
-
 
 Route::get('/admin/gestionar_citas/{id}/edit', [CitaController::class, 'edit']);
 Route::put('/admin/gestionar_citas/{id}', [CitaController::class, 'update'])->name('citas.update');
 
 Route::delete('/admin/gestionar_citas/{id}', [CitaController::class, 'destroy'])->name('citas.destroy');
+Route::get('/admin/gestionar_citas/obtenerCitas', [CitaController::class, 'obtenerCitas'])->name('admin.citas.obtenerCitas');
+Route::get('/admin/gestionar_citas/buscar_usuarios', [CitaController::class, 'buscarUsuarios'])->name('admin.buscar_usuarios');
+
 
 
 Route::put('admin/gestionar_citas/{id}/actualizar-estado', [CitaController::class, 'actualizar_estado'])->name('citas.actualizar_estado');
+
+
+// Ruta para enviar correo de contacto
+
+
+Route::post('/send-contact-email', [ContactoController::class, 'sendMail'])->name('contact.send');
 
 
 require __DIR__ . '/auth.php';

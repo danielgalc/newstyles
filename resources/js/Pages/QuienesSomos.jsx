@@ -5,6 +5,7 @@ import Team from '@/Components/QuienesSomos/Equipo';
 import Gallery from '@/Components/QuienesSomos/Gallery';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import GuestLayout from '@/Layouts/GuestLayout';
+import Footer from '@/Components/QuienesSomos/Footer';
 
 const QuienesSomos = ({ auth }) => {
   return (
@@ -20,6 +21,7 @@ const QuienesSomos = ({ auth }) => {
           </div>
           <Gallery />
           <Team />
+          <Footer auth={auth} />
         </AuthenticatedLayout>
       ) : (
         <GuestLayout>
@@ -32,6 +34,7 @@ const QuienesSomos = ({ auth }) => {
           </div>
           <Gallery />
           <Team />
+          <Footer auth={auth} />
         </GuestLayout>
       )}
     </div>

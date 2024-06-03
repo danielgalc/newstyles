@@ -13,60 +13,60 @@ class ServicioController extends Controller
      * Display a listing of the resource.
      */
 
-// ServicioController.php
+    // ServicioController.php
 
 
 
-public function index(Request $request)
-{
-    $search = $request->input('search');
-    $sortBy = $request->input('sortBy');
+    public function index(Request $request)
+    {
+        $search = $request->input('search');
+        $sortBy = $request->input('sortBy');
 
-    
-    // Construimos la query base para Servicio
-    $query = Servicio::query();
 
-    $peluqueros = User::where('rol', 'peluquero')->get();
-    
-    // Si hay una búsqueda, agregamos la condición a la query
-    if ($search) {
-        $query->where('nombre', 'ilike', "%{$search}%");
+        // Construimos la query base para Servicio
+        $query = Servicio::query();
+
+        $peluqueros = User::where('rol', 'peluquero')->get();
+
+        // Si hay una búsqueda, agregamos la condición a la query
+        if ($search) {
+            $query->where('nombre', 'ilike', "%{$search}%");
+        }
+
+        // Filtro orden
+        switch ($sortBy) {
+            case 'asc':
+                $query->orderBy('nombre', 'asc');
+                break;
+            case 'desc':
+                $query->orderBy('nombre', 'desc');
+                break;
+            case 'price_asc':
+                $query->orderBy('precio', 'asc');
+                break;
+            case 'price_desc':
+                $query->orderBy('precio', 'desc');
+                break;
+            default:
+                $query->orderBy('id', 'desc');
+                break;
+        }
+
+        // Obtenemos todos los servicios que cumplen con la condición
+        $servicios = $query->paginate(20);
+
+        // Si el request espera una respuesta JSON
+        if ($request->wantsJson()) {
+            return response()->json($servicios);
+        }
+
+        // Si no, renderizamos la vista con Inertia
+        return Inertia::render('Servicios/Servicios', [
+            'servicios' => $servicios,
+            'search' => $search,
+            'peluqueros' => $peluqueros,
+        ]);
     }
-
-    // Filtro orden
-    switch ($sortBy) {
-        case 'asc':
-            $query->orderBy('nombre', 'asc');
-            break;
-        case 'desc':
-            $query->orderBy('nombre', 'desc');
-            break;
-        case 'price_asc':
-            $query->orderBy('precio', 'asc');
-            break;
-        case 'price_desc':
-            $query->orderBy('precio', 'desc');
-            break;
-        default:
-            $query->orderBy('id', 'desc');
-            break;
-    }
-    
-    // Obtenemos todos los servicios que cumplen con la condición
-    $servicios = $query->paginate(20);
-
-    // Si el request espera una respuesta JSON
-    if ($request->wantsJson()) {
-        return response()->json($servicios);
-    }
-
-    // Si no, renderizamos la vista con Inertia
-    return Inertia::render('Servicios/Servicios', [
-        'servicios' => $servicios,
-        'search' => $search,
-        'peluqueros' => $peluqueros,
-    ]);
-}
 
 
 
@@ -88,15 +88,36 @@ public function index(Request $request)
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'nombre' => 'required|string|min:3|regex:/^[a-zA-ZáéíóúÁÉÍÓÚ\s]+$/',
+            'precio' => 'required|numeric|min:0.01',
+            'duracion' => 'required|integer|min:15|max:60',
+            'clase' => 'required|in:principal,secundario',
+        ], [
+            'nombre.required' => 'El nombre del servicio es obligatorio.',
+            'nombre.string' => 'El nombre del servicio debe ser una cadena de texto.',
+            'nombre.min' => 'El nombre del servicio debe tener al menos 3 caracteres.',
+            'nombre.regex' => 'El nombre del servicio no puede contener números ni símbolos especiales.',
+            'precio.required' => 'El precio del servicio es obligatorio.',
+            'precio.numeric' => 'El precio del servicio debe ser un número.',
+            'precio.min' => 'El precio del servicio debe ser mayor que cero.',
+            'duracion.required' => 'La duración del servicio es obligatoria.',
+            'duracion.integer' => 'La duración del servicio debe ser un número entero.',
+            'duracion.min' => 'La duración del servicio debe ser de al menos 15 minutos.',
+            'duracion.max' => 'La duración del servicio no puede ser mayor a 60 minutos.',
+            'clase.required' => 'La clase del servicio es obligatoria.',
+            'clase.in' => 'La clase del servicio debe ser "principal" o "secundario".',
+        ]);
+
         $servicio = new Servicio();
 
         $servicio->nombre = $request->input('nombre');
         $servicio->precio = $request->input('precio');
         $servicio->duracion = $request->input('duracion');
         $servicio->clase = $request->input('clase');
-    
+
         $servicio->save();
-    
+
         return redirect('/admin/servicios')
             ->with('success', 'Servicio añadido con éxito.');
     }
@@ -126,18 +147,39 @@ public function index(Request $request)
      */
     public function update(Request $request, string $id)
     {
-        $servicio = Servicio::FindOrFail($id);
+        $request->validate([
+            'nombre' => 'required|string|min:3|regex:/^[a-zA-ZáéíóúÁÉÍÓÚ\s]+$/',
+            'precio' => 'required|numeric|min:0.01',
+            'duracion' => 'required|integer|min:15|max:60',
+            'clase' => 'required|in:principal,secundario',
+        ], [
+            'nombre.required' => 'El nombre del servicio es obligatorio.',
+            'nombre.string' => 'El nombre del servicio debe ser una cadena de texto.',
+            'nombre.min' => 'El nombre del servicio debe tener al menos 3 caracteres.',
+            'nombre.regex' => 'El nombre del servicio no puede contener números ni símbolos especiales.',
+            'precio.required' => 'El precio del servicio es obligatorio.',
+            'precio.numeric' => 'El precio del servicio debe ser un número.',
+            'precio.min' => 'El precio del servicio debe ser mayor que cero.',
+            'duracion.required' => 'La duración del servicio es obligatoria.',
+            'duracion.integer' => 'La duración del servicio debe ser un número entero.',
+            'duracion.min' => 'La duración del servicio debe ser de al menos 15 minutos.',
+            'duracion.max' => 'La duración del servicio no puede ser mayor a 60 minutos.',
+            'clase.required' => 'La clase del servicio es obligatoria.',
+            'clase.in' => 'La clase del servicio debe ser "principal" o "secundario".',
+        ]);
+
+        $servicio = Servicio::findOrFail($id);
 
         $servicio->nombre = $request->input('nombre');
         $servicio->precio = $request->input('precio');
         $servicio->duracion = $request->input('duracion');
+        $servicio->clase = $request->input('clase');
 
         $servicio->save();
 
         return redirect('/admin/servicios')
-            ->with('success', 'servicio modificado con éxito.');
+            ->with('success', 'Servicio modificado con éxito.');
     }
-    
 
     /**
      * Remove the specified resource from storage.
