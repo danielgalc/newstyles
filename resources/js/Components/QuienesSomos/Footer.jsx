@@ -1,24 +1,53 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useForm, Head } from '@inertiajs/react';
 
-const Footer = () => {
+const Footer = ({ auth }) => {
+    const { data, setData, post, processing, reset, errors } = useForm({
+        name: '',
+        email: auth?.user?.email || '',
+        subject: '',
+        message: ''
+    });
+
+    const handleChange = (e) => {
+        setData(e.target.name, e.target.value);
+    };
+
+    const submit = (e) => {
+        e.preventDefault();
+        post(route('contact.send'), {
+            onSuccess: () => {
+                alert('Correo enviado con éxito');
+                reset();
+            },
+            onError: () => {
+                alert('Hubo un error enviando el correo');
+            }
+        });
+    };
+
     return (
-        <footer className="w-full bg-teal-400 text-white py-12">
+        <footer className="w-full bg-gradient-to-b from-teal-500 to-teal-400 text-white py-12">
+            <Head title="Contact Us" />
             <div className="container mx-auto px-6">
                 <div className="text-center mb-10">
                     <h1 className="text-6xl font-righteous">CONTACTA CON NOSOTROS</h1>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center md:text-left">
                     <div className="bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg rounded-lg p-6 shadow-lg">
-                        <form className="space-y-4">
+                        <form className="space-y-4" onSubmit={submit}>
                             <div>
                                 <label className="block text-sm font-medium mb-1" htmlFor="name">Nombre</label>
                                 <input
                                     type="text"
                                     id="name"
                                     name="name"
+                                    value={data.name}
+                                    onChange={handleChange}
                                     className="w-full px-4 py-2 bg-gray-700 bg-opacity-50 text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-400"
                                     required
                                 />
+                                {errors.name && <div className="text-red-500 text-sm">{errors.name}</div>}
                             </div>
                             <div>
                                 <label className="block text-sm font-medium mb-1" htmlFor="email">Correo electrónico</label>
@@ -26,23 +55,44 @@ const Footer = () => {
                                     type="email"
                                     id="email"
                                     name="email"
+                                    value={data.email}
+                                    onChange={handleChange}
+                                    readOnly={!!auth?.user?.email}
                                     className="w-full px-4 py-2 bg-gray-700 bg-opacity-50 text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-400"
                                     required
                                 />
+                                {errors.email && <div className="text-red-500 text-sm">{errors.email}</div>}
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium mb-1" htmlFor="subject">Asunto</label>
+                                <input
+                                    type="text"
+                                    id="subject"
+                                    name="subject"
+                                    value={data.subject}
+                                    onChange={handleChange}
+                                    className="w-full px-4 py-2 bg-gray-700 bg-opacity-50 text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-400"
+                                    required
+                                />
+                                {errors.subject && <div className="text-red-500 text-sm">{errors.subject}</div>}
                             </div>
                             <div>
                                 <label className="block text-sm font-medium mb-1" htmlFor="message">Mensaje</label>
                                 <textarea
                                     id="message"
                                     name="message"
+                                    value={data.message}
+                                    onChange={handleChange}
                                     className="w-full px-4 py-2 bg-gray-700 bg-opacity-50 text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-400"
                                     rows="4"
                                     required
                                 ></textarea>
+                                {errors.message && <div className="text-red-500 text-sm">{errors.message}</div>}
                             </div>
                             <button
                                 type="submit"
-                                className="px-6 py-2 bg-teal-500 text-gray-800 font-semibold rounded-md hover:bg-teal-300 focus:outline-none focus:ring-2 focus:ring-teal-400"
+                                className="px-6 py-2 bg-teal-100 text-gray-800 font-semibold rounded-md hover:bg-teal-800 hover:text-white focus:outline-none focus:ring-2 focus:ring-teal-400"
+                                disabled={processing}
                             >
                                 Enviar
                             </button>

@@ -10,6 +10,7 @@ use App\Http\Controllers\ServicioController;
 use App\Http\Controllers\CitaController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\ContactoController;
 use App\Http\Controllers\UserController;
 
 /*
@@ -201,7 +202,10 @@ Route::get('/admin/gestionar_citas/buscar_usuarios', [CitaController::class, 'bu
 Route::put('admin/gestionar_citas/{id}/actualizar-estado', [CitaController::class, 'actualizar_estado'])->name('citas.actualizar_estado');
 
 
+// Ruta para enviar correo de contacto
 
+
+Route::post('/send-contact-email', [ContactoController::class, 'sendMail'])->name('contact.send');
 
 
 require __DIR__ . '/auth.php';

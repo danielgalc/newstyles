@@ -21,7 +21,7 @@ const QuienesSomos = ({ auth }) => {
           </div>
           <Gallery />
           <Team />
-          <Footer />
+          <Footer auth={auth} />
         </AuthenticatedLayout>
       ) : (
         <GuestLayout>
@@ -34,7 +34,7 @@ const QuienesSomos = ({ auth }) => {
           </div>
           <Gallery />
           <Team />
-          <Footer />
+          <Footer auth={auth} />
         </GuestLayout>
       )}
     </div>
