@@ -91,6 +91,14 @@
                                 <option value="">Selecciona una hora</option>
                             </select>
                         </div>
+                        <div class="col-span-2">
+                            <label for="servicio_{{ $proximaCita->id }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Servicio</label>
+                            <select name="servicio" id="servicio_{{ $proximaCita->id }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                @foreach ($servicios as $servicio)
+                                <option value="{{ $servicio->id }}" {{ $proximaCita->servicio_id == $servicio->id ? 'selected' : '' }}>{{ $servicio->nombre }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                     <p id="texto_cambio_{{ $proximaCita->id }}" class="text-red-500 text-xs italic mb-2 hidden">Has de realizar cambios para poder guardar</p>
                     <p id="texto_hora_{{ $proximaCita->id }}" class="text-red-500 text-xs italic mb-2 hidden">No puedes hacer cambios a falta de menos de 24 horas para tu cita.</p>
@@ -257,10 +265,16 @@
                 console.log('Horas ocupadas:', occupiedTimes);
                 const horasDisponibles = generarHorasOptions().filter(time => !occupiedTimes.includes(time));
 
+                horasDisponibles.push('{{ $proximaCita->hora }}');
+
                 horasDisponibles.forEach(time => {
                     const option = document.createElement('option');
                     option.value = time.slice(0, 5); // Mostrar solo HH:MM
-                    option.textContent = time.slice(0, 5);
+                    if (time === '{{ $proximaCita->hora }}') {
+                        option.textContent = `${time.slice(0, 5)} - Hora seleccionada`;
+                    } else {
+                        option.textContent = time.slice(0, 5);
+                    }
                     horaInput.appendChild(option);
                 });
 
@@ -275,7 +289,7 @@
                     });
                 }
 
-                console.log('Horas disponibles:', horasDisponibles);
+                horaInput.value = '{{ $proximaCita->hora }}'.slice(0, 5);
             }
 
             // Event listener para el cambio de peluquero
@@ -300,10 +314,6 @@
         });
     </script>
 
-
-
-
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             @if($proximaCita)
@@ -311,7 +321,8 @@
             const originalData = {
                 peluquero_id: form.peluquero_id.value,
                 fecha: form.fecha.value,
-                hora: form.hora.value
+                hora: form.hora.value,
+                servicio: form.servicio.value
             };
             const submitButton = document.getElementById('submit_button_{{ $proximaCita->id }}');
             const textoCambio = document.getElementById('texto_cambio_{{ $proximaCita->id }}');
@@ -330,12 +341,14 @@
                 const newData = {
                     peluquero_id: form.peluquero_id.value,
                     fecha: form.fecha.value,
-                    hora: form.hora.value
+                    hora: form.hora.value,
+                    servicio: form.servicio.value
                 };
 
                 const isChanged = originalData.peluquero_id !== newData.peluquero_id ||
                     originalData.fecha !== newData.fecha ||
-                    originalData.hora !== newData.hora;
+                    originalData.hora !== newData.hora ||
+                    originalData.servicio !== newData.servicio;
 
                 const isTimeRestricted = comprobRestricionHora();
 

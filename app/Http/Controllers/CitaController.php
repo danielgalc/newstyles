@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\CitaAceptada;
 use App\Mail\CitaCancelada;
+use App\Mail\CitaReservada;
 use App\Models\Cita;
 use App\Models\Servicio;
 use App\Models\User;
@@ -60,11 +62,13 @@ class CitaController extends Controller
 
         // Obtiene todos los peluqueros
         $users = User::where('rol', 'peluquero')->get();
+        $servicios = Servicio::all();
 
         return view('citas.historial-citas', [
             'proximaCita' => $proximaCitaActiva ? $proximaCitaActiva : $proximaCitaInactiva,
             'citasFinalizadas' => $citasFinalizadas,
             'users' => $users,
+            'servicios' => $servicios,
         ]);
     }
 
@@ -109,57 +113,60 @@ class CitaController extends Controller
      * Store a newly created resource in storage.
      */
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'user_id' => 'required|integer|exists:users,id',
-            'peluquero_id' => 'required|integer|exists:users,id',
-            'fecha' => 'required|date',
-            'hora' => ['required', 'regex:/^\d{2}:\d{2}(:\d{2})?$/'],
-            'servicio' => 'required|integer|exists:servicios,id',
-        ], [
-            'user_id.required' => 'El campo usuario es obligatorio.',
-            'user_id.integer' => 'El ID del usuario debe ser un número entero.',
-            'user_id.exists' => 'El usuario seleccionado no existe.',
-            'peluquero_id.required' => 'El campo peluquero es obligatorio.',
-            'peluquero_id.integer' => 'El ID del peluquero debe ser un número entero.',
-            'peluquero_id.exists' => 'El peluquero seleccionado no existe.',
-            'fecha.required' => 'La fecha es obligatoria.',
-            'fecha.date' => 'La fecha no tiene un formato válido.',
-            'hora.required' => 'La hora es obligatoria.',
-            'hora.regex' => 'La hora debe tener el formato HH:MM o HH:MM:SS.',
-            'servicio.required' => 'El campo servicio es obligatorio.',
-            'servicio.integer' => 'El ID del servicio debe ser un número entero.',
-            'servicio.exists' => 'El servicio seleccionado no existe.',
-        ]);
-
-        $hora = $request->input('hora');
-        // Convertir "H:i" a "H:i:s" si es necesario
-        if (preg_match('/^\d{2}:\d{2}$/', $hora)) {
-            $hora .= ':00';
-        }
-
-        $cita = new Cita();
-        $cita->user_id = $request->input('user_id');
-        $cita->peluquero_id = $request->input('peluquero_id');
-        $cita->fecha = $request->input('fecha');
-        $cita->hora = $hora;
-        $servicio = Servicio::findOrFail($request->input('servicio'));
-        $cita->servicio = $servicio->nombre;
-
-        // Verifica si el usuario que crea la cita es un administrador
-        $user = $request->user();
-        if ($user->rol == 'admin') {
-            $cita->estado = 'aceptada';
-            $cita->save();
-
-            return redirect('/admin/citas')->with('success', 'Cita añadida con éxito.');
-        }
-
-        $cita->save();
-
-        return redirect('/historial-citas')->with('success', 'Cita añadida con éxito.');
-    }
+     public function store(Request $request)
+     {
+         $request->validate([
+             'user_id' => 'required|integer|exists:users,id',
+             'peluquero_id' => 'required|integer|exists:users,id',
+             'fecha' => 'required|date',
+             'hora' => ['required', 'regex:/^\d{2}:\d{2}(:\d{2})?$/'],
+             'servicio' => 'required|integer|exists:servicios,id',
+         ], [
+             'user_id.required' => 'El campo usuario es obligatorio.',
+             'user_id.integer' => 'El ID del usuario debe ser un número entero.',
+             'user_id.exists' => 'El usuario seleccionado no existe.',
+             'peluquero_id.required' => 'El campo peluquero es obligatorio.',
+             'peluquero_id.integer' => 'El ID del peluquero debe ser un número entero.',
+             'peluquero_id.exists' => 'El peluquero seleccionado no existe.',
+             'fecha.required' => 'La fecha es obligatoria.',
+             'fecha.date' => 'La fecha no tiene un formato válido.',
+             'hora.required' => 'La hora es obligatoria.',
+             'hora.regex' => 'La hora debe tener el formato HH:MM o HH:MM:SS.',
+             'servicio.required' => 'El campo servicio es obligatorio.',
+             'servicio.integer' => 'El ID del servicio debe ser un número entero.',
+             'servicio.exists' => 'El servicio seleccionado no existe.',
+         ]);
+     
+         $hora = $request->input('hora');
+         // Convertir "H:i" a "H:i:s" si es necesario
+         if (preg_match('/^\d{2}:\d{2}$/', $hora)) {
+             $hora .= ':00';
+         }
+     
+         $cita = new Cita();
+         $cita->user_id = $request->input('user_id');
+         $cita->peluquero_id = $request->input('peluquero_id');
+         $cita->fecha = $request->input('fecha');
+         $cita->hora = $hora;
+         $servicio = Servicio::findOrFail($request->input('servicio'));
+         $cita->servicio = $servicio->nombre;
+     
+         // Verifica si el usuario que crea la cita es un administrador
+         $user = $request->user();
+         if ($user->rol == 'admin') {
+             $cita->estado = 'aceptada';
+             $cita->save();
+     
+             return redirect('/admin/citas')->with('success', 'Cita añadida con éxito.');
+         }
+     
+         $cita->save();
+     
+         // Enviar correo de reserva de cita
+         Mail::to($cita->user->email)->send(new CitaReservada($cita));
+     
+         return redirect('/historial-citas')->with('success', 'Cita añadida con éxito.');
+     }
 
 
 
@@ -196,7 +203,7 @@ class CitaController extends Controller
             'fecha' => 'required|date',
             'hora' => ['required', 'regex:/^\d{2}:\d{2}(:\d{2})?$/'],
             'servicio' => 'required|integer|exists:servicios,id',
-            'estado' => 'required|in:pendiente,aceptada,finalizada,cancelada',
+            'estado' => 'required|in:pendiente,aceptada,cancelada,finalizada',
         ], [
             'user_id.required' => 'El campo usuario es obligatorio.',
             'user_id.integer' => 'El ID del usuario debe ser un número entero.',
@@ -214,17 +221,17 @@ class CitaController extends Controller
             'estado.required' => 'El estado es obligatorio.',
             'estado.in' => 'El estado debe ser uno de los siguientes: pendiente, aceptada, cancelada, finalizada.',
         ]);
-
+    
         $hora = $request->input('hora');
         // Convertir "H:i" a "H:i:s" si es necesario
         if (preg_match('/^\d{2}:\d{2}$/', $hora)) {
             $hora .= ':00';
         }
-
+    
         $cita = Cita::findOrFail($id);
-
+    
         $estadoAnterior = $cita->estado;
-
+    
         $cita->user_id = $request->input('user_id');
         $cita->peluquero_id = $request->input('peluquero_id');
         $cita->fecha = $request->input('fecha');
@@ -232,17 +239,23 @@ class CitaController extends Controller
         $servicio = Servicio::findOrFail($request->input('servicio'));
         $cita->servicio = $servicio->nombre;
         $cita->estado = $request->input('estado');
-
+    
         $cita->save();
-
+    
+        // Enviar correo de aceptación solo si el nuevo estado es "aceptada"
+        if ($estadoAnterior !== 'aceptada' && $cita->estado === 'aceptada') {
+            Mail::to($cita->user->email)->send(new CitaAceptada($cita));
+        }
+    
         // Enviar correo de cancelación solo si el nuevo estado es "cancelada"
         if ($estadoAnterior !== 'cancelada' && $cita->estado === 'cancelada') {
             Mail::to($cita->user->email)->send(new CitaCancelada($cita));
         }
-
+    
         return redirect('/admin/citas')
             ->with('success', 'Cita modificada con éxito.');
     }
+    
 
     public function updateFromHistorial(Request $request, string $id)
     {
@@ -251,6 +264,7 @@ class CitaController extends Controller
             'peluquero_id' => 'required|integer|exists:users,id',
             'fecha' => 'required|date',
             'hora' => ['required', 'regex:/^\d{2}:\d{2}(:\d{2})?$/'],
+            'servicio' => 'required|integer|exists:servicios,id',
         ], [
             'peluquero_id.required' => 'El campo peluquero es obligatorio.',
             'peluquero_id.integer' => 'El ID del peluquero debe ser un número entero.',
@@ -259,25 +273,29 @@ class CitaController extends Controller
             'fecha.date' => 'La fecha no tiene un formato válido.',
             'hora.required' => 'La hora es obligatoria.',
             'hora.regex' => 'La hora debe tener el formato HH:MM o HH:MM:SS.',
+            'servicio.required' => 'El campo servicio es obligatorio.',
+            'servicio.integer' => 'El ID del servicio debe ser un número entero.',
+            'servicio.exists' => 'El servicio seleccionado no existe.',
         ]);
-
+    
         $hora = $request->input('hora');
-        // Convertir "H:i" a "H:i:s" si es necesario
         if (preg_match('/^\d{2}:\d{2}$/', $hora)) {
             $hora .= ':00';
         }
-
+    
         $cita = Cita::findOrFail($id);
-
         $cita->peluquero_id = $request->input('peluquero_id');
         $cita->fecha = $request->input('fecha');
         $cita->hora = $hora;
         $cita->estado = 'pendiente';
-
+        $servicio = Servicio::findOrFail($request->input('servicio'));
+        $cita->servicio = $servicio->nombre;
+    
         $cita->save();
-
+    
         return redirect()->route('historial-citas')->with('success', 'Cita modificada con éxito.');
     }
+    
 
 
     public function buscarUsuarios(Request $request)
@@ -312,20 +330,26 @@ class CitaController extends Controller
     public function actualizar_estado(Request $request, string $id)
     {
         $cita = Cita::findOrFail($id);
-
+    
         $estadoAnterior = $cita->estado;
-
+    
         // Actualiza solo el estado de la cita
         $cita->estado = $request->input('estado');
         $cita->save();
-
+    
+        // Enviar correo de aceptación solo si el nuevo estado es "aceptada"
+        if ($estadoAnterior !== 'aceptada' && $cita->estado === 'aceptada') {
+            Mail::to($cita->user->email)->send(new CitaAceptada($cita));
+        }
+    
         // Enviar correo de cancelación solo si el nuevo estado es "cancelada"
         if ($estadoAnterior !== 'cancelada' && $cita->estado === 'cancelada') {
             Mail::to($cita->user->email)->send(new CitaCancelada($cita));
         }
-
+    
         return redirect()->back()->with('success', 'Estado de la cita actualizado con éxito.');
     }
+    
 
     /**
      * Funciones del usuario peluquero
@@ -366,24 +390,28 @@ class CitaController extends Controller
     {
         $cita = Cita::find($id);
         $peluqueroId = Auth::id();
-
+    
         if ($cita->peluquero_id != $peluqueroId || $cita->estado != 'pendiente') {
             return redirect()->back();
         }
-
+    
         DB::transaction(function () use ($cita, $peluqueroId) {
             Cita::where('peluquero_id', $peluqueroId)
                 ->where('fecha', $cita->fecha)
                 ->where('hora', $cita->hora)
                 ->where('estado', 'pendiente')
                 ->update(['estado' => 'cancelada']);
-
+    
             $cita->estado = 'aceptada';
             $cita->save();
         });
-
+    
+        // Enviar correo de aceptación
+        Mail::to($cita->user->email)->send(new CitaAceptada($cita));
+    
         return redirect()->route('peluquero.citas');
     }
+    
 
     public function cancelarCita($id)
     {
