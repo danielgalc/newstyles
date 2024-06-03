@@ -54,7 +54,7 @@
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container flex flex-col items-center justify-center">
         <div class="logo">
             <img src="{{ asset('images/Logo1Transparente.png') }}" alt="Logo">
         </div>

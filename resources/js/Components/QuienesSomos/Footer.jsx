@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { useForm, Head } from '@inertiajs/react';
+import React, { useState, useEffect } from 'react';
+import { useForm, Head, usePage } from '@inertiajs/react';
+import InputError from '@/Components/InputError';
 
 const Footer = ({ auth }) => {
     const { data, setData, post, processing, reset, errors } = useForm({
@@ -9,21 +10,64 @@ const Footer = ({ auth }) => {
         message: ''
     });
 
+    const [localErrors, setLocalErrors] = useState({});
+    const [statusMessage, setStatusMessage] = useState(null);
+    const [statusType, setStatusType] = useState(null);
+
     const handleChange = (e) => {
         setData(e.target.name, e.target.value);
     };
 
+    const validateForm = () => {
+        const errors = {};
+
+        if (!data.name) {
+            errors.name = 'El campo nombre es obligatorio.';
+        } else if (data.name.length > 255) {
+            errors.name = 'El campo nombre no puede exceder los 255 caracteres.';
+        } else if (!/^[a-zA-ZáéíóúÁÉÍÓÚ\s]+$/.test(data.name)) {
+            errors.name = 'El campo nombre debe ser una cadena de texto.';
+        }
+
+        if (!data.email) {
+            errors.email = 'El campo correo electrónico es obligatorio.';
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
+            errors.email = 'El campo correo electrónico debe ser una dirección de correo válida.';
+        } else if (data.email.length > 255) {
+            errors.email = 'El campo correo electrónico no puede exceder los 255 caracteres.';
+        }
+
+        if (!data.subject) {
+            errors.subject = 'El campo asunto es obligatorio.';
+        } else if (data.subject.length > 255) {
+            errors.subject = 'El campo asunto no puede exceder los 255 caracteres.';
+        }
+
+        if (!data.message) {
+            errors.message = 'El campo mensaje es obligatorio.';
+        } else if (typeof data.message !== 'string') {
+            errors.message = 'El campo mensaje debe ser una cadena de texto.';
+        }
+
+        setLocalErrors(errors);
+        return Object.keys(errors).length === 0;
+    };
+
     const submit = (e) => {
         e.preventDefault();
-        post(route('contact.send'), {
-            onSuccess: () => {
-                alert('Correo enviado con éxito');
-                reset();
-            },
-            onError: () => {
-                alert('Hubo un error enviando el correo');
-            }
-        });
+        if (validateForm()) {
+            post(route('contact.send'), {
+                onSuccess: () => {
+                    setStatusMessage('¡Mensaje enviado con éxito!');
+                    setStatusType('success');
+                    reset();
+                },
+                onError: () => {
+                    setStatusMessage('No se pudo enviar el mensaje. Por favor, inténtelo de nuevo.');
+                    setStatusType('error');
+                }
+            });
+        }
     };
 
     return (
@@ -47,7 +91,7 @@ const Footer = ({ auth }) => {
                                     className="w-full px-4 py-2 bg-gray-700 bg-opacity-50 text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-400"
                                     required
                                 />
-                                {errors.name && <div className="text-red-500 text-sm">{errors.name}</div>}
+                                <InputError message={errors.name || localErrors.name} className="mt-2" />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium mb-1" htmlFor="email">Correo electrónico</label>
@@ -61,7 +105,7 @@ const Footer = ({ auth }) => {
                                     className="w-full px-4 py-2 bg-gray-700 bg-opacity-50 text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-400"
                                     required
                                 />
-                                {errors.email && <div className="text-red-500 text-sm">{errors.email}</div>}
+                                <InputError message={errors.email || localErrors.email} className="mt-2" />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium mb-1" htmlFor="subject">Asunto</label>
@@ -74,7 +118,7 @@ const Footer = ({ auth }) => {
                                     className="w-full px-4 py-2 bg-gray-700 bg-opacity-50 text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-400"
                                     required
                                 />
-                                {errors.subject && <div className="text-red-500 text-sm">{errors.subject}</div>}
+                                <InputError message={errors.subject || localErrors.subject} className="mt-2" />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium mb-1" htmlFor="message">Mensaje</label>
@@ -87,15 +131,22 @@ const Footer = ({ auth }) => {
                                     rows="4"
                                     required
                                 ></textarea>
-                                {errors.message && <div className="text-red-500 text-sm">{errors.message}</div>}
+                                <InputError message={errors.message || localErrors.message} className="mt-2" />
                             </div>
-                            <button
-                                type="submit"
-                                className="px-6 py-2 bg-teal-100 text-gray-800 font-semibold rounded-md hover:bg-teal-800 hover:text-white focus:outline-none focus:ring-2 focus:ring-teal-400"
-                                disabled={processing}
-                            >
-                                Enviar
-                            </button>
+                            <div className="flex items-center space-x-4">
+                                <button
+                                    type="submit"
+                                    className="px-6 py-2 bg-teal-100 text-gray-800 font-semibold rounded-md hover:bg-teal-800 hover:text-white focus:outline-none focus:ring-2 focus:ring-teal-400"
+                                    disabled={processing}
+                                >
+                                    Enviar
+                                </button>
+                                {statusMessage && (
+                                    <span className={`text-sm font-medium ${statusType === 'success' ? 'text-green-600' : 'text-red-500'}`}>
+                                        {statusMessage}
+                                    </span>
+                                )}
+                            </div>
                         </form>
                     </div>
                     <div className="flex justify-center items-center">
@@ -109,19 +160,16 @@ const Footer = ({ auth }) => {
                         <p className="mb-4 text-lg">Horario de atención: Lunes a Viernes de 9:00 AM a 6:00 PM</p>
                         <div className="flex justify-between gap-16 w-full items-center mx-auto md:justify-start space-x-4 mt-4">
                             <a href="#" className="text-gray-800 hover:text-gray-600">
-                                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M24 4.56v14.88a4.56 4.56 0 01-4.56 4.56H4.56A4.56 4.56 0 010 19.44V4.56A4.56 4.56 0 014.56 0h14.88A4.56 4.56 0 0124 4.56zM8.09 18.61h2.72V9.41H8.09zm1.36-10.43a1.6 1.6 0 11-1.6-1.6 1.6 1.6 0 011.6 1.6zm9.1 10.43h2.72v-4.58c0-2.19-.76-3.69-2.65-3.69a2.87 2.87 0 00-2.69 1.88h-.03v-.03h-2.73v6.42h2.73v-5.74c0-1.13.4-1.9 1.4-1.9s1.3.74 1.3 1.82v5.82zm-1.36 0h-2.72v-6.42h2.72z" />
-                                </svg>
+                                <div className="w-8 h-8 rounded-full bg-cover bg-center" style={{ backgroundImage: 'url(https://graffica.ams3.digitaloceanspaces.com/2023/07/F1ySdm9WYAIbjHo-1024x1024.jpeg)' }}>
+                                </div>
                             </a>
                             <a href="#" className="text-gray-800 hover:text-gray-600">
-                                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M24 4.56v14.88a4.56 4.56 0 01-4.56 4.56H4.56A4.56 4.56 0 010 19.44V4.56A4.56 4.56 0 014.56 0h14.88A4.56 4.56 0 0124 4.56zM7.44 18.61h2.72V9.41H7.44zm1.36-10.43a1.6 1.6 0 11-1.6-1.6 1.6 1.6 0 011.6 1.6zm9.1 10.43h2.72v-4.58c0-2.19-.76-3.69-2.65-3.69a2.87 2.87 0 00-2.69 1.88h-.03v-.03h-2.73v6.42h2.73v-5.74c0-1.13.4-1.9 1.4-1.9s1.3.74 1.3 1.82v5.82zm-1.36 0h-2.72v-6.42h2.72z" />
-                                </svg>
+                                <div className="w-8 h-8 rounded-full bg-cover bg-center" style={{ backgroundImage: 'url(https://cdn.pixabay.com/photo/2021/06/15/12/51/facebook-6338507_1280.png)' }}>
+                                </div>
                             </a>
                             <a href="#" className="text-gray-800 hover:text-gray-600">
-                                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M24 4.56v14.88a4.56 4.56 0 01-4.56 4.56H4.56A4.56 4.56 0 010 19.44V4.56A4.56 4.56 0 014.56 0h14.88A4.56 4.56 0 0124 4.56zM7.44 18.61h2.72V9.41H7.44zm1.36-10.43a1.6 1.6 0 11-1.6-1.6 1.6 1.6 0 011.6 1.6zm9.1 10.43h2.72v-4.58c0-2.19-.76-3.69-2.65-3.69a2.87 2.87 0 00-2.69 1.88h-.03v-.03h-2.73v6.42h2.73v-5.74c0-1.13.4-1.9 1.4-1.9s1.3.74 1.3 1.82v5.82zm-1.36 0h-2.72v-6.42h2.72z" />
-                                </svg>
+                                <div className="w-8 h-8 rounded-full bg-cover bg-center" style={{ backgroundImage: 'url(https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Instagram_logo_2022.svg/1000px-Instagram_logo_2022.svg.png)' }}>
+                                </div>
                             </a>
                         </div>
                     </div>
