@@ -158,6 +158,13 @@
     </div>
     @endif
 
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const obtenerCitasUrl = "{{ route('citas.obtenerCitas', ['peluquero_id' => 'peluqueroID', 'fecha' => '__FECHA__']) }}";
+        console.log('URL para obtener citas:', obtenerCitasUrl);
+    });
+</script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var fechaInput = document.getElementById('fecha_{{ $proximaCita->id }}');

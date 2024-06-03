@@ -10,15 +10,18 @@ export default function ModalReserva({ servicio, isOpen, onClose, onSuccess, use
   const [citas, setCitas] = useState([]);
 
   useEffect(() => {
-    if (peluqueroId) {
-      axios.get(route('citas.obtenerCitas', { peluquero_id: peluqueroId }))
+    if (peluqueroId && fecha) {
+      const formattedFecha = new Date(fecha).toISOString().split('T')[0]; // Formatear fecha a YYYY-MM-DD
+      const url = `/citas/obtenerCitasReserva?peluquero_id=${peluqueroId}&fecha=${formattedFecha}`;
+      axios.get(url)
         .then(response => {
           console.log('Citas obtenidas:', response.data);
           setCitas(response.data);
         })
         .catch(error => console.error('Error obteniendo citas:', error));
     }
-  }, [peluqueroId]);
+  }, [peluqueroId, fecha]);
+  
 
   const generateTimeOptions = () => {
     const times = [];
@@ -29,7 +32,7 @@ export default function ModalReserva({ servicio, isOpen, onClose, onSuccess, use
 
     timeRanges.forEach(range => {
       for (let i = range.start; i <= range.end; i++) {
-        times.push(`${String(i).padStart(2, '0')}:00:00`); // Asegurarse de que el formato de la hora es HH:MM:SS
+        times.push(`${String(i).padStart(2, '0')}:00:00`);
       }
     });
 
@@ -50,7 +53,6 @@ export default function ModalReserva({ servicio, isOpen, onClose, onSuccess, use
     if (!fecha) return generateTimeOptions();
 
     const occupiedTimes = citas
-      .filter(cita => cita.fecha === fecha)
       .map(cita => `${cita.hora}`);
 
     console.log('Horas ocupadas:', occupiedTimes);

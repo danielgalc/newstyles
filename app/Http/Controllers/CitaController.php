@@ -156,6 +156,9 @@ class CitaController extends Controller
          if ($user->rol == 'admin') {
              $cita->estado = 'aceptada';
              $cita->save();
+
+            Mail::to($cita->user->email)->send(new CitaAceptada($cita));
+
      
              return redirect('/admin/citas')->with('success', 'Cita añadida con éxito.');
          }
@@ -369,6 +372,21 @@ class CitaController extends Controller
 
         return response()->json($citas);
     }
+
+    public function obtenerCitasReserva(Request $request): JsonResponse
+    {
+        $peluqueroId = $request->query('peluquero_id');
+        $fecha = $request->query('fecha'); // Obtener la fecha del query string
+    
+        // Asegúrate de que la fecha esté en el formato correcto
+        $citas = Cita::where('peluquero_id', $peluqueroId)
+            ->whereDate('fecha', $fecha) // Filtrar por fecha
+            ->whereIn('estado', ['aceptada', 'pendiente'])
+            ->get();
+    
+        return response()->json($citas);
+    }
+    
 
 
     public function gestionarCitas()

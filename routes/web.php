@@ -110,6 +110,7 @@ Route::middleware('auth', 'verified', 'comprobarRol')->group(function () {
     Route::get('/historial-citas', [CitaController::class, 'historial'])->name('historial-citas');
     Route::put('/citas/updateFromHistorial/{id}', [CitaController::class, 'updateFromHistorial'])->name('citas.updateFromHistorial');
     Route::get('/citas/obtenerCitas', [CitaController::class, 'obtenerCitas'])->name('citas.obtenerCitas');
+    Route::get('/citas/obtenerCitasReserva', [CitaController::class, 'obtenerCitasReserva'])->name('citas.obtenerCitasReserva');
 
     Route::put('/citas/{id}/cancelar', [CitaController::class, 'cancelar'])->name('citas.cancelar');
 
@@ -187,8 +188,6 @@ Route::delete('/servicios/{id}', [ServicioController::class, 'destroy'])->name('
 // Rutas de citas
 
 Route::post('/admin/gestionar_citas', [CitaController::class, 'store'])->name('citas.store');
-Route::get('/admin/gestionar_citas/obtenerCitas', [CitaController::class, 'obtenerCitas'])->name('admin.citas.obtenerCitas');
-
 
 Route::get('/admin/gestionar_citas/{id}/edit', [CitaController::class, 'edit']);
 Route::put('/admin/gestionar_citas/{id}', [CitaController::class, 'update'])->name('citas.update');

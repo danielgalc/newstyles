@@ -4,7 +4,7 @@ import InputError from '@/Components/InputError';
 
 const Footer = ({ auth }) => {
     const { data, setData, post, processing, reset, errors } = useForm({
-        name: '',
+        name: auth?.user?.name || '',
         email: auth?.user?.email || '',
         subject: '',
         message: ''
@@ -88,6 +88,7 @@ const Footer = ({ auth }) => {
                                     name="name"
                                     value={data.name}
                                     onChange={handleChange}
+                                    readOnly={!!auth?.user?.name}
                                     className="w-full px-4 py-2 bg-gray-700 bg-opacity-50 text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-400"
                                     required
                                 />
@@ -142,7 +143,7 @@ const Footer = ({ auth }) => {
                                     Enviar
                                 </button>
                                 {statusMessage && (
-                                    <span className={`text-sm font-medium ${statusType === 'success' ? 'text-green-600' : 'text-red-500'}`}>
+                                    <span className={`text-sm font-medium p-2 bg-white bg-opacity-40 backdrop-filter backdrop-blur-lg rounded-lg ${statusType === 'success' ? 'text-green-600' : 'text-red-500'}`}>
                                         {statusMessage}
                                     </span>
                                 )}
@@ -157,7 +158,7 @@ const Footer = ({ auth }) => {
                         <p className="mb-4 text-lg">Dirección: Calle Falsa 123, Ciudad, País</p>
                         <p className="mb-4 text-lg">Teléfono: +1 (234) 567-8901</p>
                         <p className="mb-4 text-lg">Correo electrónico: info@newstyles.com</p>
-                        <p className="mb-4 text-lg">Horario de atención: Lunes a Viernes de 9:00 AM a 6:00 PM</p>
+                        <p className="mb-4 text-lg">Horario de atención: Lunes a Viernes - 10h a 18h</p>
                         <div className="flex justify-between gap-16 w-full items-center mx-auto md:justify-start space-x-4 mt-4">
                             <a href="#" className="text-gray-800 hover:text-gray-600">
                                 <div className="w-8 h-8 rounded-full bg-cover bg-center" style={{ backgroundImage: 'url(https://graffica.ams3.digitaloceanspaces.com/2023/07/F1ySdm9WYAIbjHo-1024x1024.jpeg)' }}>
