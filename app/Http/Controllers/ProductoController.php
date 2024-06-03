@@ -80,7 +80,7 @@ class ProductoController extends Controller
             'nombre' => ['required', 'string', 'min:3', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚ\s]+$/'],
             'descripcion' => ['required', 'string', 'min:5'],
             'precio' => ['required', 'numeric', 'min:0.01'],
-            'imagen' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'imagen' => ['nullable', 'max:2048'],
             'stock' => ['required', 'integer', 'min:0'],
             'categoria' => ['required', 'string'],
         ], [
@@ -109,10 +109,7 @@ class ProductoController extends Controller
         $producto->nombre = $request->input('nombre');
         $producto->descripcion = $request->input('descripcion');
         $producto->precio = $request->input('precio');
-        if ($request->hasFile('imagen')) {
-            $filePath = $request->file('imagen')->store('imagenes_productos', 'public');
-            $producto->imagen = $filePath;
-        }
+        $producto->imagen = $request->input('imagen');
         $producto->stock = $request->input('stock');
         $producto->categoria = $request->input('categoria');
     
@@ -155,7 +152,7 @@ class ProductoController extends Controller
             'nombre' => ['required', 'string', 'min:3', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚ\s]+$/'],
             'descripcion' => ['required', 'string', 'min:5'],
             'precio' => ['required', 'numeric', 'min:0.01'],
-            'imagen' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'imagen' => ['nullable', 'max:2048'],
             'stock' => ['required', 'integer', 'min:0'],
             'categoria' => ['required', 'string'],
         ], [
@@ -182,10 +179,7 @@ class ProductoController extends Controller
         $producto->nombre = $request->input('nombre');
         $producto->descripcion = $request->input('descripcion');
         $producto->precio = $request->input('precio');
-        if ($request->hasFile('imagen')) {
-            $filePath = $request->file('imagen')->store('imagenes_productos', 'public');
-            $producto->imagen = $filePath;
-        }
+        $producto->imagen = $request->input('imagen');
         $producto->stock = $request->input('stock');
         $producto->categoria = $request->input('categoria');
     
