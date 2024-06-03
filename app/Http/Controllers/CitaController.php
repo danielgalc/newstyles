@@ -290,9 +290,11 @@ class CitaController extends Controller
         $cita->estado = 'pendiente';
         $servicio = Servicio::findOrFail($request->input('servicio'));
         $cita->servicio = $servicio->nombre;
-    
+
         $cita->save();
     
+        Mail::to($cita->user->email)->send(new CitaReservada($cita));
+
         return redirect()->route('historial-citas')->with('success', 'Cita modificada con éxito.');
     }
     

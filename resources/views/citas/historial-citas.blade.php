@@ -92,12 +92,14 @@
                             </select>
                         </div>
                         <div class="col-span-2">
-                            <label for="servicio_{{ $proximaCita->id }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Servicio</label>
-                            <select name="servicio" id="servicio_{{ $proximaCita->id }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                            <label for="servicio_edit_{{ $proximaCita->id }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Servicio</label>
+                            <select name="servicio" id="servicio_edit_{{ $proximaCita->id }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                <option value="" disabled selected>Seleccionar servicio...</option>
                                 @foreach ($servicios as $servicio)
                                 <option value="{{ $servicio->id }}" {{ $proximaCita->servicio_id == $servicio->id ? 'selected' : '' }}>{{ $servicio->nombre }}</option>
                                 @endforeach
                             </select>
+                            <p id="texto_servicio_{{ $proximaCita->id }}" class="text-red-500 text-xs italic mb-2 hidden">Debes seleccionar un servicio.</p>
                         </div>
                     </div>
                     <p id="texto_cambio_{{ $proximaCita->id }}" class="text-red-500 text-xs italic mb-2 hidden">Has de realizar cambios para poder guardar</p>
@@ -161,6 +163,7 @@
             var fechaInput = document.getElementById('fecha_{{ $proximaCita->id }}');
             var peluqueroInput = document.getElementById('peluquero_id_{{ $proximaCita->id }}');
             var horaInput = document.getElementById('hora_{{ $proximaCita->id }}');
+            var servicioInput = document.getElementById('servicio_edit_{{ $proximaCita->id }}');
             var submitButton = document.getElementById('submit_button_{{ $proximaCita->id }}');
             var errorMessage = document.createElement('p');
             errorMessage.className = 'text-red-500 text-xs italic mb-2 mt-2';
@@ -327,6 +330,7 @@
             const submitButton = document.getElementById('submit_button_{{ $proximaCita->id }}');
             const textoCambio = document.getElementById('texto_cambio_{{ $proximaCita->id }}');
             const textoHora = document.getElementById('texto_hora_{{ $proximaCita->id }}');
+            const textoServicio = document.getElementById('texto_servicio_{{ $proximaCita->id }}');
 
             function comprobRestricionHora() {
                 const now = new Date();
@@ -336,6 +340,15 @@
 
                 return hoursDiff < 24;
             }
+
+            form.addEventListener('submit', function(event) {
+                if (form.servicio.value === "") {
+                    event.preventDefault();
+                    textoServicio.classList.remove('hidden');
+                } else {
+                    textoServicio.classList.add('hidden');
+                }
+            });
 
             form.addEventListener('input', function() {
                 const newData = {
@@ -352,13 +365,13 @@
 
                 const isTimeRestricted = comprobRestricionHora();
 
-                submitButton.disabled = !isChanged || isTimeRestricted;
-                submitButton.classList.toggle('bg-blue-700', isChanged && !isTimeRestricted);
-                submitButton.classList.toggle('hover:bg-blue-800', isChanged && !isTimeRestricted);
-                submitButton.classList.toggle('text-white', isChanged && !isTimeRestricted);
-                submitButton.classList.toggle('bg-gray-300', !isChanged || isTimeRestricted);
-                submitButton.classList.toggle('text-black', !isChanged || isTimeRestricted);
-                submitButton.classList.toggle('cursor-not-allowed', !isChanged || isTimeRestricted);
+                submitButton.disabled = !isChanged || isTimeRestricted || form.servicio.value === "";
+                submitButton.classList.toggle('bg-blue-700', isChanged && !isTimeRestricted && form.servicio.value !== "");
+                submitButton.classList.toggle('hover:bg-blue-800', isChanged && !isTimeRestricted && form.servicio.value !== "");
+                submitButton.classList.toggle('text-white', isChanged && !isTimeRestricted && form.servicio.value !== "");
+                submitButton.classList.toggle('bg-gray-300', !isChanged || isTimeRestricted || form.servicio.value === "");
+                submitButton.classList.toggle('text-black', !isChanged || isTimeRestricted || form.servicio.value === "");
+                submitButton.classList.toggle('cursor-not-allowed', !isChanged || isTimeRestricted || form.servicio.value === "");
 
                 textoCambio.classList.toggle('hidden', isChanged);
                 textoHora.classList.toggle('hidden', !isTimeRestricted);
