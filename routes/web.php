@@ -121,6 +121,13 @@ Route::middleware('auth', 'verified', 'comprobarRol')->group(function () {
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     });
+
+    // Rutas de peluqueros
+
+    Route::get('/peluquero/citas', [CitaController::class, 'gestionarCitas'])->name('peluquero.citas');
+    Route::post('/bloqueos', [BloqueoPeluqueroController::class, 'store'])->name('bloqueos.store');
+    Route::put('/bloqueos/desbloquear', [BloqueoPeluqueroController::class, 'desbloquear'])->name('bloqueos.desbloquear');
+    Route::get('/bloqueos/horas-bloqueadas', [BloqueoPeluqueroController::class, 'horasBloqueadas'])->name('bloqueos.horas-bloqueadas');
 });
 
 require __DIR__ . '/auth.php';
@@ -128,7 +135,6 @@ require __DIR__ . '/auth.php';
 // Rutas accesibles para el usuario peluquero
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/peluquero/citas', [CitaController::class, 'gestionarCitas'])->name('peluquero.citas');
     Route::put('/citas/{id}/aceptar', [CitaController::class, 'aceptarCita'])->name('citas.aceptar');
     //Route::put('/citas/{id}/cancelar', [CitaController::class, 'cancelarCita'])->name('citas.cancelar');
     Route::post('/citas/bloquear', [CitaController::class, 'bloquearFecha'])->name('citas.bloquear');
@@ -174,9 +180,7 @@ Route::post('/usuarios', [UserController::class, 'store'])->name('users.store');
 Route::put('/usuarios/{id}', [UserController::class, 'update'])->name('users.update');
 Route::delete('/usuarios/{id}', [UserController::class, 'destroy'])->name('users.destroy');
 
-// Rutas de peluqueros
 
-Route::post('/bloqueos', [BloqueoPeluqueroController::class, 'store'])->name('bloqueos.store');
 
 
 // Rutas de servicios

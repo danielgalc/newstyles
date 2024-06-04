@@ -17,8 +17,9 @@ class ComprobarRol
     {
         if (!auth()->check() || auth()->user()->rol != 'admin') {
             return $next($request);
+        } else if (auth()->user()->rol != 'peluquero'){
+            return redirect('peluquero/citas');
         }
-
         return redirect('/admin');
     }
 }

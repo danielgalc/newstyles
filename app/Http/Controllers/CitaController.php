@@ -403,7 +403,7 @@ class CitaController extends Controller
         $user = Auth::user();
 
         if ($user->rol != 'peluquero' || !str_ends_with($user->email, '@peluquero.com')) {
-            return redirect()->route('home');
+            return redirect()->route('landing');
         }
 
         $citasPendientes = Cita::where('peluquero_id', $user->id)->where('estado', 'pendiente')->get();

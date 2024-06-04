@@ -329,7 +329,7 @@
             function actualizarHorasDisponibles(citas, bloqueos, fecha, currentHour = null) {
                 horaInput.innerHTML = '<option value="" disabled selected>Selecciona una hora</option>';
                 const occupiedTimes = citas.map(cita => cita.hora);
-                const blockedTimes = bloqueos.flatMap(bloqueo => bloqueo.horas || []);
+                const blockedTimes = JSON.parse(bloqueos.flatMap(bloqueo => bloqueo.horas || []));
 
                 const horasDisponibles = generarHorasOptions().filter(time => !occupiedTimes.includes(time) && !blockedTimes.includes(time));
 
