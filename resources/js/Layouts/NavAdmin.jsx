@@ -31,7 +31,7 @@ export default function NavAdmin({ user, header, children }) {
                 {/* Correo electrónico del administrador con línea inferior */}
                 <div className='border-b border-black text-sm font-thin italic py-2'>
                     <span className='mb-4 px-4'>
-                    {user.email}
+                        {user.email}
                     </span>
                 </div>
 
@@ -102,6 +102,19 @@ export default function NavAdmin({ user, header, children }) {
                             Lista de productos
                         </a>
                     </li>
+                    <li className="transition-all duration-150 hover:scale-105">
+                        <a href="admin/bloqueos" className="text-white flex items-center hover:text-teal-700">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="" width="30px" height="30px" className="text-teal-400 hover:text-teal mr-1.5 pb-1 productos-icon">
+                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                <g id="SVGRepo_iconCarrier">
+                                    <path className="hover:bg-teal-700" d="M3 5.5L5 3.5M21 5.5L19 3.5M9 9.5L15 15.5M15 9.5L9 15.5M20 12.5C20 16.9183 16.4183 20.5 12 20.5C7.58172 20.5 4 16.9183 4 12.5C4 8.08172 7.58172 4.5 12 4.5C16.4183 4.5 20 8.08172 20 12.5Z" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </g>
+                            </svg>
+                            Horas bloqueadas
+                        </a>
+                    </li>
+
                 </ul>
                 <Menu>
                     <Menu.Item>

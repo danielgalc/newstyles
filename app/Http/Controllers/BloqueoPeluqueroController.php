@@ -6,12 +6,44 @@ use App\Mail\CitaCancelada;
 use Illuminate\Http\Request;
 use App\Models\BloqueoPeluquero;
 use App\Models\Cita;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 
 class BloqueoPeluqueroController extends Controller
 {
+    public function index()
+    {
+        $bloqueos = BloqueoPeluquero::with('peluquero')->paginate(10); // Cambiado para usar paginación
+        $peluqueros = User::where('rol', 'peluquero')->get();
+    
+        return view('admin.bloqueos.bloqueos', compact('bloqueos', 'peluqueros'));
+    }
+    
+
+    public function update(Request $request, $id)
+    {
+        $bloqueo = BloqueoPeluquero::findOrFail($id);
+        $bloqueo->update([
+            'peluquero_id' => $request->peluquero_id,
+            'fecha' => $request->fecha,
+            'horas' => json_encode($request->horas), // Corregido aquí
+        ]);
+    
+        return redirect()->route('admin.bloqueos')->with('success', 'Bloqueo actualizado con éxito.');
+    }
+    
+
+    public function destroy($id)
+    {
+        $bloqueo = BloqueoPeluquero::findOrFail($id);
+        $bloqueo->delete();
+
+        return redirect()->route('admin.bloqueos')->with('success', 'Bloqueo eliminado con éxito.');
+    }
+
+
     public function store(Request $request)
     {
         $userId = $request->user_id;
@@ -46,7 +78,7 @@ class BloqueoPeluqueroController extends Controller
                     $cita->save();
 
                     // Enviar correo de cancelación
-                    Mail::to($cita->user->email)->send(new CitaCancelada($cita));
+                    //Mail::to($cita->user->email)->send(new CitaCancelada($cita));
                 }
             }
 

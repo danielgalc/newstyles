@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BloqueoPeluquero;
 use App\Models\User;
 use App\Models\Cita;
 use App\Models\Servicio;
@@ -94,8 +95,6 @@ public function usuarios(Request $request)
     
         return view('admin.servicios.lista_servicios', compact('servicios', 'clase'));
     }
-    
-    
 
     public function listaProductos(Request $request)
     {
@@ -125,7 +124,24 @@ public function usuarios(Request $request)
     
         return view('admin.productos.lista_productos', compact('productos', 'categoria', 'buscar'));
     }
+
+    public function gestionarBloqueos(Request $request)
+    {
+        $bloqueos = BloqueoPeluquero::with('peluquero')->paginate(5);
+        $users = User::where('rol', 'peluquero')->get();
     
+        foreach ($bloqueos as $bloqueo) {
+            $bloqueo->horas = json_decode($bloqueo->horas, true);
+        }
+    
+        if ($request->ajax()) {
+            return view('admin.bloqueos.partials.bloqueos_list', compact('bloqueos'))->render();
+        }
+    
+        return view('admin.bloqueos.bloqueos', compact('bloqueos', 'users'));
+    }
+    
+
 
 
     public function mostrarDatos()
@@ -134,18 +150,26 @@ public function usuarios(Request $request)
         $citas = Cita::latest()->take(5)->get();
         $servicios = Servicio::latest()->take(5)->get();
         $productos = Producto::latest()->take(5)->get();
-
+        $bloqueos = BloqueoPeluquero::with('peluquero')->latest()->take(5)->get();
+    
         $citas->each(function ($cita) {
             $cita->hora = \Carbon\Carbon::parse($cita->hora);
         });
-
+    
         $citas->load('user', 'peluquero');
-
+    
+        $bloqueos->each(function ($bloqueo) {
+            $bloqueo->horas = collect(json_decode($bloqueo->horas))->map(function ($hora) {
+                return \Carbon\Carbon::createFromFormat('H:i:s', $hora)->format('H:i');
+            })->toArray();
+        });
+    
         return Inertia::render('Admin/Admin', [
             'usuarios' => $usuarios,
             'citas' => $citas,
             'servicios' => $servicios,
             'productos' => $productos,
+            'bloqueos' => $bloqueos,
         ]);
-    }
+    }   
 }

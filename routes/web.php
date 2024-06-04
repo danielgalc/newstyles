@@ -160,6 +160,33 @@ Route::middleware('auth', 'admin')->group(function () {
     Route::get('/admin/citas', [AdminController::class, 'gestionarCitas'])->name('admin.citas');
     Route::get('/admin/servicios', [AdminController::class, 'listaServicios'])->name('admin.servicios');
     Route::get('/admin/productos', [AdminController::class, 'listaProductos'])->name('admin.productos');
+    Route::get('/admin/bloqueos', [AdminController::class, 'gestionarBloqueos'])->name('admin.bloqueos');
+
+    // Rutas de citas - Admin
+
+    Route::post('/admin/gestionar_citas', [CitaController::class, 'store'])->name('citas.store');
+
+    Route::get('/admin/gestionar_citas/{id}/edit', [CitaController::class, 'edit']);
+    Route::put('/admin/gestionar_citas/{id}', [CitaController::class, 'update'])->name('citas.update');
+
+    Route::delete('/admin/gestionar_citas/{id}', [CitaController::class, 'destroy'])->name('citas.destroy');
+    Route::get('/admin/gestionar_citas/obtenerCitas', [CitaController::class, 'obtenerCitas'])->name('admin.citas.obtenerCitas');
+    Route::get('/admin/gestionar_citas/buscar_usuarios', [CitaController::class, 'buscarUsuarios'])->name('admin.buscar_usuarios');
+
+    Route::put('admin/gestionar_citas/{id}/actualizar-estado', [CitaController::class, 'actualizar_estado'])->name('citas.actualizar_estado');
+
+    // Rutas de bloqueos - Admin
+
+    Route::get('admin/bloqueos', [BloqueoPeluqueroController::class, 'index'])->name('admin.bloqueos');
+    Route::put('/admin/bloqueos/{id}', [BloqueoPeluqueroController::class, 'update'])->name('bloqueos.update');
+    Route::delete('/admin/bloqueos/{id}', [BloqueoPeluqueroController::class, 'destroy'])->name('bloqueos.destroy');
+    Route::get('admin/bloqueos/horasBloqueadas', [BloqueoPeluqueroController::class, 'horasBloqueadas'])->name('bloqueos.horas_bloqueadas');
+});
+
+// Rutas accesibles tanto para peluqueros como para administradores
+Route::middleware('auth', 'peluquero')->group(function () {
+    Route::post('bloqueos', [BloqueoPeluqueroController::class, 'store'])->name('bloqueos.store')->middleware('peluquero');
+    Route::post('bloqueos/desbloquear', [BloqueoPeluqueroController::class, 'desbloquear'])->name('bloqueos.desbloquear')->middleware('peluquero');
 });
 
 
@@ -180,9 +207,6 @@ Route::post('/usuarios', [UserController::class, 'store'])->name('users.store');
 Route::put('/usuarios/{id}', [UserController::class, 'update'])->name('users.update');
 Route::delete('/usuarios/{id}', [UserController::class, 'destroy'])->name('users.destroy');
 
-
-
-
 // Rutas de servicios
 
 Route::get('/servicios/create', [ServicioController::class, 'create']);
@@ -192,22 +216,6 @@ Route::get('/servicios/{id}/edit', [ServicioController::class, 'edit']);
 Route::put('/servicios/{id}', [ServicioController::class, 'update'])->name('servicios.update');
 
 Route::delete('/servicios/{id}', [ServicioController::class, 'destroy'])->name('servicios.destroy');
-
-
-// Rutas de citas
-
-Route::post('/admin/gestionar_citas', [CitaController::class, 'store'])->name('citas.store');
-
-Route::get('/admin/gestionar_citas/{id}/edit', [CitaController::class, 'edit']);
-Route::put('/admin/gestionar_citas/{id}', [CitaController::class, 'update'])->name('citas.update');
-
-Route::delete('/admin/gestionar_citas/{id}', [CitaController::class, 'destroy'])->name('citas.destroy');
-Route::get('/admin/gestionar_citas/obtenerCitas', [CitaController::class, 'obtenerCitas'])->name('admin.citas.obtenerCitas');
-Route::get('/admin/gestionar_citas/buscar_usuarios', [CitaController::class, 'buscarUsuarios'])->name('admin.buscar_usuarios');
-
-
-
-Route::put('admin/gestionar_citas/{id}/actualizar-estado', [CitaController::class, 'actualizar_estado'])->name('citas.actualizar_estado');
 
 
 // Ruta para enviar correo de contacto
