@@ -328,15 +328,18 @@
             function actualizarHorasDisponibles(citas, bloqueos, fecha, currentHour = null) {
                 horaInput.innerHTML = '<option value="" disabled selected>Selecciona una hora</option>';
                 const occupiedTimes = citas.map(cita => cita.hora);
-                const blockedTimes = bloqueos.flatMap(bloqueo => bloqueo.horas || []); // 
+                const blockedTimes = bloqueos.flatMap(bloqueo => bloqueo.horas || []);
 
-                const horasDisponibles = generarHorasOptions().filter(time => !occupiedTimes.includes(time) && !blockedTimes.includes(time));
+                let horasDisponibles = generarHorasOptions().filter(time => !occupiedTimes.includes(time) && !blockedTimes.includes(time));
 
                 console.log('Horas ocupadas:', occupiedTimes);
                 console.log('Horas bloqueadas:', blockedTimes);
 
+                // Si la hora actual (anterior) está disponible, agrégala si no está ya en la lista
                 if (currentHour && fecha === currentDate) {
-                    horasDisponibles.push(currentHour);
+                    if (!horasDisponibles.includes(currentHour)) {
+                        horasDisponibles.push(currentHour);
+                    }
                 }
 
                 horasDisponibles.forEach(time => {
@@ -371,6 +374,7 @@
                     deshabilitarHoraInput();
                 }
             }
+
 
             function validarUserSearchInput(input) {
                 const regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s]*$/;
