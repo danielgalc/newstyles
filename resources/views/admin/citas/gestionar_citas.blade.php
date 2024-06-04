@@ -141,7 +141,6 @@
 </div>
 @endforeach
 
-
 <!-- MODAL PARA CREAR CITAS -->
 <div id="crud-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
     <div class="relative p-4 w-full max-w-md max-h-full">
@@ -344,7 +343,7 @@
                     const option = document.createElement('option');
                     option.value = time.slice(0, 5);
                     if (currentHour && time === currentHour) {
-                        option.textContent = `${time.slice(0, 5)} - Hora seleccionada`;
+                        option.textContent = `${time.slice(0, 5)} - Hora anterior`;
                     } else {
                         option.textContent = time.slice(0, 5);
                     }
@@ -363,6 +362,13 @@
 
                 if (currentHour && fecha === currentDate) {
                     horaInput.value = currentHour.slice(0, 5);
+                }
+
+                // Verificar si no hay horas disponibles
+                if (horasDisponibles.length === 0) {
+                    errorMessage.textContent = 'No hay disponibilidad para esta fecha. Por favor, elige otro día.';
+                    errorMessage.style.display = 'block';
+                    deshabilitarHoraInput();
                 }
             }
 
@@ -448,14 +454,6 @@
         iniciarScriptsModales('crear');
     });
 </script>
-
-
-
-
-
-
-
-
 
 <!-- SCRIPT PARA FILTRAR Y PAGINAR POR AJAX -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

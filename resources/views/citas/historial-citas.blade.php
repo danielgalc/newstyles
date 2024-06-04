@@ -166,163 +166,187 @@
         });
     </script>
     <script>
-document.addEventListener('DOMContentLoaded', function() {
-    var fechaInput = document.getElementById('fecha_{{ $proximaCita->id }}');
-    var peluqueroInput = document.getElementById('peluquero_id_{{ $proximaCita->id }}');
-    var horaInput = document.getElementById('hora_{{ $proximaCita->id }}');
-    var servicioInput = document.getElementById('servicio_edit_{{ $proximaCita->id }}');
-    var submitButton = document.getElementById('submit_button_{{ $proximaCita->id }}');
-    var errorMessage = document.createElement('p');
-    errorMessage.className = 'text-red-500 text-xs italic mb-2 mt-2';
-    errorMessage.style.display = 'none';
-    fechaInput.parentNode.insertBefore(errorMessage, fechaInput.nextSibling);
+        document.addEventListener('DOMContentLoaded', function() {
+            var fechaInput = document.getElementById('fecha_{{ $proximaCita->id }}');
+            var peluqueroInput = document.getElementById('peluquero_id_{{ $proximaCita->id }}');
+            var horaInput = document.getElementById('hora_{{ $proximaCita->id }}');
+            var submitButton = document.getElementById('submit_button_{{ $proximaCita->id }}');
+            var errorMessage = document.createElement('p');
+            errorMessage.className = 'text-red-500 text-xs italic mb-2 mt-2';
+            errorMessage.style.display = 'none';
+            fechaInput.parentNode.insertBefore(errorMessage, fechaInput.nextSibling);
 
-    var today = new Date().toISOString().split('T')[0];
-    fechaInput.setAttribute('min', today);
+            var today = new Date().toISOString().split('T')[0];
+            fechaInput.setAttribute('min', today);
 
-    function deshabilitarHoraInput() {
-        horaInput.disabled = true;
-        horaInput.classList.add('cursor-not-allowed');
-    }
-
-    function habilitarHoraInput() {
-        horaInput.disabled = false;
-        horaInput.classList.remove('cursor-not-allowed');
-    }
-
-    function generarHorasOptions() {
-        const times = [];
-        const timeRanges = [{
-                start: 10,
-                end: 13
-            },
-            {
-                start: 16,
-                end: 20
+            function deshabilitarHoraInput() {
+                horaInput.disabled = true;
+                horaInput.classList.add('cursor-not-allowed');
             }
-        ];
 
-        timeRanges.forEach(range => {
-            for (let i = range.start; i <= range.end; i++) {
-                times.push(`${String(i).padStart(2, '0')}:00:00`);
+            function habilitarHoraInput() {
+                horaInput.disabled = false;
+                horaInput.classList.remove('cursor-not-allowed');
             }
-        });
 
-        return times;
-    }
+            function generarHorasOptions() {
+                const times = [];
+                const timeRanges = [{
+                        start: 10,
+                        end: 13
+                    },
+                    {
+                        start: 16,
+                        end: 20
+                    }
+                ];
 
-    function getHoraActual() {
-        const now = new Date();
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        return `${hours}:${minutes}:00`;
-    }
+                timeRanges.forEach(range => {
+                    for (let i = range.start; i <= range.end; i++) {
+                        times.push(`${String(i).padStart(2, '0')}:00:00`);
+                    }
+                });
 
-    function validarFecha() {
-        const selectedDate = new Date(fechaInput.value);
-        const day = selectedDate.getUTCDay();
+                return times;
+            }
 
-        if (day === 0 || day === 6) {
-            fechaInput.value = '';
-            errorMessage.textContent = 'No se pueden seleccionar fines de semana. Por favor, elige otro día.';
-            errorMessage.style.display = 'block';
-            deshabilitarHoraInput();
-            return;
-        } else if (fechaInput.value === '') {
-            errorMessage.textContent = 'Selecciona una fecha antes de elegir una hora';
-            errorMessage.style.display = 'block';
-            deshabilitarHoraInput();
-            return;
-        }
+            function getHoraActual() {
+                const now = new Date();
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                return `${hours}:${minutes}:00`;
+            }
 
-        errorMessage.style.display = 'none';
-        habilitarHoraInput();
-        obtenerCitas(peluqueroInput.value, fechaInput.value);
-    }
+            function getHorasDisponibles(citas, bloqueos, fecha) {
+                const today = new Date().toISOString().split('T')[0];
+                const currentTime = getHoraActual();
 
-    function obtenerCitas(peluqueroId, fecha) {
-        if (!peluqueroId || !fecha) {
-            horaInput.innerHTML = '<option value="" disabled selected>Selecciona una hora</option>';
-            return;
-        }
+                const occupiedTimes = citas.map(cita => cita.hora);
+                const blockedTimes = bloqueos.flatMap(bloqueo => bloqueo.horas || []);
 
-        console.log('Obteniendo citas para peluquero:', peluqueroId, 'en la fecha:', fecha);
+                let availableTimes = generarHorasOptions().filter(time => !occupiedTimes.includes(time) && !blockedTimes.includes(time));
 
-        fetch(`/citas/obtenerCitas?peluquero_id=${peluqueroId}&fecha=${fecha}`)
-            .then(response => response.json())
-            .then(data => {
-                const citas = data.citas;
-                const bloqueos = data.bloqueos;
-                actualizarHorasDisponibles(citas, bloqueos, fecha);
-            })
-            .catch(error => console.error('Error obteniendo citas:', error));
-    }
-
-    function actualizarHorasDisponibles(citas, bloqueos, fecha) {
-        horaInput.innerHTML = '<option value="" disabled selected>Selecciona una hora</option>';
-        const occupiedTimes = citas.map(cita => cita.hora);
-        const blockedTimes = bloqueos.flatMap(bloqueo => bloqueo.horas || []); 
-
-        let horasDisponibles = generarHorasOptions().filter(time => !occupiedTimes.includes(time) && !blockedTimes.includes(time));
-
-        console.log('Horas ocupadas:', occupiedTimes);
-        console.log('Horas bloqueadas:', blockedTimes);
-
-        const horaAnterior = '{{ $proximaCita->hora }}';
-        let horaAnteriorDisponible = false;
-
-        if (horasDisponibles.includes(horaAnterior) || occupiedTimes.includes(horaAnterior)) {
-            horasDisponibles = horasDisponibles.map(time => {
-                if (time === horaAnterior) {
-                    horaAnteriorDisponible = true;
-                    return `${time.substr(0, 5)} - Hora Anterior`;
+                if (fecha === today) {
+                    availableTimes = availableTimes.filter(time => time >= currentTime);
                 }
-                
-                return time.substr(0, 5);
-            });
-        } else {
-            horasDisponibles = horasDisponibles.map(time => time.slice(0, 5));
-        }
 
-        horasDisponibles.forEach(time => {
-            const option = document.createElement('option');
-            option.value = time.includes(' - Hora Anterior') ? time.split(' ')[0] : time;
-            option.textContent = time;
-            horaInput.appendChild(option);
-        });
+                return availableTimes;
+            }
 
-        const today = new Date().toISOString().split('T')[0];
-        if (fechaInput.value === today) {
-            const currentTime = getHoraActual();
-            horaInput.querySelectorAll('option').forEach(option => {
-                if (option.value && option.value < currentTime.slice(0, 5)) {
-                    option.disabled = true;
+            function validarFecha() {
+                const selectedDate = new Date(fechaInput.value);
+                const day = selectedDate.getUTCDay();
+
+                if (day === 0 || day === 6) {
+                    fechaInput.value = '';
+                    errorMessage.textContent = 'No se pueden seleccionar fines de semana. Por favor, elige otro día.';
+                    errorMessage.style.display = 'block';
+                    deshabilitarHoraInput();
+                    return;
+                } else if (fechaInput.value === '') {
+                    errorMessage.textContent = 'Selecciona una fecha antes de elegir una hora';
+                    errorMessage.style.display = 'block';
+                    deshabilitarHoraInput();
+                    return;
+                }
+
+                errorMessage.style.display = 'none';
+                habilitarHoraInput();
+                obtenerCitas(peluqueroInput.value, fechaInput.value);
+            }
+
+            function obtenerCitas(peluqueroId, fecha) {
+                if (!peluqueroId || !fecha) {
+                    horaInput.innerHTML = '<option value="" disabled selected>Selecciona una hora</option>';
+                    return;
+                }
+
+                console.log('Obteniendo citas para peluquero:', peluqueroId, 'en la fecha:', fecha);
+
+                fetch(`/citas/obtenerCitas?peluquero_id=${peluqueroId}&fecha=${fecha}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const citas = data.citas;
+                        const bloqueos = data.bloqueos;
+                        const availableTimes = getHorasDisponibles(citas, bloqueos, fecha);
+
+                        if (availableTimes.length === 0) {
+                            errorMessage.textContent = 'No hay disponibilidad para esta fecha. Por favor, elige otro día.';
+                            errorMessage.style.display = 'block';
+                            deshabilitarHoraInput();
+                        } else {
+                            errorMessage.style.display = 'none';
+                            actualizarHorasDisponibles(citas, bloqueos, fecha);
+                        }
+                    })
+                    .catch(error => console.error('Error obteniendo citas:', error));
+            }
+
+            function actualizarHorasDisponibles(citas, bloqueos, fecha) {
+                horaInput.innerHTML = '<option value="" disabled selected>Selecciona una hora</option>';
+                const occupiedTimes = citas.map(cita => cita.hora);
+                const blockedTimes = bloqueos.flatMap(bloqueo => bloqueo.horas || []);
+
+                let horasDisponibles = generarHorasOptions().filter(time => !occupiedTimes.includes(time) && !blockedTimes.includes(time));
+
+                console.log('Horas ocupadas:', occupiedTimes);
+                console.log('Horas bloqueadas:', blockedTimes);
+
+                const horaAnterior = '{{ $proximaCita->hora }}';
+                let horaAnteriorDisponible = false;
+
+                if (horasDisponibles.includes(horaAnterior) || occupiedTimes.includes(horaAnterior)) {
+                    horasDisponibles = horasDisponibles.map(time => {
+                        if (time === horaAnterior) {
+                            horaAnteriorDisponible = true;
+                            return `${time.substr(0, 5)} - Hora Anterior`;
+                        }
+
+                        return time.substr(0, 5);
+                    });
+                } else {
+                    horasDisponibles = horasDisponibles.map(time => time.slice(0, 5));
+                }
+
+                horasDisponibles.forEach(time => {
+                    const option = document.createElement('option');
+                    option.value = time.includes(' - Hora Anterior') ? time.split(' ')[0] : time;
+                    option.textContent = time;
+                    horaInput.appendChild(option);
+                });
+
+                const today = new Date().toISOString().split('T')[0];
+                if (fechaInput.value === today) {
+                    const currentTime = getHoraActual();
+                    horaInput.querySelectorAll('option').forEach(option => {
+                        if (option.value && option.value < currentTime.slice(0, 5)) {
+                            option.disabled = true;
+                        }
+                    });
+                }
+
+                if (horaAnteriorDisponible) {
+                    horaInput.value = horaAnterior.slice(0, 5);
+                } else {
+                    horaInput.value = '';
+                }
+            }
+
+            peluqueroInput.addEventListener('change', function() {
+                if (fechaInput.value) {
+                    obtenerCitas(this.value, fechaInput.value);
                 }
             });
-        }
 
-        if (horaAnteriorDisponible) {
-            horaInput.value = horaAnterior.slice(0, 5);
-        } else {
-            horaInput.value = '';
-        }
-    }
+            fechaInput.addEventListener('input', function() {
+                validarFecha();
+            });
 
-    peluqueroInput.addEventListener('change', function() {
-        if (fechaInput.value) {
-            obtenerCitas(this.value, fechaInput.value);
-        }
-    });
+            if (!fechaInput.value) {
+                deshabilitarHoraInput();
+            }
 
-    fechaInput.addEventListener('input', function() {
-        validarFecha();
-    });
-
-    if (!fechaInput.value) {
-        deshabilitarHoraInput();
-    }
-
-    validarFecha();
-});
+            validarFecha();
+        });
     </script>
 </x-app-layout>
