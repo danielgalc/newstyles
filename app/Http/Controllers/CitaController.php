@@ -34,44 +34,40 @@ class CitaController extends Controller
 
     public function historial()
     {
-        // Obtiene el usuario actualmente autenticado
         $user = auth()->user();
+        $fechaHoy = Carbon::now()->format('Y-m-d');
 
-        // Obtiene la próxima cita activa (aceptada o pendiente)
-        $proximaCitaActiva = Cita::where('user_id', $user->id)
+        $citasPendientes = Cita::where('user_id', $user->id)
             ->whereIn('estado', ['aceptada', 'pendiente'])
+            ->whereDate('fecha', '>=', $fechaHoy)
             ->orderBy('fecha', 'asc')
             ->orderBy('hora', 'asc')
-            ->first();
+            ->get();
 
-        // Si no hay citas activas, obtiene la próxima cita inactiva (cancelada)
-        $proximaCitaInactiva = null;
-        if (!$proximaCitaActiva) {
-            $proximaCitaInactiva = Cita::where('user_id', $user->id)
-                ->where('estado', 'cancelada')
-                ->orderBy('fecha', 'asc')
-                ->orderBy('hora', 'asc')
-                ->first();
-        }
-
-        // Obtiene todas las citas finalizadas o canceladas, ordenadas de más recientes a más antiguas
         $citasFinalizadas = Cita::where('user_id', $user->id)
             ->whereIn('estado', ['finalizada', 'cancelada'])
             ->orderBy('fecha', 'desc')
             ->orderBy('hora', 'desc')
             ->get();
 
-        // Obtiene todos los peluqueros
-        $users = User::where('rol', 'peluquero')->get();
-        $servicios = Servicio::all();
+        $bloqueos = BloqueoPeluquero::where('peluquero_id', $user->id)
+            ->whereDate('fecha', '>=', $fechaHoy)
+            ->orderBy('fecha', 'asc')
+            ->get()
+            ->flatMap(function ($bloqueo) {
+                return json_decode($bloqueo->horas);
+            })
+            ->toArray();
 
         return view('citas.historial-citas', [
-            'proximaCita' => $proximaCitaActiva ? $proximaCitaActiva : $proximaCitaInactiva,
+            'proximaCita' => $citasPendientes->first(),
             'citasFinalizadas' => $citasFinalizadas,
-            'users' => $users,
-            'servicios' => $servicios,
+            'users' => User::where('rol', 'peluquero')->get(),
+            'servicios' => Servicio::all(),
+            'bloqueos' => $bloqueos,
         ]);
     }
+
 
     public function cancelar(Request $request, $id)
     {
@@ -361,25 +357,30 @@ class CitaController extends Controller
      * Funciones del usuario peluquero
      */
 
-    public function obtenerCitas(Request $request): JsonResponse
-    {
-        $peluqueroId = $request->query('peluquero_id');
-        $fecha = $request->query('fecha');
-
-        $citas = Cita::where('peluquero_id', $peluqueroId)
-            ->whereDate('fecha', $fecha)
-            ->whereIn('estado', ['aceptada', 'pendiente'])
-            ->get();
-
-        $bloqueos = BloqueoPeluquero::where('peluquero_id', $peluqueroId)
-            ->whereDate('fecha', $fecha)
-            ->get();
-
-        return response()->json([
-            'citas' => $citas,
-            'bloqueos' => $bloqueos,
-        ]);
-    }
+     public function obtenerCitas(Request $request): JsonResponse
+     {
+         $peluqueroId = $request->query('peluquero_id');
+         $fecha = $request->query('fecha');
+     
+         $citas = Cita::where('peluquero_id', $peluqueroId)
+             ->whereDate('fecha', $fecha)
+             ->whereIn('estado', ['aceptada', 'pendiente'])
+             ->get();
+     
+         $bloqueos = BloqueoPeluquero::where('peluquero_id', $peluqueroId)
+             ->whereDate('fecha', $fecha)
+             ->get();
+     
+         return response()->json([
+             'citas' => $citas,
+             'bloqueos' => $bloqueos->map(function ($bloqueo) {
+                 return [
+                     'horas' => json_decode($bloqueo->horas)
+                 ];
+             }),
+         ]);
+     }
+     
 
 
     public function obtenerCitasReserva(Request $request): JsonResponse

@@ -102,15 +102,17 @@ class BloqueoPeluqueroController extends Controller
     {
         $userId = $request->query('user_id');
         $fecha = $request->query('fecha');
-
+    
         $bloqueo = BloqueoPeluquero::where('peluquero_id', $userId)
                                     ->where('fecha', $fecha)
                                     ->first();
-
+    
         $horasBloqueadas = $bloqueo ? json_decode($bloqueo->horas, true) : [];
-
+    
         return response()->json($horasBloqueadas);
     }
+    
+    
 
     public function gestionarCitas()
     {

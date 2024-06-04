@@ -160,230 +160,169 @@
 
 
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const obtenerCitasUrl = "{{ route('citas.obtenerCitas', ['peluquero_id' => 'peluqueroID', 'fecha' => '__FECHA__']) }}";
-        console.log('URL para obtener citas:', obtenerCitasUrl);
-    });
-</script>
-    <script>
         document.addEventListener('DOMContentLoaded', function() {
-            var fechaInput = document.getElementById('fecha_{{ $proximaCita->id }}');
-            var peluqueroInput = document.getElementById('peluquero_id_{{ $proximaCita->id }}');
-            var horaInput = document.getElementById('hora_{{ $proximaCita->id }}');
-            var servicioInput = document.getElementById('servicio_edit_{{ $proximaCita->id }}');
-            var submitButton = document.getElementById('submit_button_{{ $proximaCita->id }}');
-            var errorMessage = document.createElement('p');
-            errorMessage.className = 'text-red-500 text-xs italic mb-2 mt-2';
-            errorMessage.style.display = 'none';
-            fechaInput.parentNode.insertBefore(errorMessage, fechaInput.nextSibling);
-
-            // Establecer la fecha mínima a hoy
-            var today = new Date().toISOString().split('T')[0];
-            fechaInput.setAttribute('min', today);
-
-            // Función para deshabilitar el input de hora
-            function deshabilitarHoraInput() {
-                horaInput.disabled = true;
-                horaInput.classList.add('cursor-not-allowed');
-            }
-
-            // Función para habilitar el input de hora
-            function habilitarHoraInput() {
-                horaInput.disabled = false;
-                horaInput.classList.remove('cursor-not-allowed');
-            }
-
-            // Generar opciones de tiempo disponibles
-            function generarHorasOptions() {
-                const times = [];
-                const timeRanges = [{
-                        start: 10,
-                        end: 13
-                    },
-                    {
-                        start: 16,
-                        end: 20
-                    }
-                ];
-
-                timeRanges.forEach(range => {
-                    for (let i = range.start; i <= range.end; i++) {
-                        times.push(`${String(i).padStart(2, '0')}:00:00`);
-                    }
-                });
-
-                return times;
-            }
-
-            // Obtener la hora actual en formato HH:MM:SS
-            function getHoraActual() {
-                const now = new Date();
-                const hours = String(now.getHours()).padStart(2, '0');
-                const minutes = String(now.getMinutes()).padStart(2, '0');
-                return `${hours}:${minutes}:00`;
-            }
-
-            // Validar la fecha seleccionada
-            function validarFecha() {
-                const selectedDate = new Date(fechaInput.value);
-                const day = selectedDate.getUTCDay();
-
-                if (day === 0 || day === 6) {
-                    fechaInput.value = ''; // Resetear el campo de fecha
-                    errorMessage.textContent = 'No se pueden seleccionar fines de semana. Por favor, elige otro día.';
-                    errorMessage.style.display = 'block';
-                    deshabilitarHoraInput(); // Deshabilitar el input de hora
-                    return;
-                } else if (fechaInput.value === '') {
-                    errorMessage.textContent = 'Selecciona una fecha antes de elegir una hora';
-                    errorMessage.style.display = 'block';
-                    deshabilitarHoraInput(); // Deshabilitar el input de hora
-                    return;
-                }
-
-                errorMessage.style.display = 'none';
-                habilitarHoraInput(); // Habilitar el input de hora
-                obtenerCitas(peluqueroInput.value, fechaInput.value);
-            }
-
-            // Obtener citas disponibles para el peluquero seleccionado en la fecha seleccionada
-            function obtenerCitas(peluqueroId, fecha) {
-                if (!peluqueroId || !fecha) {
-                    horaInput.innerHTML = '<option value="" disabled selected>Selecciona una hora</option>';
-                    return;
-                }
-
-                console.log('Obteniendo citas para peluquero:', peluqueroId, 'en la fecha:', fecha);
-
-                fetch(`/citas/obtenerCitas?peluquero_id=${peluqueroId}&fecha=${fecha}`)
-                    .then(response => response.json())
-                    .then(citas => {
-                        console.log('Citas obtenidas:', citas);
-                        // Llamada a actualizarHorasDisponibles con la fecha pasada como argumento
-                        actualizarHorasDisponibles(citas, fecha); // Cambio: se pasa 'fecha' como segundo parámetro
-                    })
-                    .catch(error => console.error('Error obteniendo citas:', error));
-            }
-
-            // Actualizar opciones del select de hora
-            function actualizarHorasDisponibles(citas, fecha) { // Cambio: se añade 'fecha' como parámetro
-                horaInput.innerHTML = '<option value="" disabled selected>Selecciona una hora</option>';
-                // Cambio: filtrar las citas por la fecha pasada como parámetro
-                const occupiedTimes = citas
-                    .filter(cita => cita.fecha === fecha) // Cambio: filtro por fecha específica
-                    .map(cita => `${cita.hora}`);
-                console.log('Horas ocupadas:', occupiedTimes);
-                const horasDisponibles = generarHorasOptions().filter(time => !occupiedTimes.includes(time));
-
-                horasDisponibles.push('{{ $proximaCita->hora }}');
-
-                horasDisponibles.forEach(time => {
-                    const option = document.createElement('option');
-                    option.value = time.slice(0, 5); // Mostrar solo HH:MM
-                    if (time === '{{ $proximaCita->hora }}') {
-                        option.textContent = `${time.slice(0, 5)} - Hora seleccionada`;
-                    } else {
-                        option.textContent = time.slice(0, 5);
-                    }
-                    horaInput.appendChild(option);
-                });
-
-                // Deshabilitar horas pasadas si la fecha es hoy
-                const today = new Date().toISOString().split('T')[0];
-                if (fechaInput.value === today) {
-                    const currentTime = getHoraActual();
-                    horaInput.querySelectorAll('option').forEach(option => {
-                        if (option.value && option.value < currentTime.slice(0, 5)) {
-                            option.disabled = true;
-                        }
-                    });
-                }
-
-                horaInput.value = '{{ $proximaCita->hora }}'.slice(0, 5);
-            }
-
-            // Event listener para el cambio de peluquero
-            peluqueroInput.addEventListener('change', function() {
-                if (fechaInput.value) {
-                    obtenerCitas(this.value, fechaInput.value);
-                }
-            });
-
-            // Agregar el listener al campo de fecha
-            fechaInput.addEventListener('input', function() {
-                validarFecha();
-            });
-
-            // Deshabilitar el input de hora al cargar la página si no hay fecha seleccionada
-            if (!fechaInput.value) {
-                deshabilitarHoraInput();
-            }
-
-            // Validar la fecha al cargar la página
-            validarFecha();
+            const obtenerCitasUrl = "{{ route('citas.obtenerCitas', ['peluquero_id' => 'peluqueroID', 'fecha' => '__FECHA__']) }}";
+            console.log('URL para obtener citas:', obtenerCitasUrl);
         });
     </script>
-
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            @if($proximaCita)
-            const form = document.getElementById('edit_cita_form_{{ $proximaCita->id }}');
-            const originalData = {
-                peluquero_id: form.peluquero_id.value,
-                fecha: form.fecha.value,
-                hora: form.hora.value,
-                servicio: form.servicio.value
-            };
-            const submitButton = document.getElementById('submit_button_{{ $proximaCita->id }}');
-            const textoCambio = document.getElementById('texto_cambio_{{ $proximaCita->id }}');
-            const textoHora = document.getElementById('texto_hora_{{ $proximaCita->id }}');
-            const textoServicio = document.getElementById('texto_servicio_{{ $proximaCita->id }}');
+document.addEventListener('DOMContentLoaded', function() {
+    var fechaInput = document.getElementById('fecha_{{ $proximaCita->id }}');
+    var peluqueroInput = document.getElementById('peluquero_id_{{ $proximaCita->id }}');
+    var horaInput = document.getElementById('hora_{{ $proximaCita->id }}');
+    var servicioInput = document.getElementById('servicio_edit_{{ $proximaCita->id }}');
+    var submitButton = document.getElementById('submit_button_{{ $proximaCita->id }}');
+    var errorMessage = document.createElement('p');
+    errorMessage.className = 'text-red-500 text-xs italic mb-2 mt-2';
+    errorMessage.style.display = 'none';
+    fechaInput.parentNode.insertBefore(errorMessage, fechaInput.nextSibling);
 
-            function comprobRestricionHora() {
-                const now = new Date();
-                const citaFecha = new Date(form.fecha.value + 'T' + form.hora.value);
-                const diff = citaFecha - now;
-                const hoursDiff = diff / 1000 / 60 / 60;
+    var today = new Date().toISOString().split('T')[0];
+    fechaInput.setAttribute('min', today);
 
-                return hoursDiff < 24;
+    function deshabilitarHoraInput() {
+        horaInput.disabled = true;
+        horaInput.classList.add('cursor-not-allowed');
+    }
+
+    function habilitarHoraInput() {
+        horaInput.disabled = false;
+        horaInput.classList.remove('cursor-not-allowed');
+    }
+
+    function generarHorasOptions() {
+        const times = [];
+        const timeRanges = [{
+                start: 10,
+                end: 13
+            },
+            {
+                start: 16,
+                end: 20
             }
+        ];
 
-            form.addEventListener('submit', function(event) {
-                if (form.servicio.value === "") {
-                    event.preventDefault();
-                    textoServicio.classList.remove('hidden');
-                } else {
-                    textoServicio.classList.add('hidden');
+        timeRanges.forEach(range => {
+            for (let i = range.start; i <= range.end; i++) {
+                times.push(`${String(i).padStart(2, '0')}:00:00`);
+            }
+        });
+
+        return times;
+    }
+
+    function getHoraActual() {
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        return `${hours}:${minutes}:00`;
+    }
+
+    function validarFecha() {
+        const selectedDate = new Date(fechaInput.value);
+        const day = selectedDate.getUTCDay();
+
+        if (day === 0 || day === 6) {
+            fechaInput.value = '';
+            errorMessage.textContent = 'No se pueden seleccionar fines de semana. Por favor, elige otro día.';
+            errorMessage.style.display = 'block';
+            deshabilitarHoraInput();
+            return;
+        } else if (fechaInput.value === '') {
+            errorMessage.textContent = 'Selecciona una fecha antes de elegir una hora';
+            errorMessage.style.display = 'block';
+            deshabilitarHoraInput();
+            return;
+        }
+
+        errorMessage.style.display = 'none';
+        habilitarHoraInput();
+        obtenerCitas(peluqueroInput.value, fechaInput.value);
+    }
+
+    function obtenerCitas(peluqueroId, fecha) {
+        if (!peluqueroId || !fecha) {
+            horaInput.innerHTML = '<option value="" disabled selected>Selecciona una hora</option>';
+            return;
+        }
+
+        console.log('Obteniendo citas para peluquero:', peluqueroId, 'en la fecha:', fecha);
+
+        fetch(`/citas/obtenerCitas?peluquero_id=${peluqueroId}&fecha=${fecha}`)
+            .then(response => response.json())
+            .then(data => {
+                const citas = data.citas;
+                const bloqueos = data.bloqueos;
+                actualizarHorasDisponibles(citas, bloqueos, fecha);
+            })
+            .catch(error => console.error('Error obteniendo citas:', error));
+    }
+
+    function actualizarHorasDisponibles(citas, bloqueos, fecha) {
+        horaInput.innerHTML = '<option value="" disabled selected>Selecciona una hora</option>';
+        const occupiedTimes = citas.map(cita => cita.hora);
+        const blockedTimes = bloqueos.flatMap(bloqueo => bloqueo.horas || []); 
+
+        let horasDisponibles = generarHorasOptions().filter(time => !occupiedTimes.includes(time) && !blockedTimes.includes(time));
+
+        console.log('Horas ocupadas:', occupiedTimes);
+        console.log('Horas bloqueadas:', blockedTimes);
+
+        const horaAnterior = '{{ $proximaCita->hora }}';
+        let horaAnteriorDisponible = false;
+
+        if (horasDisponibles.includes(horaAnterior) || occupiedTimes.includes(horaAnterior)) {
+            horasDisponibles = horasDisponibles.map(time => {
+                if (time === horaAnterior) {
+                    horaAnteriorDisponible = true;
+                    return `${time.substr(0, 5)} - Hora Anterior`;
+                }
+                
+                return time.substr(0, 5);
+            });
+        } else {
+            horasDisponibles = horasDisponibles.map(time => time.slice(0, 5));
+        }
+
+        horasDisponibles.forEach(time => {
+            const option = document.createElement('option');
+            option.value = time.includes(' - Hora Anterior') ? time.split(' ')[0] : time;
+            option.textContent = time;
+            horaInput.appendChild(option);
+        });
+
+        const today = new Date().toISOString().split('T')[0];
+        if (fechaInput.value === today) {
+            const currentTime = getHoraActual();
+            horaInput.querySelectorAll('option').forEach(option => {
+                if (option.value && option.value < currentTime.slice(0, 5)) {
+                    option.disabled = true;
                 }
             });
+        }
 
-            form.addEventListener('input', function() {
-                const newData = {
-                    peluquero_id: form.peluquero_id.value,
-                    fecha: form.fecha.value,
-                    hora: form.hora.value,
-                    servicio: form.servicio.value
-                };
+        if (horaAnteriorDisponible) {
+            horaInput.value = horaAnterior.slice(0, 5);
+        } else {
+            horaInput.value = '';
+        }
+    }
 
-                const isChanged = originalData.peluquero_id !== newData.peluquero_id ||
-                    originalData.fecha !== newData.fecha ||
-                    originalData.hora !== newData.hora ||
-                    originalData.servicio !== newData.servicio;
+    peluqueroInput.addEventListener('change', function() {
+        if (fechaInput.value) {
+            obtenerCitas(this.value, fechaInput.value);
+        }
+    });
 
-                const isTimeRestricted = comprobRestricionHora();
+    fechaInput.addEventListener('input', function() {
+        validarFecha();
+    });
 
-                submitButton.disabled = !isChanged || isTimeRestricted || form.servicio.value === "";
-                submitButton.classList.toggle('bg-blue-700', isChanged && !isTimeRestricted && form.servicio.value !== "");
-                submitButton.classList.toggle('hover:bg-blue-800', isChanged && !isTimeRestricted && form.servicio.value !== "");
-                submitButton.classList.toggle('text-white', isChanged && !isTimeRestricted && form.servicio.value !== "");
-                submitButton.classList.toggle('bg-gray-300', !isChanged || isTimeRestricted || form.servicio.value === "");
-                submitButton.classList.toggle('text-black', !isChanged || isTimeRestricted || form.servicio.value === "");
-                submitButton.classList.toggle('cursor-not-allowed', !isChanged || isTimeRestricted || form.servicio.value === "");
+    if (!fechaInput.value) {
+        deshabilitarHoraInput();
+    }
 
-                textoCambio.classList.toggle('hidden', isChanged);
-                textoHora.classList.toggle('hidden', !isTimeRestricted);
-            });
-            @endif
-        });
+    validarFecha();
+});
     </script>
 </x-app-layout>
