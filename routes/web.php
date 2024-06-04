@@ -10,6 +10,7 @@ use App\Http\Controllers\ServicioController;
 use App\Http\Controllers\CitaController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\BloqueoPeluqueroController;
 use App\Http\Controllers\ContactoController;
 use App\Http\Controllers\UserController;
 
@@ -172,6 +173,10 @@ Route::get('/categorias', [ProductoController::class, 'categorias'])->name('cate
 Route::post('/usuarios', [UserController::class, 'store'])->name('users.store');
 Route::put('/usuarios/{id}', [UserController::class, 'update'])->name('users.update');
 Route::delete('/usuarios/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+
+// Rutas de peluqueros
+
+Route::post('/bloqueos', [BloqueoPeluqueroController::class, 'store'])->name('bloqueos.store');
 
 
 // Rutas de servicios

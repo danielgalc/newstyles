@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Mail\CitaAceptada;
 use App\Mail\CitaCancelada;
 use App\Mail\CitaReservada;
+use App\Models\BloqueoPeluquero;
 use App\Models\Cita;
 use App\Models\Servicio;
 use App\Models\User;
@@ -360,33 +361,25 @@ class CitaController extends Controller
      * Funciones del usuario peluquero
      */
 
-    public function obtenerCitas(Request $request): JsonResponse
-    {
-        $peluqueroId = $request->query('peluquero_id');
-        $fecha = $request->query('fecha');
-
-        $citas = Cita::where('peluquero_id', $peluqueroId)
-            ->where('fecha', $fecha)
-            ->whereIn('estado', ['aceptada', 'pendiente'])
-            ->get();
-
-        return response()->json($citas);
-    }
-
-    public function obtenerCitasReserva(Request $request): JsonResponse
-    {
-        $peluqueroId = $request->query('peluquero_id');
-        $fecha = $request->query('fecha'); // Obtener la fecha del query string
-    
-        // Asegúrate de que la fecha esté en el formato correcto
-        $citas = Cita::where('peluquero_id', $peluqueroId)
-            ->whereDate('fecha', $fecha) // Filtrar por fecha
-            ->whereIn('estado', ['aceptada', 'pendiente'])
-            ->get();
-    
-        return response()->json($citas);
-    }
-    
+     public function obtenerCitas(Request $request): JsonResponse
+     {
+         $peluqueroId = $request->query('peluquero_id');
+         $fecha = $request->query('fecha');
+     
+         $citas = Cita::where('peluquero_id', $peluqueroId)
+             ->whereDate('fecha', $fecha)
+             ->whereIn('estado', ['aceptada', 'pendiente'])
+             ->get();
+     
+         $bloqueos = BloqueoPeluquero::where('peluquero_id', $peluqueroId)
+             ->whereDate('fecha', $fecha)
+             ->get();
+     
+         return response()->json([
+             'citas' => $citas,
+             'bloqueos' => $bloqueos,
+         ]);
+     }   
 
 
     public function gestionarCitas()
