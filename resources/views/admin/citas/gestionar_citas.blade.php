@@ -316,22 +316,25 @@
                         }
                         return response.json();
                     })
-                    .then(citas => {
-                        actualizarHorasDisponibles(citas, fecha, currentHour);
+                    .then(data => {
+                        const citas = data.citas;
+                        const bloqueos = data.bloqueos;
+                        actualizarHorasDisponibles(citas, bloqueos, fecha, currentHour);
                     })
                     .catch(error => {
                         console.error('Error obteniendo citas:', error);
                     });
             }
 
-            function actualizarHorasDisponibles(citas, fecha, currentHour = null) {
+            function actualizarHorasDisponibles(citas, bloqueos, fecha, currentHour = null) {
                 horaInput.innerHTML = '<option value="" disabled selected>Selecciona una hora</option>';
-                const occupiedTimes = citas
-                    .filter(cita => cita.fecha === fecha)
-                    .map(cita => `${cita.hora}`);
-                const horasDisponibles = generarHorasOptions().filter(time => !occupiedTimes.includes(time));
+                const occupiedTimes = citas.map(cita => cita.hora);
+                const blockedTimes = bloqueos.flatMap(bloqueo => bloqueo.horas || []);
+
+                const horasDisponibles = generarHorasOptions().filter(time => !occupiedTimes.includes(time) && !blockedTimes.includes(time));
 
                 console.log('Horas ocupadas:', occupiedTimes);
+                console.log('Horas bloqueadas:', blockedTimes);
 
                 if (currentHour && fecha === currentDate) {
                     horasDisponibles.push(currentHour);
