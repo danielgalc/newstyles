@@ -15,7 +15,7 @@ class BloqueoPeluqueroController extends Controller
 {
     public function index()
     {
-        $bloqueos = BloqueoPeluquero::with('peluquero')->paginate(10); // Cambiado para usar paginación
+        $bloqueos = BloqueoPeluquero::with('peluquero')->paginate(10);
         $peluqueros = User::where('rol', 'peluquero')->get();
     
         return view('admin.bloqueos.bloqueos', compact('bloqueos', 'peluqueros'));
@@ -28,7 +28,7 @@ class BloqueoPeluqueroController extends Controller
         $bloqueo->update([
             'peluquero_id' => $request->peluquero_id,
             'fecha' => $request->fecha,
-            'horas' => json_encode($request->horas), // Corregido aquí
+            'horas' => json_encode($request->horas),
         ]);
     
         return redirect()->route('admin.bloqueos')->with('success', 'Bloqueo actualizado con éxito.');

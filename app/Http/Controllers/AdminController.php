@@ -140,9 +140,6 @@ public function usuarios(Request $request)
     
         return view('admin.bloqueos.bloqueos', compact('bloqueos', 'users'));
     }
-    
-
-
 
     public function mostrarDatos()
     {

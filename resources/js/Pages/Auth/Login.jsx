@@ -25,7 +25,15 @@ export default function Login({ status, canResetPassword }) {
     const submit = (e) => {
         e.preventDefault();
         if (validateForm()) {
-            post(route('login'));
+            post(route('login'), {
+                onSuccess: (page) => {
+                    if (page.props.user.rol === 'peluquero') {
+                        window.location.href = route('peluquero.citas');  // Redirección completa
+                    } else {
+                        window.location.href = route('dashboard');  // Redirección completa
+                    }
+                }
+            });
         }
     };
 
@@ -123,7 +131,7 @@ export default function Login({ status, canResetPassword }) {
                             </PrimaryButton>
                         </div>
                         <div className='flex justify-center gap-1 text-sm items-center mt-4 text-gray-500'>
-                        ¿No tienes cuenta?<a href="/register" className='text-teal-500'>Haz click aquí para registrarte</a>
+                            ¿No tienes cuenta? <a href="/register" className='text-teal-500'>Haz click aquí para registrarte</a>
                         </div>
                     </form>
                 </div>

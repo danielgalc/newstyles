@@ -4,8 +4,8 @@
 
 @section('header')
 <div class="flex justify-center gap-16 text-3xl font-righteous text-white">
-    <a href="/peluqueros/horas" class="hover:text-teal-500 transition-all duration-300 transform hover:scale-105">Gestionar Horas</a>
-    <a href="/peluqueros/citas" class="hover:text-teal-500 transition-all duration-300 transform hover:scale-105">Gestionar Citas</a>
+    <a href="/peluquero/horas" class="hover:text-teal-500 transition-all duration-300 transform hover:scale-105">Gestionar Horas</a>
+    <a href="/peluquero/citas" class="hover:text-teal-500 transition-all duration-300 transform hover:scale-105">Gestionar Citas</a>
 </div>
 @endsection
 

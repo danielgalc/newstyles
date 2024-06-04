@@ -124,7 +124,6 @@ Route::middleware('auth', 'verified', 'comprobarRol')->group(function () {
 
     // Rutas de peluqueros
 
-    Route::get('/peluquero/citas', [CitaController::class, 'gestionarCitas'])->name('peluquero.citas');
     Route::post('/bloqueos', [BloqueoPeluqueroController::class, 'store'])->name('bloqueos.store');
     Route::put('/bloqueos/desbloquear', [BloqueoPeluqueroController::class, 'desbloquear'])->name('bloqueos.desbloquear');
     Route::get('/bloqueos/horas-bloqueadas', [BloqueoPeluqueroController::class, 'horasBloqueadas'])->name('bloqueos.horas-bloqueadas');
@@ -134,10 +133,13 @@ require __DIR__ . '/auth.php';
 
 // Rutas accesibles para el usuario peluquero
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware('auth', 'peluquero')->group(function () {
+    Route::get('/peluquero/citas', [CitaController::class, 'gestionarCitas'])->name('peluquero.citas');
     Route::put('/citas/{id}/aceptar', [CitaController::class, 'aceptarCita'])->name('citas.aceptar');
-    //Route::put('/citas/{id}/cancelar', [CitaController::class, 'cancelarCita'])->name('citas.cancelar');
+    Route::put('/citas/{id}/cancelar', [CitaController::class, 'cancelarCita'])->name('citas.cancelar');
     Route::post('/citas/bloquear', [CitaController::class, 'bloquearFecha'])->name('citas.bloquear');
+    Route::post('bloqueos', [BloqueoPeluqueroController::class, 'store'])->name('bloqueos.store')->middleware('peluquero');
+    Route::post('bloqueos/desbloquear', [BloqueoPeluqueroController::class, 'desbloquear'])->name('bloqueos.desbloquear')->middleware('peluquero');
 });
 
 
@@ -183,11 +185,7 @@ Route::middleware('auth', 'admin')->group(function () {
     Route::get('admin/bloqueos/horasBloqueadas', [BloqueoPeluqueroController::class, 'horasBloqueadas'])->name('bloqueos.horas_bloqueadas');
 });
 
-// Rutas accesibles tanto para peluqueros como para administradores
-Route::middleware('auth', 'peluquero')->group(function () {
-    Route::post('bloqueos', [BloqueoPeluqueroController::class, 'store'])->name('bloqueos.store')->middleware('peluquero');
-    Route::post('bloqueos/desbloquear', [BloqueoPeluqueroController::class, 'desbloquear'])->name('bloqueos.desbloquear')->middleware('peluquero');
-});
+
 
 
 Route::get('/productos/create', [ProductoController::class, 'create']);
