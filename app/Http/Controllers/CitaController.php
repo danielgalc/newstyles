@@ -244,12 +244,12 @@ class CitaController extends Controller
 
         // Enviar correo de aceptación solo si el nuevo estado es "aceptada"
         if ($estadoAnterior !== 'aceptada' && $cita->estado === 'aceptada') {
-            Mail::to($cita->user->email)->send(new CitaAceptada($cita));
+            //Mail::to($cita->user->email)->send(new CitaAceptada($cita));
         }
 
         // Enviar correo de cancelación solo si el nuevo estado es "cancelada"
         if ($estadoAnterior !== 'cancelada' && $cita->estado === 'cancelada') {
-            Mail::to($cita->user->email)->send(new CitaCancelada($cita));
+            //Mail::to($cita->user->email)->send(new CitaCancelada($cita));
         }
 
         return redirect('/admin/citas')
@@ -341,12 +341,12 @@ class CitaController extends Controller
 
         // Enviar correo de aceptación solo si el nuevo estado es "aceptada"
         if ($estadoAnterior !== 'aceptada' && $cita->estado === 'aceptada') {
-            Mail::to($cita->user->email)->send(new CitaAceptada($cita));
+            //Mail::to($cita->user->email)->send(new CitaAceptada($cita));
         }
 
         // Enviar correo de cancelación solo si el nuevo estado es "cancelada"
         if ($estadoAnterior !== 'cancelada' && $cita->estado === 'cancelada') {
-            Mail::to($cita->user->email)->send(new CitaCancelada($cita));
+            //Mail::to($cita->user->email)->send(new CitaCancelada($cita));
         }
 
         return redirect()->back()->with('success', 'Estado de la cita actualizado con éxito.');
@@ -437,7 +437,7 @@ class CitaController extends Controller
         });
 
         // Enviar correo de aceptación
-        Mail::to($cita->user->email)->send(new CitaAceptada($cita));
+        // Mail::to($cita->user->email)->send(new CitaAceptada($cita));
 
         return redirect()->route('peluquero.citas');
     }
@@ -456,7 +456,7 @@ class CitaController extends Controller
         $cita->save();
 
         // Enviar correo de cancelación
-        Mail::to($cita->user->email)->send(new CitaCancelada($cita));
+        // Mail::to($cita->user->email)->send(new CitaCancelada($cita));
 
         return redirect()->route('peluquero.citas');
     }

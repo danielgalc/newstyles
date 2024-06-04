@@ -1,14 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Righteous&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-
 @font-face {
     font-family: 'Righteous';
     src: url('/fonts/Righteous-Regular.ttf') format('truetype');
 }
+
+.font-righteous {
+    font-family: 'Righteous', sans-serif;
+}
+
 
 .teal-shadow {
   box-shadow: 4px 4px 4px 0 rgba(0, 228, 215, 1);

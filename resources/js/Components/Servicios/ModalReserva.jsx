@@ -12,16 +12,16 @@ export default function ModalReserva({ servicio, isOpen, onClose, onSuccess, use
 
   useEffect(() => {
     if (peluqueroId && fecha) {
-        const formattedFecha = new Date(fecha).toISOString().split('T')[0];
-        const url = `/citas/obtenerCitas?peluquero_id=${peluqueroId}&fecha=${formattedFecha}`;
-        axios.get(url)
-            .then(response => {
-                console.log('Citas y bloqueos obtenidos:', response.data);
-                setCitas(response.data.citas);
-                setBloqueos(response.data.bloqueos.flatMap(bloqueo => bloqueo.horas));
-
-            })
-            .catch(error => console.error('Error obteniendo citas y bloqueos:', error));
+      const formattedFecha = new Date(fecha).toISOString().split('T')[0];
+      const url = `/citas/obtenerCitas?peluquero_id=${peluqueroId}&fecha=${formattedFecha}`;
+      axios.get(url)
+        .then(response => {
+          console.log('Citas y bloqueos obtenidos:', response.data);
+          setCitas(response.data.citas);
+          const flattenBloqueos = response.data.bloqueos.flatMap(bloqueo => bloqueo.horas);
+          setBloqueos(flattenBloqueos);
+        })
+        .catch(error => console.error('Error obteniendo citas y bloqueos:', error));
     }
   }, [peluqueroId, fecha]);
 
@@ -66,19 +66,21 @@ export default function ModalReserva({ servicio, isOpen, onClose, onSuccess, use
       availableTimes = availableTimes.filter(time => time >= currentTime);
     }
 
+    console.log('Longitud availableTimes:', availableTimes.length);
+
     return availableTimes;
   };
 
-  const isDayFullyBooked = (date) => {
-    const formattedDate = date.toISOString().split('T')[0];
-    const times = generateTimeOptions();
-
-    const bookedTimes = citas
-      .filter(cita => cita.fecha === formattedDate)
-      .map(cita => `${cita.hora}`);
-
-    return times.every(time => bookedTimes.includes(time));
-  };
+  useEffect(() => {
+    if (fecha && peluqueroId) {
+      const availableTimes = getAvailableTimes();
+      if (availableTimes.length === 0) {
+        setLocalErrors({ fecha: 'No hay disponibilidad para esta fecha. Por favor, elige otro día.' });
+      } else {
+        setLocalErrors({});
+      }
+    }
+  }, [citas, bloqueos]);
 
   const handleDateChange = (e) => {
     const selectedDate = new Date(e.target.value);
@@ -87,11 +89,7 @@ export default function ModalReserva({ servicio, isOpen, onClose, onSuccess, use
     if (day === 6 || day === 0) {
       setLocalErrors({ fecha: 'No se pueden seleccionar fines de semana. Por favor, elige otro día.' });
       setFecha('');
-    } else if (isDayFullyBooked(selectedDate)) {
-      setLocalErrors({ fecha: 'No hay disponibilidad para esta fecha. Por favor, elige otro día.' });
-      setFecha('');
     } else {
-      setLocalErrors({});
       setFecha(e.target.value);
     }
   };
@@ -111,7 +109,7 @@ export default function ModalReserva({ servicio, isOpen, onClose, onSuccess, use
 
       if (day === 6 || day === 0) {
         errors.fecha = 'No se pueden seleccionar fines de semana. Por favor, elige otro día.';
-      } else if (isDayFullyBooked(selectedDate)) {
+      } else if (getAvailableTimes().length === 0) {
         errors.fecha = 'No hay disponibilidad para esta fecha. Por favor, elige otro día.';
       }
     }

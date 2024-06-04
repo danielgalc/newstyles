@@ -163,7 +163,7 @@ class UserController extends Controller
                 $cliente = User::find($cita->user_id);
     
                 // Enviar correo de cancelación
-                Mail::to($cliente->email)->send(new CitaCancelada($cita));
+                // Mail::to($cliente->email)->send(new CitaCancelada($cita));
     
                 // Eliminar la cita
                 $cita->delete();
@@ -180,7 +180,7 @@ class UserController extends Controller
             }
     
             // Enviar correo de notificación de eliminación de cuenta
-            Mail::to($user->email)->send(new ClienteEliminado($user));
+            // Mail::to($user->email)->send(new ClienteEliminado($user));
         }
     
         // Eliminar el usuario
