@@ -25,7 +25,7 @@ export default function Authenticated({ user, header, children }) {
                     </div>
                 </div>
                 <div className='flex items-center justify-between'>
-                    <LoggedLogos user={user} />
+                    <LoggedLogos />
                 </div>
             </nav>
 

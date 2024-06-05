@@ -2,15 +2,14 @@ import React, { useState } from 'react';
 import { Menu } from '@headlessui/react';
 import { useForm } from '@inertiajs/react';
 
-export default function LoggedLogos({ user }) {
+export default function LoggedLogos() {
     const [isOpen, setIsOpen] = useState(false);
     const { post } = useForm();
-    const userRole = user.rol;
 
     const handleLogout = () => {
         post(route('logout'));
     };
-
+    
     return (
         <div className="relative flex items-center mr-4">
             <a href="/carrito" className="transition-all duration-300 transform hover:text-teal-500 hover:scale-105">
@@ -26,7 +25,7 @@ export default function LoggedLogos({ user }) {
                     <svg className="svg-icon w-8 h-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"/></svg>
                     <div className="ms-1">
                         <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 011.414 1.414l-4 4a1 1 01-1.414 0l-4-4a1 1 010-1.414z" clipRule="evenodd" />
+                            <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
                         </svg>
                     </div>
                 </button>
@@ -68,31 +67,18 @@ export default function LoggedLogos({ user }) {
                                 </button>
                             )}
                         </Menu.Item>
-                        {userRole === 'peluquero' && (
-                            <Menu.Item>
-                                {({ active }) => (
-                                    <a
-                                        className={`${active ? 'bg-gray-100' : ''
-                                            } block px-4 py-2 text-sm text-gray-700 w-full text-left`}
-                                        href='/peluquero/citas'
-                                    >
-                                        Gestionar citas
-                                    </a>
-                                )}
-                            </Menu.Item>
-                        )}
                         <Menu.Item>
-                            {({ active }) => (
-                                <a
-                                    onClick={handleLogout}
-                                    href='/'
-                                    className={`${active ? 'bg-gray-100' : ''
-                                        } block px-4 py-2 text-sm text-gray-700 w-full text-left`}
-                                >
-                                    Cerrar sesión
-                                </a>
-                            )}
-                        </Menu.Item>
+                        {({ active }) => (
+                            <a
+                                onClick={handleLogout}
+                                href='/'
+                                className={`${active ? 'bg-gray-100' : ''
+                                    } block px-4 py-2 text-sm text-gray-700 w-full text-left`}
+                            >
+                                Cerrar sesión
+                            </a>
+                        )}
+                    </Menu.Item>
                     </Menu>
                 )}
             </div>

@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Inertia\Inertia;
 
 class CitaController extends Controller
 {
@@ -415,6 +416,18 @@ class CitaController extends Controller
 
         return view('peluquero.citas', compact('citasPendientes', 'citasAceptadas'));
     }
+
+    public function peluqueros()
+    {
+        $user = Auth::user();
+
+        if ($user->rol != 'peluquero') {
+            return redirect()->route('home');
+        }
+
+        return Inertia::render('Peluqueros/Peluqueros');
+    }
+
 
     public function aceptarCita($id)
     {
