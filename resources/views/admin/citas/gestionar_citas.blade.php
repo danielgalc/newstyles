@@ -13,16 +13,24 @@
         </button>
     </div>
 
-    <!-- FILTRO POR ESTADO -->
-    <div class="mb-4">
-        <form method="GET" action="{{ route('admin.citas') }}" id="filter-form">
-            <select class="rounded" name="estado" id="filtro-citas" onchange="document.getElementById('filter-form').submit();">
+    <!-- FILTRO POR ESTADO, BÚSQUEDA Y PELUQUERO -->
+    <div class="mb-4 flex items-center">
+        <form method="GET" action="{{ route('admin.citas') }}" id="filter-form" class="flex items-center">
+            <select class="rounded mr-2" name="estado" id="filtro-citas" onchange="document.getElementById('filter-form').submit();">
                 <option value="" {{ request('estado') == '' ? 'selected' : '' }}>Mostrar todo</option>
                 <option value="aceptada" {{ request('estado') == 'aceptada' ? 'selected' : '' }}>Aceptada</option>
                 <option value="pendiente" {{ request('estado') == 'pendiente' ? 'selected' : '' }}>Pendiente</option>
                 <option value="cancelada" {{ request('estado') == 'cancelada' ? 'selected' : '' }}>Cancelada</option>
                 <option value="finalizada" {{ request('estado') == 'finalizada' ? 'selected' : '' }}>Finalizada</option>
             </select>
+            <select class="rounded mr-2" name="peluquero" id="filtro-peluquero" onchange="document.getElementById('filter-form').submit();">
+                <option value="" {{ request('peluquero') == '' ? 'selected' : '' }}>Todos los peluqueros</option>
+                @foreach ($users as $user)
+                <option value="{{ $user->id }}" {{ request('peluquero') == $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
+                @endforeach
+            </select>
+            <input type="text" name="buscar" placeholder="Buscar clientes..." class="rounded border-gray-300 mr-2" value="{{ request('buscar') }}">
+            <button type="submit" class="ml-2 text-white bg-teal-500 hover:bg-teal-800 focus:ring-4 focus:outline-none focus:ring-teal-300 font-medium rounded-lg text-sm px-4 h-10 text-center dark:bg-teal-600 dark:hover:bg-teal-700 dark:focus:ring-teal-800">Buscar</button>
         </form>
     </div>
 
@@ -51,7 +59,7 @@
             </div>
             <!-- Modal body -->
             <!-- Form Editar -->
-            <form action="{{ route('citas.update', ['id' => $cita->id]) }}" id="edit_cita_form_{{ $cita->id }}" method="POST" class="p-4 md:p-5">
+            <form action="{{ route('admin.citas.update', ['id' => $cita->id]) }}" id="edit_cita_form_{{ $cita->id }}" method="POST" class="p-4 md:p-5">
                 @csrf
                 @method('PUT')
                 <div class="grid gap-4 mb-4 grid-cols-2">
@@ -123,15 +131,15 @@
             <div class="p-4 md:p-5">
                 <p class="dark:text-white">¿Estás seguro de que quieres eliminar esta cita? <br> <span class="text-teal-400 italic">ID: {{ $cita->id }}</span></p>
                 <div class="flex justify-end items-center mt-4">
-                    <form action="{{ route('citas.destroy', ['id' => $cita->id]) }}" method="post" class="p-4 md:p-5">
+                    <form action="{{ route('admin.citas.destroy', ['id' => $cita->id]) }}" method="post" class="p-4 md:p-5">
                         @csrf
                         @method('DELETE')
-                        <input type="hidden" name="id" value="{{ $cita->id }}" data-delete-route="{{ route('citas.destroy', ['id' => $cita->id]) }}">
+                        <input type="hidden" name="id" value="{{ $cita->id }}" data-delete-route="{{ route('admin.citas.destroy', ['id' => $cita->id]) }}">
                         <button type="submit" class="text-white inline-flex items-center bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800" id="confirmar_eliminar">
                             Confirmar
                         </button>
                     </form>
-                    <button type="button" class="h-10 text-gray-900 bg-gray-200 hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-100 dark:hover:bg-gray-300 dark:focus:ring-gray-800" data-modal-toggle="confirm_delete_modal_{{ $cita->id }}" data-delete-route="{{ route('citas.destroy', ['id' => $cita->id]) }}">
+                    <button type="button" class="h-10 text-gray-900 bg-gray-200 hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-100 dark:hover:bg-gray-300 dark:focus:ring-gray-800" data-modal-toggle="confirm_delete_modal_{{ $cita->id }}" data-delete-route="{{ route('admin.citas.destroy', ['id' => $cita->id]) }}">
                         Cancelar
                     </button>
                 </div>
@@ -140,7 +148,6 @@
     </div>
 </div>
 @endforeach
-
 
 <!-- MODAL PARA CREAR CITAS -->
 <div id="crud-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
@@ -157,7 +164,7 @@
                     <span class="sr-only">Cerrar modal</span>
                 </button>
             </div>
-            <form action="{{ route('citas.store') }}" id="crearForm" method="post" class="p-4 md:p-5">
+            <form action="{{ route('admin.citas.store') }}" id="crearForm" method="post" class="p-4 md:p-5">
                 @csrf
                 <div class="grid gap-4 mb-4 grid-cols-2">
                     <div class="col-span-2">
@@ -316,32 +323,38 @@
                         }
                         return response.json();
                     })
-                    .then(citas => {
-                        actualizarHorasDisponibles(citas, fecha, currentHour);
+                    .then(data => {
+                        const citas = data.citas;
+                        const bloqueos = data.bloqueos;
+                        actualizarHorasDisponibles(citas, bloqueos, fecha, currentHour);
                     })
                     .catch(error => {
                         console.error('Error obteniendo citas:', error);
                     });
             }
 
-            function actualizarHorasDisponibles(citas, fecha, currentHour = null) {
+            function actualizarHorasDisponibles(citas, bloqueos, fecha, currentHour = null) {
                 horaInput.innerHTML = '<option value="" disabled selected>Selecciona una hora</option>';
-                const occupiedTimes = citas
-                    .filter(cita => cita.fecha === fecha)
-                    .map(cita => `${cita.hora}`);
-                const horasDisponibles = generarHorasOptions().filter(time => !occupiedTimes.includes(time));
+                const occupiedTimes = citas.map(cita => cita.hora);
+                const blockedTimes = bloqueos.flatMap(bloqueo => bloqueo.horas || []);
+
+                let horasDisponibles = generarHorasOptions().filter(time => !occupiedTimes.includes(time) && !blockedTimes.includes(time));
 
                 console.log('Horas ocupadas:', occupiedTimes);
+                console.log('Horas bloqueadas:', blockedTimes);
 
+                // Si la hora actual (anterior) está disponible, se agrega si no está ya en la lista
                 if (currentHour && fecha === currentDate) {
-                    horasDisponibles.push(currentHour);
+                    if (!horasDisponibles.includes(currentHour)) {
+                        horasDisponibles.push(currentHour);
+                    }
                 }
 
                 horasDisponibles.forEach(time => {
                     const option = document.createElement('option');
                     option.value = time.slice(0, 5);
                     if (currentHour && time === currentHour) {
-                        option.textContent = `${time.slice(0, 5)} - Hora seleccionada`;
+                        option.textContent = `${time.slice(0, 5)} - Hora anterior`;
                     } else {
                         option.textContent = time.slice(0, 5);
                     }
@@ -361,7 +374,15 @@
                 if (currentHour && fecha === currentDate) {
                     horaInput.value = currentHour.slice(0, 5);
                 }
+
+                // Verificar si no hay horas disponibles
+                if (horasDisponibles.length === 0) {
+                    errorMessage.textContent = 'No hay disponibilidad para esta fecha. Por favor, elige otro día.';
+                    errorMessage.style.display = 'block';
+                    deshabilitarHoraInput();
+                }
             }
+
 
             function validarUserSearchInput(input) {
                 const regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s]*$/;
@@ -445,14 +466,6 @@
         iniciarScriptsModales('crear');
     });
 </script>
-
-
-
-
-
-
-
-
 
 <!-- SCRIPT PARA FILTRAR Y PAGINAR POR AJAX -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

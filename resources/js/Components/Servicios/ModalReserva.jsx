@@ -8,20 +8,24 @@ export default function ModalReserva({ servicio, isOpen, onClose, onSuccess, use
   const [errorMessage, setErrorMessage] = useState('');
   const [localErrors, setLocalErrors] = useState({});
   const [citas, setCitas] = useState([]);
+  const [bloqueos, setBloqueos] = useState([]);
 
   useEffect(() => {
     if (peluqueroId && fecha) {
-      const formattedFecha = new Date(fecha).toISOString().split('T')[0]; // Formatear fecha a YYYY-MM-DD
-      const url = `/citas/obtenerCitasReserva?peluquero_id=${peluqueroId}&fecha=${formattedFecha}`;
+      const formattedFecha = new Date(fecha).toISOString().split('T')[0];
+      // Obtenemos la ID del Peluquero y la Fecha, y las pasamos a la función ObtenerCitas
+      const url = `/citas/obtenerCitas?peluquero_id=${peluqueroId}&fecha=${formattedFecha}`;
       axios.get(url)
         .then(response => {
-          console.log('Citas obtenidas:', response.data);
-          setCitas(response.data);
+          // Aquí se muestran las horas que no están disponibles
+          console.log('Citas y bloqueos obtenidos:', response.data);
+          setCitas(response.data.citas);
+          const flattenBloqueos = response.data.bloqueos.flatMap(bloqueo => bloqueo.horas); // Pasa los valores del Array Bloqueos a un nuevo array
+          setBloqueos(flattenBloqueos);
         })
-        .catch(error => console.error('Error obteniendo citas:', error));
+        .catch(error => console.error('Error obteniendo citas y bloqueos:', error));
     }
   }, [peluqueroId, fecha]);
-  
 
   const generateTimeOptions = () => {
     const times = [];
@@ -39,6 +43,7 @@ export default function ModalReserva({ servicio, isOpen, onClose, onSuccess, use
     return times;
   };
 
+  // Obtenemos la hora actual
   const getCurrentTime = () => {
     const now = new Date();
     const hours = String(now.getHours()).padStart(2, '0');
@@ -46,49 +51,54 @@ export default function ModalReserva({ servicio, isOpen, onClose, onSuccess, use
     return `${hours}:${minutes}:00`;
   };
 
+  // Obtenemos las horas que están disponibles
   const getAvailableTimes = () => {
     const today = new Date().toISOString().split('T')[0];
     const currentTime = getCurrentTime();
 
     if (!fecha) return generateTimeOptions();
 
-    const occupiedTimes = citas
-      .map(cita => `${cita.hora}`);
+    // Almacenamos las citas y los bloqueos en dos variables
+    const occupiedTimes = citas.map(cita => `${cita.hora}`);
+    const blockedTimes = bloqueos;
 
     console.log('Horas ocupadas:', occupiedTimes);
+    console.log('Horas bloqueadas:', blockedTimes);
 
-    let availableTimes = generateTimeOptions().filter(time => !occupiedTimes.includes(time));
+    // La variable availableTimes almacenará un filtrado de las horas disponibles
+    let availableTimes = generateTimeOptions().filter(time => !occupiedTimes.includes(time) && !blockedTimes.includes(time));
 
+    // Comprobamos que las horas no sean anteriores a la hora actual
     if (fecha === today) {
       availableTimes = availableTimes.filter(time => time >= currentTime);
     }
 
+    console.log('Longitud availableTimes:', availableTimes.length);
+
     return availableTimes;
   };
 
-  const isDayFullyBooked = (date) => {
-    const formattedDate = date.toISOString().split('T')[0];
-    const times = generateTimeOptions();
-
-    const bookedTimes = citas
-      .filter(cita => cita.fecha === formattedDate)
-      .map(cita => `${cita.hora}`);
-
-    return times.every(time => bookedTimes.includes(time));
-  };
+  useEffect(() => {
+    if (fecha && peluqueroId) {
+      const availableTimes = getAvailableTimes();
+      // Si la longitud de availableTimes es 0, es que no hay citas disponibles para esa fecha
+      if (availableTimes.length === 0) {
+        setLocalErrors({ fecha: 'No hay disponibilidad para esta fecha. Por favor, elige otro día.' });
+      } else {
+        setLocalErrors({});
+      }
+    }
+  }, [citas, bloqueos]);
 
   const handleDateChange = (e) => {
     const selectedDate = new Date(e.target.value);
     const day = selectedDate.getUTCDay();
 
+    // Comprobación para no poder elegir día de fin de semana
     if (day === 6 || day === 0) {
       setLocalErrors({ fecha: 'No se pueden seleccionar fines de semana. Por favor, elige otro día.' });
       setFecha('');
-    } else if (isDayFullyBooked(selectedDate)) {
-      setLocalErrors({ fecha: 'No hay disponibilidad para esta fecha. Por favor, elige otro día.' });
-      setFecha('');
     } else {
-      setLocalErrors({});
       setFecha(e.target.value);
     }
   };
@@ -106,9 +116,10 @@ export default function ModalReserva({ servicio, isOpen, onClose, onSuccess, use
       const selectedDate = new Date(fecha);
       const day = selectedDate.getUTCDay();
 
+      // Comprobación para no poder elegir día de fin de semana y para la disponibilidad
       if (day === 6 || day === 0) {
         errors.fecha = 'No se pueden seleccionar fines de semana. Por favor, elige otro día.';
-      } else if (isDayFullyBooked(selectedDate)) {
+      } else if (getAvailableTimes().length === 0) {
         errors.fecha = 'No hay disponibilidad para esta fecha. Por favor, elige otro día.';
       }
     }
@@ -128,6 +139,7 @@ export default function ModalReserva({ servicio, isOpen, onClose, onSuccess, use
       return;
     }
 
+    // Si todo es correcto, almacenamos la cita
     try {
       const response = await axios.post(route('citas.store'), {
         user_id: userId,
@@ -208,7 +220,7 @@ export default function ModalReserva({ servicio, isOpen, onClose, onSuccess, use
               <option value="">Selecciona una hora</option>
               {getAvailableTimes().map((time) => (
                 <option key={time} value={time}>
-                  {time.slice(0, 5)} {/* Mostrar solo HH:MM en el select */}
+                  {time.slice(0, 5)}
                 </option>
               ))}
             </select>

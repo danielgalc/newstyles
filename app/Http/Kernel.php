@@ -68,6 +68,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'comprobarRol' => \App\Http\Middleware\ComprobarRol::class,
         'admin' => \App\Http\Middleware\Admin::class,
+        'peluquero' => \App\Http\Middleware\PeluqueroMiddleware::class,
         // app/Http/Kernel.php
 
     ];
