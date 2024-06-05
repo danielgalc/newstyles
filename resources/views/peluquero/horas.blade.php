@@ -37,7 +37,7 @@
         @foreach($bloqueos as $bloqueo)
         <div class="mb-4">
             <p class="text-gray-200 text-xl font-semibold">{{ \Carbon\Carbon::parse($bloqueo->fecha)->format('d/m/Y') }}</p>
-            <div class="grid grid-cols-2 gap-x-4 text-gray-400 text-sm">
+            <div class="flex gap-1 text-gray-400 text-sm">
                 @foreach (json_decode($bloqueo->horas, true) as $hora)
                     <div>{{ \Carbon\Carbon::createFromFormat('H:i:s', $hora)->format('H:i') }}</div>
                 @endforeach
@@ -138,11 +138,7 @@
             const horasBloquearSelect = document.getElementById('horas_bloquear');
             const fechaDesbloquearInput = document.getElementById('fecha_desbloquear');
             const horasDesbloquearSelect = document.getElementById('horas_desbloquear');
-            const userId = {
-                {
-                    Auth::id()
-                }
-            };
+            const userId = {{ Auth::id() }};
 
             const todasLasHoras = ['10:00:00', '11:00:00', '12:00:00', '13:00:00', '16:00:00', '17:00:00', '18:00:00', '19:00:00', '20:00:00'];
 

@@ -416,7 +416,10 @@ class CitaController extends Controller
     public function gestionarHoras()
     {
         $userId = Auth::id();
-        $bloqueos = BloqueoPeluquero::where('peluquero_id', $userId)->get();
+        $bloqueos = BloqueoPeluquero::where('peluquero_id', $userId)
+            ->where('fecha', '>=', now()->format('Y-m-d'))
+            ->orderBy('fecha', 'asc')
+            ->get();
         return view('peluquero.horas', compact('bloqueos'));
     }
     

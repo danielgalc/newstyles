@@ -13,16 +13,24 @@
         </button>
     </div>
 
-    <!-- FILTRO POR ESTADO -->
-    <div class="mb-4">
-        <form method="GET" action="{{ route('admin.citas') }}" id="filter-form">
-            <select class="rounded" name="estado" id="filtro-citas" onchange="document.getElementById('filter-form').submit();">
+    <!-- FILTRO POR ESTADO, BÚSQUEDA Y PELUQUERO -->
+    <div class="mb-4 flex items-center">
+        <form method="GET" action="{{ route('admin.citas') }}" id="filter-form" class="flex items-center">
+            <select class="rounded mr-2" name="estado" id="filtro-citas" onchange="document.getElementById('filter-form').submit();">
                 <option value="" {{ request('estado') == '' ? 'selected' : '' }}>Mostrar todo</option>
                 <option value="aceptada" {{ request('estado') == 'aceptada' ? 'selected' : '' }}>Aceptada</option>
                 <option value="pendiente" {{ request('estado') == 'pendiente' ? 'selected' : '' }}>Pendiente</option>
                 <option value="cancelada" {{ request('estado') == 'cancelada' ? 'selected' : '' }}>Cancelada</option>
                 <option value="finalizada" {{ request('estado') == 'finalizada' ? 'selected' : '' }}>Finalizada</option>
             </select>
+            <select class="rounded mr-2" name="peluquero" id="filtro-peluquero" onchange="document.getElementById('filter-form').submit();">
+                <option value="" {{ request('peluquero') == '' ? 'selected' : '' }}>Todos los peluqueros</option>
+                @foreach ($users as $user)
+                <option value="{{ $user->id }}" {{ request('peluquero') == $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
+                @endforeach
+            </select>
+            <input type="text" name="buscar" placeholder="Buscar clientes..." class="rounded border-gray-300 mr-2" value="{{ request('buscar') }}">
+            <button type="submit" class="ml-2 text-white bg-teal-500 hover:bg-teal-800 focus:ring-4 focus:outline-none focus:ring-teal-300 font-medium rounded-lg text-sm px-4 h-10 text-center dark:bg-teal-600 dark:hover:bg-teal-700 dark:focus:ring-teal-800">Buscar</button>
         </form>
     </div>
 
@@ -335,7 +343,7 @@
                 console.log('Horas ocupadas:', occupiedTimes);
                 console.log('Horas bloqueadas:', blockedTimes);
 
-                // Si la hora actual (anterior) está disponible, agrégala si no está ya en la lista
+                // Si la hora actual (anterior) está disponible, se agrega si no está ya en la lista
                 if (currentHour && fecha === currentDate) {
                     if (!horasDisponibles.includes(currentHour)) {
                         horasDisponibles.push(currentHour);

@@ -59,7 +59,7 @@
     </tbody>
 </table>
 <!-- Mostrar enlaces de paginación -->
-{{ $citas->appends(['estado' => request('estado')])->links() }}
+{{ $citas->appends(['estado' => request('estado'), 'buscar' => request('buscar')])->links() }}
 @else
 <p>No hay citas disponibles.</p>
 @endif
