@@ -10,13 +10,16 @@ const Admin = ({ auth, usuarios, citas, servicios, productos, bloqueos }) => {
           Bienvenido, <span className="text-teal-500">{auth.user.name}</span>
         </h1>
         <div className="user-preview-container grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 gap-4">
-          <TablaAdmin
+        <TablaAdmin
             titulo="Usuarios"
             subtitulo="Últimos usuarios añadidos"
-            columnas={['Nombre', 'Email', 'Rol', 'Verificado', 'Última Modificación']}
+            columnas={['Nombre', 'Email', 'DNI', 'Teléfono', 'Dirección', 'Rol', 'Verificado', 'Última Modificación']}
             datos={usuarios.map((usuario) => ({
               name: usuario.name,
               email: usuario.email,
+              dni: usuario.dni,
+              telefono: usuario.telefono,
+              direccion: usuario.direccion,
               rol: usuario.rol,
               verificado: usuario.email_verified_at ? 'Sí' : 'No',
               updated_at: new Date(usuario.updated_at).toLocaleString('es-ES'),
@@ -61,11 +64,12 @@ const Admin = ({ auth, usuarios, citas, servicios, productos, bloqueos }) => {
           <TablaAdmin
             titulo="Productos"
             subtitulo="Últimos productos agregados"
-            columnas={['Producto', 'Precio', 'Stock', 'Fecha de creación', 'Última modificación']}
+            columnas={['Producto', 'Precio', 'Stock', 'Categoría', 'Fecha de creación', 'Última modificación']}
             datos={productos.map((producto) => ({
               nombre: producto.nombre,
               precio: `${producto.precio}€`,
               stock: producto.stock,
+              categoria: producto.categoria,
               created_at: new Date(producto.created_at).toLocaleString('es-ES'),
               updated_at: new Date(producto.updated_at).toLocaleString('es-ES'),
             }))}

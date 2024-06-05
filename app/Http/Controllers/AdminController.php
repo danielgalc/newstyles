@@ -25,7 +25,8 @@ class AdminController extends Controller
             $query->where(function ($q) use ($buscar) {
                 $q->where('name', 'LIKE', "%{$buscar}%")
                     ->orWhere('email', 'LIKE', "%{$buscar}%")
-                    ->orWhere('id', 'LIKE', "%{$buscar}%");
+                    ->orWhere('id', 'LIKE', "%{$buscar}%")
+                    ->orWhere('dni', 'LIKE', "%{$buscar}%");
             });
         }
 
@@ -57,7 +58,8 @@ class AdminController extends Controller
             $query->whereHas('user', function($q) use ($buscar) {
                 $q->where('name', 'LIKE', "%{$buscar}%")
                   ->orWhere('email', 'LIKE', "%{$buscar}%")
-                  ->orWhere('id', 'LIKE', "%{$buscar}%");
+                  ->orWhere('id', 'LIKE', "%{$buscar}%")
+                  ->orWhere('dni', 'LIKE', "%{$buscar}%");
             });
         }
     

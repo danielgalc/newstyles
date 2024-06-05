@@ -47,6 +47,9 @@ class UserController extends Controller
             'email' => ['required', 'email', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8', 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/'],
             'rol' => ['required', 'in:cliente,peluquero,admin'],
+            'dni' => ['required', 'string', 'regex:/^[0-9]{8}[A-Z]$/', 'unique:users,dni'],
+            'telefono' => ['required', 'string', 'regex:/^[0-9]{9}$/', 'unique:users,telefono'],
+            'direccion' => ['required', 'string', 'max:255'],
         ], [
             'name.required' => 'El nombre es obligatorio.',
             'name.string' => 'El nombre debe ser una cadena de texto.',
@@ -61,6 +64,15 @@ class UserController extends Controller
             'password.regex' => 'La contraseña debe contener al menos una letra minúscula, una letra mayúscula, un número y un carácter especial.',
             'rol.required' => 'El rol es obligatorio.',
             'rol.in' => 'El rol debe ser uno de los siguientes: cliente, peluquero, admin.',
+            'dni.required' => 'El DNI es obligatorio.',
+            'dni.regex' => 'El formato del DNI no es válido.',
+            'dni.unique' => 'El DNI ya está registrado.',
+            'telefono.required' => 'El teléfono es obligatorio.',
+            'telefono.regex' => 'El formato del teléfono no es válido.',
+            'telefono.unique' => 'El teléfono ya está registrado.',
+            'direccion.required' => 'La dirección es obligatoria.',
+            'direccion.string' => 'La dirección debe ser una cadena de texto.',
+            'direccion.max' => 'La dirección no puede tener más de 255 caracteres.',
         ]);
     
         // Crear un nuevo usuario
@@ -69,6 +81,9 @@ class UserController extends Controller
         $user->email = $request->input('email');
         $user->password = bcrypt($request->input('password'));
         $user->rol = $request->input('rol', 'cliente'); // Valor por defecto si no se proporciona
+        $user->dni = $request->input('dni');
+        $user->telefono = $request->input('telefono');
+        $user->direccion = $request->input('direccion');
     
         $user->save();
     
@@ -115,6 +130,9 @@ class UserController extends Controller
             'email' => ['required', 'email', 'unique:users,email,' . $user->id],
             'password' => ['nullable', 'string', 'min:8', 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/'],
             'rol' => ['required', 'in:cliente,peluquero,admin'],
+            'dni' => ['required', 'string', 'regex:/^[0-9]{8}[A-Z]$/', 'unique:users,dni,' . $user->id],
+            'telefono' => ['required', 'string', 'regex:/^[0-9]{9}$/', 'unique:users,telefono,' . $user->id],
+            'direccion' => ['required', 'string', 'max:255'],
         ], [
             'name.required' => 'El nombre es obligatorio.',
             'name.string' => 'El nombre debe ser una cadena de texto.',
@@ -128,6 +146,15 @@ class UserController extends Controller
             'password.regex' => 'La contraseña debe contener al menos una letra minúscula, una letra mayúscula, un número y un carácter especial.',
             'rol.required' => 'El rol es obligatorio.',
             'rol.in' => 'El rol debe ser uno de los siguientes: cliente, peluquero, admin.',
+            'dni.required' => 'El DNI es obligatorio.',
+            'dni.regex' => 'El formato del DNI no es válido.',
+            'dni.unique' => 'El DNI ya está registrado.',
+            'telefono.required' => 'El teléfono es obligatorio.',
+            'telefono.regex' => 'El formato del teléfono no es válido.',
+            'telefono.unique' => 'El teléfono ya está registrado.',
+            'direccion.required' => 'La dirección es obligatoria.',
+            'direccion.string' => 'La dirección debe ser una cadena de texto.',
+            'direccion.max' => 'La dirección no puede tener más de 255 caracteres.',
         ]);
     
         // Actualizar los datos del usuario
@@ -137,12 +164,16 @@ class UserController extends Controller
             $user->password = bcrypt($request->input('password'));
         }
         $user->rol = $request->input('rol', 'cliente'); // Valor por defecto si no se proporciona
+        $user->dni = $request->input('dni');
+        $user->telefono = $request->input('telefono');
+        $user->direccion = $request->input('direccion');
     
         $user->save();
     
         return redirect('/admin/usuarios')
             ->with('success', 'Usuario actualizado con éxito.');
     }
+    
     
 
     /**

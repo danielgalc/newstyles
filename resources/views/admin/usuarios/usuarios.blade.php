@@ -26,7 +26,6 @@
         </form>
     </div>
 
-
     <div id="usuarios-content">
         @include('admin.usuarios.partials.usuarios_list', ['usuarios' => $usuarios])
     </div>
@@ -65,11 +64,23 @@
                         <input type="email" name="email" id="email_{{ $usuario->id }}" value="{{ $usuario->email }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required>
                     </div>
                     <div class="col-span-2">
+                        <label for="dni_{{ $usuario->id }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">DNI</label>
+                        <input type="text" name="dni" id="dni_{{ $usuario->id }}" value="{{ $usuario->dni }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required>
+                    </div>
+                    <div class="col-span-2">
+                        <label for="telefono_{{ $usuario->id }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Teléfono</label>
+                        <input type="text" name="telefono" id="telefono_{{ $usuario->id }}" value="{{ $usuario->telefono }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required>
+                    </div>
+                    <div class="col-span-2">
+                        <label for="direccion_{{ $usuario->id }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Dirección</label>
+                        <input type="text" name="direccion" id="direccion_{{ $usuario->id }}" value="{{ $usuario->direccion }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required>
+                    </div>
+                    <div class="col-span-2">
                         <label for="rol_{{ $usuario->id }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Rol</label>
                         <select name="rol" id="rol_{{ $usuario->id }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                             <option value="cliente" {{ $usuario->rol == 'cliente' ? 'selected' : '' }}>Cliente</option>
-                            <option value="peluquero" {{ $usuario->rol == 'peluquero' }}>Peluquero</option>
-                            <option value="admin" {{ $usuario->rol == 'admin' }}>Administrador</option>
+                            <option value="peluquero" {{ $usuario->rol == 'peluquero' ? 'selected' : '' }}>Peluquero</option>
+                            <option value="admin" {{ $usuario->rol == 'admin' ? 'selected' : '' }}>Administrador</option>
                         </select>
                     </div>
                 </div>
@@ -126,15 +137,11 @@
 </div>
 @endforeach
 
-
-
-
 <!-- MODAL PARA CREAR USUARIOS -->
 <div id="crud-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
     <div class="relative p-4 w-full max-w-md max-h-full">
         <!-- Modal content -->
         <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-            <!-- Modal header -->
             <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                 <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
                     Crear Nuevo Usuario
@@ -155,13 +162,24 @@
                         <input type="text" name="name" id="nameCrear" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Escribe el nombre del usuario" required>
                     </div>
                     <div class="col-span-2 group">
-                        <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Correo
-                            Electrónico</label>
+                        <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Correo Electrónico</label>
                         <input type="email" name="email" id="emailCrear" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Escribe el correo electrónico" required>
                     </div>
                     <div class="col-span-2 group">
                         <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Contraseña</label>
                         <input type="password" name="password" id="passwordCrear" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Escribe la contraseña" required>
+                    </div>
+                    <div class="col-span-2 group">
+                        <label for="dniCrear" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">DNI</label>
+                        <input type="text" name="dni" id="dniCrear" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Escribe el DNI" required>
+                    </div>
+                    <div class="col-span-2 group">
+                        <label for="telefonoCrear" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Teléfono</label>
+                        <input type="text" name="telefono" id="telefonoCrear" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Escribe el teléfono" required>
+                    </div>
+                    <div class="col-span-2 group">
+                        <label for="direccionCrear" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Dirección</label>
+                        <input type="text" name="direccion" id="direccionCrear" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Escribe la dirección" required>
                     </div>
                     <div class="col-span-2">
                         <label for="rol" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Rol</label>
@@ -209,8 +227,6 @@
     });
 </script>
 
-
-
 <!-- SCRIPTS PARA VALIDAR LA CREACIÓN Y MODIFICACION DE USUARIOS -->
 
 <script>
@@ -222,7 +238,7 @@
         if (crearForm) {
             crearForm.addEventListener('submit', function(event) {
                 event.preventDefault(); // Prevenir el envío del formulario
-                validateForm(crearForm, 'nameCrear', 'emailCrear', 'passwordCrear');
+                validateForm(crearForm, 'nameCrear', 'emailCrear', 'passwordCrear', 'dniCrear', 'telefonoCrear', 'direccionCrear');
             });
         }
 
@@ -231,14 +247,17 @@
             form.addEventListener('submit', function(event) {
                 event.preventDefault(); // Prevenir el envío del formulario
                 const id = form.id.split('_')[1];
-                validateForm(event.target, `name_${id}`, `email_${id}`, `password_${id}`);
+                validateForm(event.target, `name_${id}`, `email_${id}`, `password_${id}`, `dni_${id}`, `telefono_${id}`, `direccion_${id}`);
             });
         });
 
-        function validateForm(form, nameId, emailId, passwordId) {
+        function validateForm(form, nameId, emailId, passwordId, dniId, telefonoId, direccionId) {
             const nameInput = document.getElementById(nameId);
             const emailInput = document.getElementById(emailId);
             const passwordInput = passwordId ? document.getElementById(passwordId) : null;
+            const dniInput = document.getElementById(dniId);
+            const telefonoInput = document.getElementById(telefonoId);
+            const direccionInput = document.getElementById(direccionId);
             let errors = false;
 
             // Validar el nombre
@@ -269,6 +288,33 @@
                 } else {
                     hideError(passwordInput);
                 }
+            }
+
+            // Validar el DNI
+            const dniRegex = /^\d{8}[A-Z]$/;
+            if (!dniInput.value.match(dniRegex)) {
+                showError(dniInput, 'El DNI debe estar compuesto por 8 números y una letra mayúscula.');
+                errors = true;
+            } else {
+                hideError(dniInput);
+            }
+
+            // Validar el teléfono
+            const telefonoRegex = /^\d{9}$/;
+            if (!telefonoInput.value.match(telefonoRegex)) {
+                showError(telefonoInput, 'El teléfono debe estar compuesto por 9 números sin espacios.');
+                errors = true;
+            } else {
+                hideError(telefonoInput);
+            }
+
+            // Validar la dirección
+            const direccionRegex = /^[a-zA-ZáéíóúÁÉÍÓÚ0-9\s]+$/;
+            if (!direccionInput.value.match(direccionRegex)) {
+                showError(direccionInput, 'La dirección solo puede contener letras, números y espacios.');
+                errors = true;
+            } else {
+                hideError(direccionInput);
             }
 
             if (!errors) {

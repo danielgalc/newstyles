@@ -4,6 +4,9 @@
             <tr>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-100 uppercase tracking-wider text-center">Nombre</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-100 uppercase tracking-wider text-center">Email</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-100 uppercase tracking-wider text-center">DNI</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-100 uppercase tracking-wider text-center">Teléfono</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-100 uppercase tracking-wider text-center">Dirección</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-100 uppercase tracking-wider text-center">Rol</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-100 uppercase tracking-wider text-center">Verificado</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-100 uppercase tracking-wider text-center">Última Modificación</th>
@@ -12,27 +15,28 @@
         <tbody class="bg-white divide-y divide-gray-200">
             @foreach ($usuarios as $usuario)
                 <tr class="hover:bg-teal-200 cursor-pointer w-full" data-modal-toggle="edit_user_modal_{{ $usuario->id }}" data-modal-target="edit_user_modal_{{ $usuario->id }}">
-                    <div>
-                        <td class="px-6 py-4 whitespace-nowrap text-center">{{ $usuario->name }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-center">{{ $usuario->email }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-center">
-                            @if($usuario->rol === 'cliente')
-                                Cliente
-                            @elseif($usuario->rol === 'admin')
-                                Admin
-                            @else
-                                Peluquero
-                            @endif
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-center">
-                            @if ($usuario->email_verified_at)
-                                Verificado
-                            @else
-                                No verificado
-                            @endif
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-center">{{ $usuario->updated_at }}</td>
-                    </div>
+                    <td class="px-6 py-4 whitespace-nowrap text-center">{{ $usuario->name }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-center">{{ $usuario->email }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-center">{{ $usuario->dni }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-center">{{ $usuario->telefono }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-center">{{ $usuario->direccion }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-center">
+                        @if($usuario->rol === 'cliente')
+                            Cliente
+                        @elseif($usuario->rol === 'admin')
+                            Admin
+                        @else
+                            Peluquero
+                        @endif
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-center">
+                        @if ($usuario->email_verified_at)
+                            Verificado
+                        @else
+                            No verificado
+                        @endif
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-center">{{ $usuario->updated_at }}</td>
                 </tr>
             @endforeach
         </tbody>
