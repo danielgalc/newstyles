@@ -71,10 +71,21 @@
                             @endif
                         </table>
     
-                        <div class="w-full flex justify-center w-1/4">
-                            <span class="text-xl  font-bold">Precio Total: </span>
-                            <span class="font-bold text-xl">{{ $precioTotal }}&euro;</span>
-                        </div>
+                        @if (!$carritos->isEmpty())
+                            <div class="w-full flex justify-center w-1/4">
+                                <span class="text-xl font-bold">Precio Total: </span>
+                                <span class="font-bold text-xl">{{ $precioTotal }}&euro;</span>
+                            </div>
+
+                            <div class="w-full flex justify-center mt-4">
+                                <form action="{{ route('completarCompra') }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="bg-teal-500 hover:bg-teal-800 text-white font-bold py-2 px-4 rounded">
+                                        Completar compra
+                                    </button>
+                                </form>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>

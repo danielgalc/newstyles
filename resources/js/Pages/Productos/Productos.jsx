@@ -6,9 +6,9 @@ import Grid from '@/Components/Productos/Grid';
 import axios from 'axios';
 import debounce from 'lodash/debounce';
 
-export default function Productos({ auth, productos, search }) {
+export default function Productos({ auth, productos = [], search }) {
   const [searchTerm, setSearchTerm] = useState(search || '');
-  const [filteredProductos, setFilteredProductos] = useState(productos);
+  const [filteredProductos, setFilteredProductos] = useState(productos.data || []);
   const [sortBy, setSortBy] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [categorias, setCategorias] = useState([]);
@@ -31,7 +31,7 @@ export default function Productos({ auth, productos, search }) {
       const response = await axios.get(route('productos.productos'), {
         params: { search, sortBy, category: selectedCategory }
       });
-      setFilteredProductos(response.data.productos);
+      setFilteredProductos(response.data.productos.data || []);
     } catch (error) {
       console.error('Error fetching productos:', error);
     }
@@ -41,7 +41,7 @@ export default function Productos({ auth, productos, search }) {
     if (searchTerm || sortBy || selectedCategory) {
       fetchProductos(searchTerm);
     } else {
-      setFilteredProductos(productos);
+      setFilteredProductos(productos.data || []);
     }
 
     return () => {
@@ -61,6 +61,18 @@ export default function Productos({ auth, productos, search }) {
   const handleCategoryChange = (e) => {
     const selectedCategory = e.target.value;
     setSelectedCategory(selectedCategory);
+  };
+
+  const handleProductoAdded = (updatedProducto) => {
+    setFilteredProductos((prevProductos) => {
+      if (!Array.isArray(prevProductos)) {
+        return prevProductos;
+      }
+
+      return prevProductos.map((producto) =>
+        producto.id === updatedProducto.id ? updatedProducto : producto
+      );
+    });
   };
 
   return (
@@ -96,6 +108,7 @@ export default function Productos({ auth, productos, search }) {
             searchTerm={searchTerm} 
             sortBy={sortBy} 
             selectedCategory={selectedCategory} 
+            handleProductoAdded={handleProductoAdded}
           />
         </AuthenticatedLayout>
       ) : (
@@ -117,7 +130,7 @@ export default function Productos({ auth, productos, search }) {
               <option value="price_desc">Mayor a menor precio</option>
             </select>
             <select onChange={handleCategoryChange} className="p-2 border rounded-md ml-4 w-52">
-              <option value="" selected>Seleccionar categoría...</option>
+              <option value="">Seleccionar categoría...</option>
               {categorias.map((categoria, index) => (
                 <option key={index} value={categoria}>{categoria}</option>
               ))}
@@ -129,6 +142,7 @@ export default function Productos({ auth, productos, search }) {
             searchTerm={searchTerm} 
             sortBy={sortBy} 
             selectedCategory={selectedCategory} 
+            handleProductoAdded={handleProductoAdded}
           />
         </GuestLayout>
       )}

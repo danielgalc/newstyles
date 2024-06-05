@@ -12,6 +12,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\BloqueoPeluqueroController;
 use App\Http\Controllers\ContactoController;
+use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\UserController;
 
 /*
@@ -100,10 +101,10 @@ Route::middleware('auth', 'verified', 'comprobarRol')->group(function () {
     Route::get('/carrito', [CarritoController::class, 'index'])->name('carrito');
     Route::post('/carrito/add/{producto}', [CarritoController::class, 'add'])->name('add');
     Route::post('/carrito/clear', [CarritoController::class, 'clear'])->name('clear');
-
+    Route::post('/carrito/completar-compra', [CarritoController::class, 'completarCompra'])->name('completarCompra');
     Route::post('/carrito/decrementarCantidad/{carrito}', [CarritoController::class, 'decrementarCantidad'])->name('decrementarCantidad');
     Route::post('/carrito/incrementarCantidad/{carrito}', [CarritoController::class, 'incrementarCantidad'])->name('incrementarCantidad');
-
+    
     // Rutas de citas del usuario
     Route::get('/citas', [CitaController::class, 'index']);
     Route::get('/citas/{id}/create', [CitaController::class, 'create']);
@@ -114,6 +115,17 @@ Route::middleware('auth', 'verified', 'comprobarRol')->group(function () {
     Route::get('/citas/obtenerCitasReserva', [CitaController::class, 'obtenerCitasReserva'])->name('citas.obtenerCitasReserva');
 
     Route::put('/citas/{id}/cancelar', [CitaController::class, 'cancelar'])->name('citas.cancelar');
+
+    // Rutas de pedidos
+    Route::get('/pedidos', [PedidoController::class, 'index'])->name('pedidos.index');
+    Route::get('/pedidos/create', [PedidoController::class, 'create'])->name('pedidos.create');
+    Route::post('/pedidos', [PedidoController::class, 'store'])->name('pedidos.store');
+    Route::get('/pedidos/{id}', [PedidoController::class, 'show'])->name('pedidos.show');
+    Route::get('/pedidos/{id}/edit', [PedidoController::class, 'edit'])->name('pedidos.edit');
+    Route::put('/pedidos/{id}', [PedidoController::class, 'update'])->name('pedidos.update');
+    Route::delete('/pedidos/{id}', [PedidoController::class, 'destroy'])->name('pedidos.destroy');
+    Route::put('/pedidos/{id}/restore', [PedidoController::class, 'restore'])->name('pedidos.restore');
+    Route::delete('/pedidos/{id}/forceDelete', [PedidoController::class, 'forceDelete'])->name('pedidos.forceDelete');
 
     // Perfil del usuario
     Route::middleware('auth')->group(function () {

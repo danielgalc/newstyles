@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-
+use App\Models\Carrito;
 use App\Models\Producto;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class ProductoController extends Controller
@@ -59,7 +60,6 @@ class ProductoController extends Controller
             'category' => $category,
         ]);
     }
-
     public function categorias()
     {
         $categorias = Producto::select('categoria')
@@ -103,18 +103,18 @@ class ProductoController extends Controller
             'categoria.required' => 'La categoría del producto es obligatoria.',
             'categoria.string' => 'La categoría del producto debe ser una cadena de texto.',
         ]);
-    
+
         $producto = new Producto();
-    
+
         $producto->nombre = $request->input('nombre');
         $producto->descripcion = $request->input('descripcion');
         $producto->precio = $request->input('precio');
         $producto->imagen = $request->input('imagen');
         $producto->stock = $request->input('stock');
         $producto->categoria = $request->input('categoria');
-    
+
         $producto->save();
-    
+
         return redirect('/admin/productos')
             ->with('success', 'Producto añadido con éxito.');
     }
@@ -146,7 +146,7 @@ class ProductoController extends Controller
     public function update(Request $request, string $id)
     {
         $producto = Producto::findOrFail($id);
-    
+
         // Validar los datos de entrada
         $request->validate([
             'nombre' => ['required', 'string', 'min:3', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚ\s]+$/'],
@@ -175,16 +175,16 @@ class ProductoController extends Controller
             'categoria.required' => 'La categoría del producto es obligatoria.',
             'categoria.string' => 'La categoría del producto debe ser una cadena de texto.',
         ]);
-    
+
         $producto->nombre = $request->input('nombre');
         $producto->descripcion = $request->input('descripcion');
         $producto->precio = $request->input('precio');
         $producto->imagen = $request->input('imagen');
         $producto->stock = $request->input('stock');
         $producto->categoria = $request->input('categoria');
-    
+
         $producto->save();
-    
+
         return redirect('/admin/productos')
             ->with('success', 'Producto modificado con éxito.');
     }
