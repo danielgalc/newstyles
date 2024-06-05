@@ -124,7 +124,7 @@
                     <span class="sr-only">Cerrar modal</span>
                 </button>
             </div>
-            <form action="{{ route('bloqueos.store') }}" id="crearForm" method="post" class="p-4 md:p-5">
+            <form action="{{ route('admin.bloqueos.store') }}" id="crearForm" method="post" class="p-4 md:p-5">
                 @csrf
                 <div class="grid gap-4 mb-4 grid-cols-2">
                     <div class="col-span-2">

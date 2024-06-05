@@ -30,10 +30,28 @@
         </div>
         @endif
 
+        <!-- Div informativo con fechas y horas bloqueadas -->
+        <div class="relative backdrop-filter backdrop-blur-lg bg-white bg-opacity-10 border border-white border-opacity-20 shadow-lg rounded-lg px-8 pt-8 pb-2 w-full max-w-md mb-10">
+    <h2 class="text-3xl text-yellow-500 text-center mb-4 font-righteous">Horas Bloqueadas</h2>
+    <div>
+        @foreach($bloqueos as $bloqueo)
+        <div class="mb-4">
+            <p class="text-gray-200 text-xl font-semibold">{{ \Carbon\Carbon::parse($bloqueo->fecha)->format('d/m/Y') }}</p>
+            <div class="grid grid-cols-2 gap-x-4 text-gray-400 text-sm">
+                @foreach (json_decode($bloqueo->horas, true) as $hora)
+                    <div>{{ \Carbon\Carbon::createFromFormat('H:i:s', $hora)->format('H:i') }}</div>
+                @endforeach
+            </div>
+        </div>
+        @endforeach
+    </div>
+</div>
+
+
         <!-- Div del bloqueo de horas con efecto Glassmorfismo -->
         <div class="relative backdrop-filter backdrop-blur-lg bg-white bg-opacity-10 border border-white border-opacity-20 shadow-lg rounded-lg px-8 pt-8 pb-2 w-full max-w-md">
             <h2 class="text-3xl text-red-600 text-center mb-4 font-righteous">Bloquear Horas</h2>
-            
+
             <form action="{{ route('bloqueos.store') }}" method="post">
                 @csrf
                 <input type="hidden" name="user_id" value="{{ Auth::id() }}">
@@ -57,10 +75,9 @@
         <!-- Div del desbloqueo de horas con efecto Glassmorfismo -->
         <div class="relative backdrop-filter backdrop-blur-lg bg-white bg-opacity-10 border border-white border-opacity-20 shadow-lg rounded-lg px-8 pt-8 pb-2 w-full max-w-md mt-10">
             <h2 class="text-3xl text-teal-500 text-center mb-4 font-righteous">Desbloquear Horas</h2>
-            
+
             <form action="{{ route('bloqueos.desbloquear') }}" method="post">
                 @csrf
-                @method('PUT')
                 <input type="hidden" name="user_id" value="{{ Auth::id() }}">
                 <div class="grid gap-4 mb-4 grid-cols-2">
                     <div class="col-span-2">
@@ -121,7 +138,11 @@
             const horasBloquearSelect = document.getElementById('horas_bloquear');
             const fechaDesbloquearInput = document.getElementById('fecha_desbloquear');
             const horasDesbloquearSelect = document.getElementById('horas_desbloquear');
-            const userId = {{ Auth::id() }};
+            const userId = {
+                {
+                    Auth::id()
+                }
+            };
 
             const todasLasHoras = ['10:00:00', '11:00:00', '12:00:00', '13:00:00', '16:00:00', '17:00:00', '18:00:00', '19:00:00', '20:00:00'];
 

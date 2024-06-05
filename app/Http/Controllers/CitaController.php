@@ -245,12 +245,12 @@ class CitaController extends Controller
 
         // Enviar correo de aceptación solo si el nuevo estado es "aceptada"
         if ($estadoAnterior !== 'aceptada' && $cita->estado === 'aceptada') {
-            //Mail::to($cita->user->email)->send(new CitaAceptada($cita));
+            Mail::to($cita->user->email)->send(new CitaAceptada($cita));
         }
 
         // Enviar correo de cancelación solo si el nuevo estado es "cancelada"
         if ($estadoAnterior !== 'cancelada' && $cita->estado === 'cancelada') {
-            //Mail::to($cita->user->email)->send(new CitaCancelada($cita));
+            Mail::to($cita->user->email)->send(new CitaCancelada($cita));
         }
 
         return redirect('/admin/citas')
@@ -342,12 +342,12 @@ class CitaController extends Controller
 
         // Enviar correo de aceptación solo si el nuevo estado es "aceptada"
         if ($estadoAnterior !== 'aceptada' && $cita->estado === 'aceptada') {
-            //Mail::to($cita->user->email)->send(new CitaAceptada($cita));
+            Mail::to($cita->user->email)->send(new CitaAceptada($cita));
         }
 
         // Enviar correo de cancelación solo si el nuevo estado es "cancelada"
         if ($estadoAnterior !== 'cancelada' && $cita->estado === 'cancelada') {
-            //Mail::to($cita->user->email)->send(new CitaCancelada($cita));
+            Mail::to($cita->user->email)->send(new CitaCancelada($cita));
         }
 
         return redirect()->back()->with('success', 'Estado de la cita actualizado con éxito.');
@@ -398,35 +398,26 @@ class CitaController extends Controller
         return response()->json($citas);
     }
 
-    public function gestionarHoras()
-    {
-        $user = Auth::user();
-
-        if ($user->rol != 'peluquero' || !str_ends_with($user->email, '@peluquero.com')) {
-            return redirect()->route('landing');
-        }
-
-        $citasPendientes = Cita::where('peluquero_id', $user->id)->where('estado', 'pendiente')->get();
-        $citasAceptadas = Cita::where('peluquero_id', $user->id)->where('estado', 'aceptada')->get();
-
-        // Debugging
-        // dd($citasPendientes, $citasAceptadas);
-
-        return view('peluquero.horas', compact('citasPendientes', 'citasAceptadas'));
-    }
 
     public function gestionarCitas()
     {
         $user = Auth::user();
-    
+
         if ($user->rol != 'peluquero' || !str_ends_with($user->email, '@peluquero.com')) {
             return redirect()->route('landing');
         }
-    
+
         $citasPendientes = Cita::where('peluquero_id', $user->id)->where('estado', 'pendiente')->get();
         $citasAceptadas = Cita::where('peluquero_id', $user->id)->where('estado', 'aceptada')->get();
-    
+
         return view('peluquero.citas', compact('citasPendientes', 'citasAceptadas'));
+    }
+
+    public function gestionarHoras()
+    {
+        $userId = Auth::id();
+        $bloqueos = BloqueoPeluquero::where('peluquero_id', $userId)->get();
+        return view('peluquero.horas', compact('bloqueos'));
     }
     
     public function obtenerCitasDelDia(Request $request)
@@ -452,7 +443,7 @@ class CitaController extends Controller
             $user = Auth::user();
     
             if ($user->rol != 'peluquero') {
-                return redirect()->route('home');
+                return redirect()->route('landing');
             }
     
             return Inertia::render('Peluqueros/Peluqueros', [
@@ -483,7 +474,7 @@ class CitaController extends Controller
         });
 
         // Enviar correo de aceptación
-        // Mail::to($cita->user->email)->send(new CitaAceptada($cita));
+        Mail::to($cita->user->email)->send(new CitaAceptada($cita));
 
         return redirect()->route('peluquero.citas');
     }
@@ -502,7 +493,7 @@ class CitaController extends Controller
         $cita->save();
 
         // Enviar correo de cancelación
-        // Mail::to($cita->user->email)->send(new CitaCancelada($cita));
+        Mail::to($cita->user->email)->send(new CitaCancelada($cita));
 
         return redirect()->route('peluquero.citas');
     }

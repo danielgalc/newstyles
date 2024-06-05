@@ -140,9 +140,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/bloqueos/horas-bloqueadas', [BloqueoPeluqueroController::class, 'horasBloqueadas'])->name('bloqueos.horas-bloqueadas');
 });
 
-
-// Rutas accesibles para el usuario administrador
-
 // Rutas accesibles para el usuario administrador
 Route::middleware('auth', 'admin')->group(function () {
     Route::get('/admin', function () {
@@ -169,6 +166,14 @@ Route::middleware('auth', 'admin')->group(function () {
     Route::get('/admin/gestionar_citas/obtenerCitas', [CitaController::class, 'obtenerCitas'])->name('admin.citas.obtenerCitas');
     Route::get('/admin/gestionar_citas/buscar_usuarios', [CitaController::class, 'buscarUsuarios'])->name('admin.buscar_usuarios');
     Route::put('admin/gestionar_citas/{id}/actualizar-estado', [CitaController::class, 'actualizar_estado'])->name('citas.actualizar_estado');
+
+    // Rutas de bloqueos - Admin
+
+    Route::get('admin/bloqueos', [BloqueoPeluqueroController::class, 'index'])->name('admin.bloqueos');
+    Route::post('admin/bloqueos', [BloqueoPeluqueroController::class, 'storeAdmin'])->name('admin.bloqueos.store');
+    Route::put('/admin/bloqueos/{id}', [BloqueoPeluqueroController::class, 'update'])->name('bloqueos.update');
+    Route::delete('/admin/bloqueos/{id}', [BloqueoPeluqueroController::class, 'destroy'])->name('bloqueos.destroy');
+    Route::get('admin/bloqueos/horasBloqueadas', [BloqueoPeluqueroController::class, 'horasBloqueadas'])->name('bloqueos.horas_bloqueadas');
 });
 
 

@@ -194,13 +194,13 @@
 
         $('#filtro-users').on('change', function() {
             var rol = $(this).val();
-            var buscar = $('#buscar-input').val(); // Obtener el valor del campo de búsqueda
-            fetchUsuarios(1, rol, buscar); // Reiniciar a la primera página al cambiar el filtro
+            var buscar = $('#buscar-input').val(); 
+            fetchUsuarios(1, rol, buscar); 
         });
 
         function fetchUsuarios(page, rol, buscar) {
             $.ajax({
-                url: "/admin/usuarios?page=" + page + "&rol=" + rol + "&buscar=" + buscar, // Incluir el término de búsqueda en la URL
+                url: "/admin/usuarios?page=" + page + "&rol=" + rol + "&buscar=" + buscar, 
                 success: function(data) {
                     $('#usuarios-content').html(data);
                 }
@@ -217,8 +217,7 @@
     // VALIDACIÓN DE LOS FORMULARIOS DE CREAR Y EDITAR USUARIOS
     document.addEventListener('DOMContentLoaded', function() {
         const crearForm = document.querySelector('form[action="{{ route('users.store') }}"]');
-        const editarForm = document.querySelector('form[action^="{{ route('users.update', '
-            ') }}"]');
+        const editarForm = document.querySelector('form[action^="{{ route('users.update', '') }}"]');
 
         if (crearForm) {
             crearForm.addEventListener('submit', function(event) {
