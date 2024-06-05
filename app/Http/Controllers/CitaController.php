@@ -398,7 +398,7 @@ class CitaController extends Controller
         return response()->json($citas);
     }
 
-    public function gestionarCitas()
+    public function gestionarHoras()
     {
         $user = Auth::user();
 
@@ -412,8 +412,39 @@ class CitaController extends Controller
         // Debugging
         // dd($citasPendientes, $citasAceptadas);
 
+        return view('peluquero.horas', compact('citasPendientes', 'citasAceptadas'));
+    }
+
+    public function gestionarCitas()
+    {
+        $user = Auth::user();
+    
+        if ($user->rol != 'peluquero' || !str_ends_with($user->email, '@peluquero.com')) {
+            return redirect()->route('landing');
+        }
+    
+        $citasPendientes = Cita::where('peluquero_id', $user->id)->where('estado', 'pendiente')->get();
+        $citasAceptadas = Cita::where('peluquero_id', $user->id)->where('estado', 'aceptada')->get();
+    
         return view('peluquero.citas', compact('citasPendientes', 'citasAceptadas'));
     }
+    
+    public function obtenerCitasDelDia(Request $request)
+    {
+        $peluqueroId = Auth::id();
+        $fecha = $request->input('fecha');
+    
+        $citasDelDia = Cita::where('peluquero_id', $peluqueroId)
+            ->whereDate('fecha', $fecha)
+            ->whereIn('estado', ['aceptada', 'pendiente'])
+            ->with('user')
+            ->get();
+    
+        return response()->json($citasDelDia);
+    }
+
+
+    // Vista previa peluqueros
 
     public function peluqueros()
     {
