@@ -398,8 +398,6 @@ class CitaController extends Controller
         return response()->json($citas);
     }
 
-
-
     public function gestionarCitas()
     {
         $user = Auth::user();
@@ -419,13 +417,17 @@ class CitaController extends Controller
 
     public function peluqueros()
     {
-        $user = Auth::user();
-
-        if ($user->rol != 'peluquero') {
-            return redirect()->route('home');
+        {
+            $user = Auth::user();
+    
+            if ($user->rol != 'peluquero') {
+                return redirect()->route('home');
+            }
+    
+            return Inertia::render('Peluqueros/Peluqueros', [
+                'userName' => $user->name
+            ]);
         }
-
-        return Inertia::render('Peluqueros/Peluqueros');
     }
 
 
