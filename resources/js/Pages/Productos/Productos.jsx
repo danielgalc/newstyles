@@ -6,9 +6,9 @@ import Grid from '@/Components/Productos/Grid';
 import axios from 'axios';
 import debounce from 'lodash/debounce';
 
-export default function Productos({ auth, productos = [], search }) {
+export default function Productos({ auth, productos, search }) {
   const [searchTerm, setSearchTerm] = useState(search || '');
-  const [filteredProductos, setFilteredProductos] = useState(productos.data || []);
+  const [filteredProductos, setFilteredProductos] = useState(productos || { data: [] });
   const [sortBy, setSortBy] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [categorias, setCategorias] = useState([]);
@@ -31,7 +31,7 @@ export default function Productos({ auth, productos = [], search }) {
       const response = await axios.get(route('productos.productos'), {
         params: { search, sortBy, category: selectedCategory }
       });
-      setFilteredProductos(response.data.productos.data || []);
+      setFilteredProductos(response.data.productos || { data: [] });
     } catch (error) {
       console.error('Error fetching productos:', error);
     }
@@ -41,7 +41,7 @@ export default function Productos({ auth, productos = [], search }) {
     if (searchTerm || sortBy || selectedCategory) {
       fetchProductos(searchTerm);
     } else {
-      setFilteredProductos(productos.data || []);
+      setFilteredProductos(productos || { data: [] });
     }
 
     return () => {
@@ -63,15 +63,19 @@ export default function Productos({ auth, productos = [], search }) {
     setSelectedCategory(selectedCategory);
   };
 
-  const handleProductoAdded = (updatedProducto) => {
+  const handleProductoAdded = (productoId) => {
     setFilteredProductos((prevProductos) => {
-      if (!Array.isArray(prevProductos)) {
+      if (!Array.isArray(prevProductos.data)) {
         return prevProductos;
       }
-
-      return prevProductos.map((producto) =>
-        producto.id === updatedProducto.id ? updatedProducto : producto
+  
+      const updatedData = prevProductos.data.map((producto) =>
+        producto.id === productoId
+          ? { ...producto, stock: producto.stock - 1 }
+          : producto
       );
+  
+      return { ...prevProductos, data: updatedData };
     });
   };
 
@@ -80,13 +84,14 @@ export default function Productos({ auth, productos = [], search }) {
       {auth.user ? (
         <AuthenticatedLayout user={auth.user}>
           <Banner text="Catálogo de productos" />
-          <div className="flex justify-between items-center my-4">
+          <div className="flex justify-center items-center my-4">
+
             <input
               type="text"
               value={searchTerm}
               onChange={handleSearchChange}
               placeholder="Buscar productos..."
-              className="p-2 border rounded-md w-3/4"
+              className="p-2 border rounded-md w-1/4"
             />
             <select onChange={handleSortChange} className="p-2 border rounded-md ml-4 w-52">
               <option value="">Ordenar por...</option>
@@ -102,12 +107,12 @@ export default function Productos({ auth, productos = [], search }) {
               ))}
             </select>
           </div>
-          <Grid 
-            productos={filteredProductos} 
+          <Grid
+            productos={filteredProductos}
             setFilteredProductos={setFilteredProductos}
-            searchTerm={searchTerm} 
-            sortBy={sortBy} 
-            selectedCategory={selectedCategory} 
+            searchTerm={searchTerm}
+            sortBy={sortBy}
+            selectedCategory={selectedCategory}
             handleProductoAdded={handleProductoAdded}
           />
         </AuthenticatedLayout>
@@ -136,12 +141,12 @@ export default function Productos({ auth, productos = [], search }) {
               ))}
             </select>
           </div>
-          <Grid 
-            productos={filteredProductos} 
+          <Grid
+            productos={filteredProductos}
             setFilteredProductos={setFilteredProductos}
-            searchTerm={searchTerm} 
-            sortBy={sortBy} 
-            selectedCategory={selectedCategory} 
+            searchTerm={searchTerm}
+            sortBy={sortBy}
+            selectedCategory={selectedCategory}
             handleProductoAdded={handleProductoAdded}
           />
         </GuestLayout>

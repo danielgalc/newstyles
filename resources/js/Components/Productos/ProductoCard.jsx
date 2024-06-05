@@ -1,16 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 
 export default function ProductoCard({ producto, onProductoAdded }) {
+    const [successMessage, setSuccessMessage] = useState('');
+    const [cantidad, setCantidad] = useState(1); // Estado para la cantidad
+
     const handleAddToCart = async () => {
         try {
-            const response = await axios.post(`/carrito/add/${producto.id}`);
+            const response = await axios.post(`/carrito/add/${producto.id}`, { cantidad }); // Enviar cantidad
             if (response.status === 200) {
-                onProductoAdded(response.data.producto);
+                onProductoAdded(response.data.producto); // Producto actualizado
+                setSuccessMessage(`¡Añadido al carrito! (${cantidad} unidad${cantidad > 1 ? 'es' : ''})`);
+                setTimeout(() => setSuccessMessage(''), 4000); // Clear message after 4 seconds
             }
         } catch (error) {
             console.error('Error adding product to cart:', error);
         }
+    };
+
+    const handleCantidadChange = (e) => {
+        setCantidad(parseInt(e.target.value));
     };
 
     return (
@@ -21,13 +30,30 @@ export default function ProductoCard({ producto, onProductoAdded }) {
                 <p className="text-gray-400">{producto.descripcion}</p>
                 <p className="text-lg font-bold text-teal-600">{producto.precio}&euro;</p>
                 <p className="text-gray-500">Stock: {producto.stock}</p>
-                <button 
-                    onClick={handleAddToCart} 
-                    className="mt-2 bg-teal-500 text-white py-2 px-4 rounded hover:bg-teal-700"
-                    disabled={producto.stock === 0}
-                >
-                    {producto.stock === 0 ? 'Sin stock' : 'Añadir al carrito'}
-                </button>
+                <div className="flex items-center mt-2">
+                    <div className='flex gap-4'>
+                        <button
+                            onClick={handleAddToCart}
+                            className="bg-teal-500 text-white py-2 px-4 rounded hover:bg-teal-700"
+                            disabled={producto.stock === 0 || cantidad < 1}
+                        >
+                            {producto.stock === 0 ? 'Sin stock' : 'Añadir al carrito'}
+                        </button>
+                        <input
+                            type="number"
+                            min="1"
+                            value={cantidad}
+                            onChange={handleCantidadChange}
+                            className="p-2 border rounded-md w-20 mr-2 text-black"
+                            disabled={producto.stock === 0}
+                        />
+                    </div>
+                </div>
+                {successMessage && (
+                    <div className="mt-2 w-full text-center text-3xs bg-green-100 text-green-800 p-2 rounded">
+                        {successMessage}
+                    </div>
+                )}
             </div>
         </div>
     );

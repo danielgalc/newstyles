@@ -47,29 +47,34 @@ class CarritoController extends Controller
         return redirect()->route('carrito')->with('success', 'Compra completada con éxito.');
     }
 
-    public function add(Producto $producto)
+    public function add(Request $request, Producto $producto)
     {
-        $carrito = Carrito::where('producto_id', $producto->id)->where('user_id', auth()->user()->id)->first();
-
+        $cantidad = $request->input('cantidad', 1); // Obtener la cantidad de la solicitud, por defecto 1
+    
+        $carrito = Carrito::where('producto_id', $producto->id)
+                          ->where('user_id', auth()->user()->id)
+                          ->first();
+    
         if (empty($carrito)) {
             $carrito = new Carrito();
             $carrito->user_id = Auth::user()->id;
             $carrito->producto_id = $producto->id;
-            $carrito->cantidad = 1;
+            $carrito->cantidad = $cantidad;
         } else {
-            $carrito->cantidad += 1;
+            $carrito->cantidad += $cantidad;
         }
-
-        $producto->stock -= 1;
+    
+        $producto->stock -= $cantidad;
         $producto->save();
-
+    
         $carrito->save();
-
+    
         return response()->json([
             'message' => 'Producto añadido al carrito.',
             'producto' => $producto
         ]);
     }
+    
 
     public function clear()
     {
