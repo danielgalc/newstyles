@@ -132,11 +132,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/peluquero/citas', [CitaController::class, 'gestionarCitas'])->name('peluquero.citas');
     Route::get('/peluquero', [CitaController::class, 'peluqueros'])->name('peluquero.peluquero');
     Route::post('/citas/aceptar/{id}', [CitaController::class, 'aceptarCita'])->name('citas.aceptar');
-    //Route::post('/citas/cancelar/{id}', [CitaController::class, 'cancelarCita'])->name('citas.cancelar');
+    Route::post('/citas/cancelar/{id}', [CitaController::class, 'cancelarCita'])->name('peluquero.citas.cancelar');
     Route::get('/citas/obtenerCitasDelDia', [CitaController::class, 'obtenerCitasDelDia'])->name('citas.obtenerCitasDelDia');
     Route::post('/citas/bloquear', [CitaController::class, 'bloquearFecha'])->name('citas.bloquear');
     Route::post('bloqueos', [BloqueoPeluqueroController::class, 'store'])->name('bloqueos.store')->middleware('peluquero');
     Route::post('bloqueos/desbloquear', [BloqueoPeluqueroController::class, 'desbloquear'])->name('bloqueos.desbloquear')->middleware('peluquero');
+    Route::get('/bloqueos/horas-bloqueadas', [BloqueoPeluqueroController::class, 'horasBloqueadas'])->name('bloqueos.horas-bloqueadas');
 });
 
 

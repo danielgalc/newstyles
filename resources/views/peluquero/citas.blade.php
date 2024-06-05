@@ -60,7 +60,7 @@
                             @csrf
                             <button type="submit" class="bg-teal-500 hover:bg-teal-600 text-white px-4 py-2 rounded">Aceptar</button>
                         </form>
-                        <form action="{{ route('citas.cancelar', $cita->id) }}" method="post">
+                        <form action="{{ route('peluquero.citas.cancelar', ['id' => $cita->id]) }}" method="post">
                             @csrf
                             <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded">Cancelar</button>
                         </form>
