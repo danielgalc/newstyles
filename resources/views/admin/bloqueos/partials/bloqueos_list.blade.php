@@ -16,10 +16,15 @@
             <td class="px-6 py-4 whitespace-nowrap text-center" data-modal-toggle="edit_bloqueo_modal_{{ $bloqueo->id }}" data-modal-target="edit_bloqueo_modal_{{ $bloqueo->id }}">{{ $bloqueo->peluquero->name }}</td>
             <td class="px-6 py-4 whitespace-nowrap text-center" data-modal-toggle="edit_bloqueo_modal_{{ $bloqueo->id }}" data-modal-target="edit_bloqueo_modal_{{ $bloqueo->id }}">{{ $bloqueo->fecha }}</td>
             <td class="px-6 py-4 whitespace-nowrap text-center" data-modal-toggle="edit_bloqueo_modal_{{ $bloqueo->id }}" data-modal-target="edit_bloqueo_modal_{{ $bloqueo->id }}">
-                @foreach (json_decode($bloqueo->horas, true) as $hora)
-                    {{ \Carbon\Carbon::createFromFormat('H:i:s', $hora)->format('H:i') }}
-                    @if (!$loop->last), @endif
-                @endforeach
+                @php
+                    $horas = is_string($bloqueo->horas) ? json_decode($bloqueo->horas, true) : $bloqueo->horas;
+                @endphp
+                @if (is_array($horas))
+                    @foreach ($horas as $hora)
+                        {{ \Carbon\Carbon::createFromFormat('H:i:s', $hora)->format('H:i') }}
+                        @if (!$loop->last), @endif
+                    @endforeach
+                @endif
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-center">
                 <button type="button" class="text-white bg-red-600 hover:bg-red-700 inline-flex items-center font-medium rounded-lg text-sm px-5 py-2.5 text-center" data-modal-hide="edit_bloqueo_modal_{{ $bloqueo->id }}" data-modal-target="confirm_delete_modal_{{ $bloqueo->id }}" data-modal-toggle="confirm_delete_modal_{{ $bloqueo->id }}">Eliminar</button>

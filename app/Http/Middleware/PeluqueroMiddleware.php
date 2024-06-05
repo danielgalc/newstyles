@@ -20,6 +20,6 @@ class PeluqueroMiddleware
             return $next($request);
         }
 
-        return redirect('/landing')->with('error', 'No tienes permiso para acceder a esta página.');
+        return redirect('/peluquero')->with('error', 'No tienes permiso para acceder a esta página.');
     }
 }

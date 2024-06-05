@@ -51,7 +51,7 @@
             </div>
             <!-- Modal body -->
             <!-- Form Editar -->
-            <form action="{{ route('citas.update', ['id' => $cita->id]) }}" id="edit_cita_form_{{ $cita->id }}" method="POST" class="p-4 md:p-5">
+            <form action="{{ route('admin.citas.update', ['id' => $cita->id]) }}" id="edit_cita_form_{{ $cita->id }}" method="POST" class="p-4 md:p-5">
                 @csrf
                 @method('PUT')
                 <div class="grid gap-4 mb-4 grid-cols-2">
@@ -123,15 +123,15 @@
             <div class="p-4 md:p-5">
                 <p class="dark:text-white">¿Estás seguro de que quieres eliminar esta cita? <br> <span class="text-teal-400 italic">ID: {{ $cita->id }}</span></p>
                 <div class="flex justify-end items-center mt-4">
-                    <form action="{{ route('citas.destroy', ['id' => $cita->id]) }}" method="post" class="p-4 md:p-5">
+                    <form action="{{ route('admin.citas.destroy', ['id' => $cita->id]) }}" method="post" class="p-4 md:p-5">
                         @csrf
                         @method('DELETE')
-                        <input type="hidden" name="id" value="{{ $cita->id }}" data-delete-route="{{ route('citas.destroy', ['id' => $cita->id]) }}">
+                        <input type="hidden" name="id" value="{{ $cita->id }}" data-delete-route="{{ route('admin.citas.destroy', ['id' => $cita->id]) }}">
                         <button type="submit" class="text-white inline-flex items-center bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800" id="confirmar_eliminar">
                             Confirmar
                         </button>
                     </form>
-                    <button type="button" class="h-10 text-gray-900 bg-gray-200 hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-100 dark:hover:bg-gray-300 dark:focus:ring-gray-800" data-modal-toggle="confirm_delete_modal_{{ $cita->id }}" data-delete-route="{{ route('citas.destroy', ['id' => $cita->id]) }}">
+                    <button type="button" class="h-10 text-gray-900 bg-gray-200 hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-100 dark:hover:bg-gray-300 dark:focus:ring-gray-800" data-modal-toggle="confirm_delete_modal_{{ $cita->id }}" data-delete-route="{{ route('admin.citas.destroy', ['id' => $cita->id]) }}">
                         Cancelar
                     </button>
                 </div>
@@ -156,7 +156,7 @@
                     <span class="sr-only">Cerrar modal</span>
                 </button>
             </div>
-            <form action="{{ route('citas.store') }}" id="crearForm" method="post" class="p-4 md:p-5">
+            <form action="{{ route('admin.citas.store') }}" id="crearForm" method="post" class="p-4 md:p-5">
                 @csrf
                 <div class="grid gap-4 mb-4 grid-cols-2">
                     <div class="col-span-2">

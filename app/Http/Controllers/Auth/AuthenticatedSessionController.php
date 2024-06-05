@@ -38,7 +38,7 @@ class AuthenticatedSessionController extends Controller
             if (auth()->user()->rol === 'admin') {
                 return redirect('/admin')->with('reload', true);
             } else if (auth()->user()->rol === 'peluquero') {
-                return redirect('/peluquero/citas')->with('reload', true);
+                return redirect('/peluquero')->with('reload', true);
             }
             return redirect('/');
         }
