@@ -33,8 +33,8 @@ Route::middleware(['auth', 'verified', 'comprobarRol', 'comprobarRolPeluquero'])
     Route::get('/carrito', [CarritoController::class, 'index'])->name('carrito');
     Route::post('/carrito/clear', [CarritoController::class, 'clear'])->name('clear');
     Route::post('/carrito/completar-compra', [CarritoController::class, 'completarCompra'])->name('completarCompra');
-    Route::post('/carrito/decrementarCantidad/{carrito}', [CarritoController::class, 'decrementarCantidad'])->name('decrementarCantidad');
-    Route::post('/carrito/incrementarCantidad/{carrito}', [CarritoController::class, 'incrementarCantidad'])->name('incrementarCantidad');
+    Route::post('/carrito/decrementarCantidad/{carritoItem}', [CarritoController::class, 'decrementarCantidad'])->name('decrementarCantidad');
+    Route::post('/carrito/incrementarCantidad/{carritoItem}', [CarritoController::class, 'incrementarCantidad'])->name('incrementarCantidad');    
     Route::post('/carrito/add/{producto}', [CarritoController::class, 'add'])->name('add');
     Route::middleware('auth')->post('/carrito/migrar', [CarritoController::class, 'migrar'])->name('carrito.migrar');
 

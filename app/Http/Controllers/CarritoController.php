@@ -129,32 +129,38 @@ class CarritoController extends Controller
         return redirect()->route('carrito')->with('success', 'Carrito vaciado con éxito.');
     }
 
-    public function decrementarCantidad(CarritoItem $carritoItem)
+    public function decrementarCantidad(Request $request, $carritoItemId)
     {
+        $carritoItem = CarritoItem::findOrFail($carritoItemId);
+        $producto = $carritoItem->producto;
+    
         if ($carritoItem->cantidad === 1) {
-            $carritoItem->producto->stock += 1;
-            $carritoItem->producto->save();
+            $producto->stock += 1;
+            $producto->save();
             $carritoItem->delete();
-
+    
             return redirect()->route('carrito')->with('success', 'Se eliminó el producto del carrito.');
         }
-
+    
         $carritoItem->cantidad -= 1;
-        $carritoItem->producto->stock += 1;
-        $carritoItem->producto->save();
+        $producto->stock += 1;
+        $producto->save();
         $carritoItem->save();
-
+    
         return redirect()->route('carrito')->with('success', 'Se redujo la cantidad del producto en el carrito.');
     }
 
-    public function incrementarCantidad(CarritoItem $carritoItem)
+    public function incrementarCantidad(Request $request, $carritoItemId)
     {
-        if ($carritoItem->producto->stock > 0) {
+        $carritoItem = CarritoItem::findOrFail($carritoItemId);
+        $producto = $carritoItem->producto;
+    
+        if ($producto->stock > 0) {
             $carritoItem->cantidad += 1;
-            $carritoItem->producto->stock -= 1;
-            $carritoItem->producto->save();
+            $producto->stock -= 1;
+            $producto->save();
             $carritoItem->save();
-
+    
             return redirect()->route('carrito')->with('success', 'Se incrementó la cantidad del producto en el carrito.');
         } else {
             return redirect()->route('carrito')->with('error', 'No hay suficiente stock para añadir más de este producto.');

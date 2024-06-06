@@ -33,13 +33,13 @@
                                         <h3 class="text-lg font-semibold">{{ $carrito->producto->nombre }}</h3>
                                         <p class="text-gray-600">{{ $carrito->producto->precio }} &euro;</p>
                                         <div class="flex items-center mt-2">
-                                            <form action="{{ route('decrementarCantidad', $carrito) }}" method="POST" class="inline-block">
+                                            <form action="{{ route('decrementarCantidad', $carrito->id) }}" method="POST" class="inline-block">
                                                 @csrf
                                                 @method('POST')
-                                                <button type="submit" class="bg-gray-300 text-black py-1 px-2 rounded hover:bg-gray-400" {{ $carrito->cantidad === 1 ? 'disabled' : '' }}>-</button>
+                                                <button type="submit" class="bg-gray-300 text-black py-1 px-2 rounded hover:bg-gray-400">-</button>
                                             </form>
                                             <span class="mx-2">{{ $carrito->cantidad }}</span>
-                                            <form action="{{ route('incrementarCantidad', $carrito) }}" method="POST" class="inline-block">
+                                            <form action="{{ route('incrementarCantidad', $carrito->id) }}" method="POST" class="inline-block">
                                                 @csrf
                                                 @method('POST')
                                                 <button type="submit" class="bg-gray-300 text-black py-1 px-2 rounded hover:bg-gray-400">+</button>
