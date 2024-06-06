@@ -57,7 +57,7 @@ export default function Login({ status, canResetPassword }) {
                 if (user && user.rol) {
                     console.log('Usuario y rol encontrados:', user.rol);
                     if (user.rol === 'peluquero') {
-                        window.location.href = route('peluquero.citas');
+                        window.location.href = route('peluquero.peluquero');
                     } else if (user.rol === 'admin') {
                         window.location.href = route('admin');
                     } else {

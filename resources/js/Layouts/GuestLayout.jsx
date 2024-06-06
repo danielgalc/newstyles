@@ -17,7 +17,7 @@ export default function Guest({ children }) {
                         <NavLink href="/servicios">Servicios</NavLink>
                         <NavLink href="/quienes-somos">Quiénes Somos</NavLink>
                     </div>
-                    <div className='flex justify-between items-center'>
+                    <div className='flex flex-col w-1/4 gap-4 -mr-16 justify-between items-center'>
                         <NavLink href="/login">Iniciar sesión</NavLink>
                         <NavLink href="/register">Registrarse</NavLink>
                     </div>

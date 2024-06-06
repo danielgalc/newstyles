@@ -39,7 +39,7 @@ class AuthenticatedSessionController extends Controller
         if ($user->rol === 'admin') {
             return redirect('/admin');
         } elseif ($user->rol === 'peluquero') {
-            return redirect('/peluquero');
+            return redirect('/peluquero/citas');
         } else {
             return redirect('/');
         }
