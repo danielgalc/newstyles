@@ -15,7 +15,7 @@ export default function Login({ status, canResetPassword }) {
         remember: false,
     });
 
-    const [localErrors, setLocalErrors] = useState({}); // Definir el estado para localErrors
+    const [localErrors, setLocalErrors] = useState({});
 
     useEffect(() => {
         return () => {
@@ -26,36 +26,28 @@ export default function Login({ status, canResetPassword }) {
     const submit = async (e) => {
         e.preventDefault();
 
-        // Recuperar carrito del localStorage
         const carritoLocalStorage = JSON.parse(localStorage.getItem('carrito')) || [];
-        console.log('Carrito recuperado del localStorage:', carritoLocalStorage);
-
-        // Crear instancias de Carrito y guardarlas en el estado
         const productos = carritoLocalStorage.map(item => ({
             producto_id: item.id,
             cantidad: item.cantidad || 1,
         }));
-        console.log('Productos instanciados:', productos);
 
         if (validateForm()) {
             const formData = {
                 ...data,
             };
-            console.log('Datos a enviar:', formData);
 
             try {
                 const response = await axios.post(route('login'), formData);
-                console.log('Usuario autenticado, migrando carrito...');
 
-                await axios.post(route('carrito.migrar'), { productos });
+                if (response.data.user) {
+                    const user = response.data.user;
+                    console.log('Usuario autenticado:', user);
 
-                console.log('Carrito migrado, limpiando localStorage');
-                localStorage.removeItem('carrito');
+                    await axios.post(route('carrito.migrar'), { productos });
 
-                // Redirigir al usuario basado en el rol
-                const user = response.data.user;
-                if (user && user.rol) {
-                    console.log('Usuario y rol encontrados:', user.rol);
+                    localStorage.removeItem('carrito');
+
                     if (user.rol === 'peluquero') {
                         window.location.href = route('peluquero.peluquero');
                     } else if (user.rol === 'admin') {
@@ -64,11 +56,14 @@ export default function Login({ status, canResetPassword }) {
                         window.location.href = route('landing');
                     }
                 } else {
-                    console.error('El usuario no está definido o no tiene un rol válido');
-                    window.location.href = route('landing'); // Redirigir a una página predeterminada si no se encuentra el rol
+                    console.error('Usuario no encontrado en la respuesta:', response.data.user);
+                    window.location.href = route('landing');
                 }
             } catch (error) {
                 console.error("Error en el inicio de sesión o migración del carrito:", error);
+                if (error.response && error.response.data.errors) {
+                    setLocalErrors(error.response.data.errors);
+                }
             }
         }
     };

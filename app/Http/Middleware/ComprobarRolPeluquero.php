@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class PeluqueroMiddleware
+class ComprobarRolPeluquero
 {
     /**
      * Handle an incoming request.
@@ -15,10 +15,10 @@ class PeluqueroMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(auth()->user()->rol=='peluquero'){
+        if (!auth()->check() || auth()->user()->rol != 'peluquero') {
             return $next($request);
-        }
+        }        
 
-        return redirect('/');
+        return redirect('/peluquero');
     }
 }
