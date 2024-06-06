@@ -69,12 +69,6 @@ export default function Login({ status, canResetPassword }) {
                 }
             } catch (error) {
                 console.error("Error en el inicio de sesión o migración del carrito:", error);
-
-                if (error.response && error.response.status === 422) {
-                    setLocalErrors(error.response.data.errors || {});
-                } else {
-                    setLocalErrors({ general: 'Ocurrió un error durante el inicio de sesión. Por favor, intenta nuevamente.' });
-                }
             }
         }
     };
@@ -166,11 +160,6 @@ export default function Login({ status, canResetPassword }) {
                                 Iniciar Sesión
                             </PrimaryButton>
                         </div>
-                        {localErrors.general && (
-                            <div className="mt-4 text-red-500 text-center">
-                                {localErrors.general}
-                            </div>
-                        )}
                         <div className='flex justify-center gap-1 text-sm items-center mt-4 text-gray-500'>
                             ¿No tienes cuenta? <a href="/register" className='text-teal-500'>Haz click aquí para registrarte</a>
                         </div>

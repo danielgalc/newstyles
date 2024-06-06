@@ -121,7 +121,7 @@ export default function Productos({ auth, productos, search }) {
                         sortBy={sortBy}
                         selectedCategory={selectedCategory}
                         handleProductoAdded={handleProductoAdded}
-                        auth={auth} // Pasar auth aquí
+                        auth={auth}
                     />
                 </AuthenticatedLayout>
             ) : (
@@ -161,7 +161,7 @@ export default function Productos({ auth, productos, search }) {
                         sortBy={sortBy}
                         selectedCategory={selectedCategory}
                         handleProductoAdded={handleProductoAdded}
-                        auth={auth} // Pasar auth aquí
+                        auth={auth}
                     />
                 </GuestLayout>
             )}

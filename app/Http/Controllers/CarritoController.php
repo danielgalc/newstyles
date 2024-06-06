@@ -25,27 +25,32 @@ class CarritoController extends Controller
         $user = Auth::user();
         $productos = $request->input('productos', []);
 
-        Log::info('Productos recibidos para migrar:', $productos);
+        if ($user->rol === 'cliente') {
+            Log::info('Productos recibidos para migrar:', $productos);
 
-        if (!empty($productos)) {
-            foreach ($productos as $item) {
-                $carritoExistente = Carrito::where('user_id', $user->id)
-                    ->where('producto_id', $item['producto_id'])
-                    ->first();
-                if ($carritoExistente) {
-                    $carritoExistente->cantidad += $item['cantidad'];
-                    $carritoExistente->save();
-                } else {
-                    Carrito::create([
-                        'user_id' => $user->id,
-                        'producto_id' => $item['producto_id'],
-                        'cantidad' => $item['cantidad'],
-                    ]);
+            if (!empty($productos)) {
+                foreach ($productos as $item) {
+                    $carritoExistente = Carrito::where('user_id', $user->id)
+                        ->where('producto_id', $item['producto_id'])
+                        ->first();
+                    if ($carritoExistente) {
+                        $carritoExistente->cantidad += $item['cantidad'];
+                        $carritoExistente->save();
+                    } else {
+                        Carrito::create([
+                            'user_id' => $user->id,
+                            'producto_id' => $item['producto_id'],
+                            'cantidad' => $item['cantidad'],
+                        ]);
+                    }
                 }
             }
+    
+            return response()->json(['message' => 'Carrito migrado con éxito.']);
+        } else {
+            return redirect('/');
         }
 
-        return response()->json(['message' => 'Carrito migrado con éxito.']);
     }
 
     public function completarCompra()
@@ -78,7 +83,7 @@ class CarritoController extends Controller
 
     public function add(Request $request, Producto $producto)
     {
-        $cantidad = $request->input('cantidad', 1); // Obtener la cantidad de la solicitud, por defecto 1
+        $cantidad = $request->input('cantidad', 1);
 
         $carrito = Carrito::where('producto_id', $producto->id)
             ->where('user_id', auth()->user()->id)
