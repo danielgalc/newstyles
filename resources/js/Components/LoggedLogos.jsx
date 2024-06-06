@@ -33,7 +33,7 @@ export default function LoggedLogos() {
                 {isOpen && (
                     <Menu
                         as="div"
-                        className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md overflow-hidden z-10"
+                        className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md overflow-hidden z-22"
                     >
                         <Menu.Item>
                             {({ active }) => (

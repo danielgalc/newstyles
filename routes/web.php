@@ -135,6 +135,9 @@ Route::post('/send-contact-email', [ContactoController::class, 'sendMail'])->nam
 // Obtener categorías de productos
 Route::get('/categorias', [ProductoController::class, 'categorias'])->name('categorias');
 
+Route::post('/completar-compra', [CarritoController::class, 'completarCompra'])->name('completarCompra');
+
+
 
 // Autenticación
 require __DIR__ . '/auth.php';
