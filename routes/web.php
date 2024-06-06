@@ -98,13 +98,7 @@ Route::middleware('guest')->get('/login', function () {
 
 Route::middleware('auth', 'verified', 'comprobarRol')->group(function () {
     // Rutas del carrito
-    Route::get('/carrito', [CarritoController::class, 'index'])->name('carrito');
-    Route::post('/carrito/add/{producto}', [CarritoController::class, 'add'])->name('add');
-    Route::post('/carrito/clear', [CarritoController::class, 'clear'])->name('clear');
-    Route::post('/carrito/completar-compra', [CarritoController::class, 'completarCompra'])->name('completarCompra');
-    Route::post('/carrito/decrementarCantidad/{carrito}', [CarritoController::class, 'decrementarCantidad'])->name('decrementarCantidad');
-    Route::post('/carrito/incrementarCantidad/{carrito}', [CarritoController::class, 'incrementarCantidad'])->name('incrementarCantidad');
-    
+
     // Rutas de citas del usuario
     Route::get('/citas', [CitaController::class, 'index']);
     Route::get('/citas/{id}/create', [CitaController::class, 'create']);
@@ -134,6 +128,17 @@ Route::middleware('auth', 'verified', 'comprobarRol')->group(function () {
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     });
 });
+
+// Añadir al carrito es accesible sin estar logueado - LocalStorage
+Route::get('/carrito', [CarritoController::class, 'index'])->name('carrito');
+Route::post('/carrito/clear', [CarritoController::class, 'clear'])->name('clear');
+Route::post('/carrito/completar-compra', [CarritoController::class, 'completarCompra'])->name('completarCompra');
+Route::post('/carrito/decrementarCantidad/{carrito}', [CarritoController::class, 'decrementarCantidad'])->name('decrementarCantidad');
+Route::post('/carrito/incrementarCantidad/{carrito}', [CarritoController::class, 'incrementarCantidad'])->name('incrementarCantidad');
+Route::post('/carrito/add/{producto}', [CarritoController::class, 'add'])->name('add');
+Route::middleware('auth')->post('/carrito/migrar', [CarritoController::class, 'migrar'])->name('carrito.migrar');
+
+
 
 require __DIR__ . '/auth.php';
 

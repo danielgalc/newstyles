@@ -32,22 +32,18 @@ class AuthenticatedSessionController extends Controller
     {
         $request->authenticate();
 
-        if ($request->user()->hasVerifiedEmail()) {
-            auth()->login($request->user());
-
-            if (auth()->user()->rol === 'admin') {
-                return redirect('/admin')->with('reload', true);
-            } else if (auth()->user()->rol === 'peluquero') {
-                return redirect('/peluquero')->with('reload', true);
-            }
-            return redirect('/');
-        }
-
         $request->session()->regenerate();
 
-        return redirect()->route('verification.notice');
-    }
+        $user = Auth::user();
 
+        if ($user->rol === 'admin') {
+            return redirect('/admin');
+        } elseif ($user->rol === 'peluquero') {
+            return redirect('/peluquero');
+        } else {
+            return redirect('/');
+        }
+    }
     /**
      * Destroy an authenticated session.
      */
@@ -62,3 +58,4 @@ class AuthenticatedSessionController extends Controller
         return redirect('/');
     }
 }
+

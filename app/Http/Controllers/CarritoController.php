@@ -7,6 +7,7 @@ use App\Models\Pedido;
 use App\Models\Producto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class CarritoController extends Controller
 {
@@ -17,6 +18,34 @@ class CarritoController extends Controller
         return view('carrito.index', [
             'carritos' => $carritos->where('user_id', Auth::user()->id)->sortBy('producto.nombre')
         ]);
+    }
+
+    public function migrar(Request $request)
+    {
+        $user = Auth::user();
+        $productos = $request->input('productos', []);
+
+        Log::info('Productos recibidos para migrar:', $productos);
+
+        if (!empty($productos)) {
+            foreach ($productos as $item) {
+                $carritoExistente = Carrito::where('user_id', $user->id)
+                    ->where('producto_id', $item['producto_id'])
+                    ->first();
+                if ($carritoExistente) {
+                    $carritoExistente->cantidad += $item['cantidad'];
+                    $carritoExistente->save();
+                } else {
+                    Carrito::create([
+                        'user_id' => $user->id,
+                        'producto_id' => $item['producto_id'],
+                        'cantidad' => $item['cantidad'],
+                    ]);
+                }
+            }
+        }
+
+        return response()->json(['message' => 'Carrito migrado con éxito.']);
     }
 
     public function completarCompra()
@@ -50,11 +79,11 @@ class CarritoController extends Controller
     public function add(Request $request, Producto $producto)
     {
         $cantidad = $request->input('cantidad', 1); // Obtener la cantidad de la solicitud, por defecto 1
-    
+
         $carrito = Carrito::where('producto_id', $producto->id)
-                          ->where('user_id', auth()->user()->id)
-                          ->first();
-    
+            ->where('user_id', auth()->user()->id)
+            ->first();
+
         if (empty($carrito)) {
             $carrito = new Carrito();
             $carrito->user_id = Auth::user()->id;
@@ -63,18 +92,18 @@ class CarritoController extends Controller
         } else {
             $carrito->cantidad += $cantidad;
         }
-    
+
         $producto->stock -= $cantidad;
         $producto->save();
-    
+
         $carrito->save();
-    
+
         return response()->json([
             'message' => 'Producto añadido al carrito.',
             'producto' => $producto
         ]);
     }
-    
+
 
     public function clear()
     {

@@ -1,20 +1,36 @@
+// ProductoCard.jsx
 import React, { useState } from 'react';
 import axios from 'axios';
 
-export default function ProductoCard({ producto, onProductoAdded }) {
+export default function ProductoCard({ producto, auth, onProductoAdded }) {
     const [successMessage, setSuccessMessage] = useState('');
-    const [cantidad, setCantidad] = useState(1); // Estado para la cantidad
+    const [cantidad, setCantidad] = useState(1);
 
     const handleAddToCart = async () => {
-        try {
-            const response = await axios.post(`/carrito/add/${producto.id}`, { cantidad }); // Enviar cantidad
-            if (response.status === 200) {
-                onProductoAdded(response.data.producto); // Producto actualizado
-                setSuccessMessage(`¡Añadido al carrito! (${cantidad} unidad${cantidad > 1 ? 'es' : ''})`);
-                setTimeout(() => setSuccessMessage(''), 4000); // Clear message after 4 seconds
+        if (auth.user) {
+            // Usuario autenticado
+            try {
+                const response = await axios.post(`/carrito/add/${producto.id}`, { cantidad });
+                if (response.status === 200) {
+                    onProductoAdded(response.data.producto);
+                    setSuccessMessage(`¡Añadido al carrito! (${cantidad} unidad${cantidad > 1 ? 'es' : ''})`);
+                    setTimeout(() => setSuccessMessage(''), 4000);
+                }
+            } catch (error) {
+                console.error('Error adding product to cart:', error);
             }
-        } catch (error) {
-            console.error('Error adding product to cart:', error);
+        } else {
+            // Usuario no autenticado
+            const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+            const productoEnCarrito = carrito.find(item => item.id === producto.id);
+            if (productoEnCarrito) {
+                productoEnCarrito.cantidad += cantidad;
+            } else {
+                carrito.push({ id: producto.id, cantidad });
+            }
+            localStorage.setItem('carrito', JSON.stringify(carrito));
+            setSuccessMessage(`¡Añadido al carrito! (${cantidad} unidad${cantidad > 1 ? 'es' : ''})`);
+            setTimeout(() => setSuccessMessage(''), 4000);
         }
     };
 

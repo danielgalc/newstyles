@@ -6,6 +6,7 @@ import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import { Head, Link, useForm } from '@inertiajs/react';
+import axios from 'axios';
 
 export default function Login({ status, canResetPassword }) {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -14,7 +15,7 @@ export default function Login({ status, canResetPassword }) {
         remember: false,
     });
 
-    const [localErrors, setLocalErrors] = useState({});
+    const [localErrors, setLocalErrors] = useState({}); // Definir el estado para localErrors
 
     useEffect(() => {
         return () => {
@@ -22,18 +23,53 @@ export default function Login({ status, canResetPassword }) {
         };
     }, []);
 
-    const submit = (e) => {
+    const submit = async (e) => {
         e.preventDefault();
+
+        // Recuperar carrito del localStorage
+        const carritoLocalStorage = JSON.parse(localStorage.getItem('carrito')) || [];
+        console.log('Carrito recuperado del localStorage:', carritoLocalStorage);
+
+        // Crear instancias de Carrito y guardarlas en el estado
+        const productos = carritoLocalStorage.map(item => ({
+            producto_id: item.id,
+            cantidad: item.cantidad || 1,
+        }));
+        console.log('Productos instanciados:', productos);
+
         if (validateForm()) {
-            post(route('login'), {
-                onSuccess: (page) => {
-                    if (page.props.user.rol === 'peluquero') {
-                        window.location.href = route('peluquero.citas');  // Redirección completa
+            const formData = {
+                ...data,
+            };
+            console.log('Datos a enviar:', formData);
+
+            try {
+                const response = await axios.post(route('login'), formData);
+                console.log('Usuario autenticado, migrando carrito...');
+
+                await axios.post(route('carrito.migrar'), { productos });
+
+                console.log('Carrito migrado, limpiando localStorage');
+                localStorage.removeItem('carrito');
+
+                // Redirigir al usuario basado en el rol
+                const user = response.data.user;
+                if (user && user.rol) {
+                    console.log('Usuario y rol encontrados:', user.rol);
+                    if (user.rol === 'peluquero') {
+                        window.location.href = route('peluquero.citas');
+                    } else if (user.rol === 'admin') {
+                        window.location.href = route('admin');
                     } else {
-                        window.location.href = route('dashboard');  // Redirección completa
+                        window.location.href = route('landing');
                     }
+                } else {
+                    console.error('El usuario no está definido o no tiene un rol válido');
+                    window.location.href = route('landing'); // Redirigir a una página predeterminada si no se encuentra el rol
                 }
-            });
+            } catch (error) {
+                console.error("Error en el inicio de sesión o migración del carrito:", error);
+            }
         }
     };
 
@@ -55,21 +91,16 @@ export default function Login({ status, canResetPassword }) {
     return (
         <div>
             <Head title="Log in" />
-            <div className="relative min-h-screen flex items-center justify-center bg-gray-800 pt-20">                
-                {/* Logo del sitio web */}
+            <div className="relative min-h-screen flex items-center justify-center bg-gray-800 pt-20">
                 <div className="absolute top-8 mt-10">
                     <Link href="/">
                         <img src="/images/Logo1Transparente.png" alt="Logo 1" className="w-44 h-30 mx-auto drop-shadow-md" />
                     </Link>
                 </div>
-
-                {/* Div del Login con efecto Glassmorfismo */}
                 <div className="relative backdrop-filter backdrop-blur-lg bg-white bg-opacity-10 border border-white border-opacity-20 shadow-lg rounded-lg px-8 pt-8 pb-2 mt-10 w-full max-w-md">
                     <h2 className="text-3xl text-white text-center mb-4 font-righteous">Login</h2>
                     <p className="text-white font-semibold text-center mb-8">¡Bienvenido a <span className='text-teal-500 font-semibold'>NewStyles</span>!</p>
-                    
                     {status && <div className="mb-4 text-center font-medium text-sm text-green-600">Tu contraseña ha sido reestablecida.</div>}
-
                     <form onSubmit={submit}>
                         <div className="mb-2">
                             <InputLabel htmlFor="email" value="Email" className="text-white" />
@@ -114,7 +145,6 @@ export default function Login({ status, canResetPassword }) {
                                 />
                                 <span className="ml-2 text-sm">Recordarme</span>
                             </label>
-
                             {canResetPassword && (
                                 <Link
                                     href={route('password.request')}

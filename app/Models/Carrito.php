@@ -10,6 +10,12 @@ class Carrito extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'user_id',
+        'producto_id',
+        'cantidad',
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

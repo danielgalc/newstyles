@@ -3,7 +3,7 @@ import ProductoCard from './ProductoCard';
 import Paginacion from '@/Components/Paginacion';
 import axios from 'axios';
 
-export default function Grid({ productos, setFilteredProductos, searchTerm, sortBy, selectedCategory, handleProductoAdded }) {
+export default function Grid({ productos, setFilteredProductos, searchTerm, sortBy, selectedCategory, handleProductoAdded, auth }) {
     const handlePageChange = async (page) => {
         try {
             const response = await axios.get(route('productos.productos'), {
@@ -38,7 +38,7 @@ export default function Grid({ productos, setFilteredProductos, searchTerm, sort
         <div className='p-8'>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 {productos.data && productos.data.map((producto) =>
-                    <ProductoCard key={producto.id} producto={producto} onProductoAdded={handleProductoUpdated} />
+                    <ProductoCard key={producto.id} producto={producto} auth={auth} onProductoAdded={handleProductoUpdated} />
                 )}
             </div>
             {productos && productos.data.length > 0 && (
