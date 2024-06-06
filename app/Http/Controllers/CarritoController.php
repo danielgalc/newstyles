@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Carrito;
+use App\Models\CarritoItem;
 use App\Models\Pedido;
 use App\Models\Producto;
 use Illuminate\Http\Request;
@@ -13,11 +14,11 @@ class CarritoController extends Controller
 {
     public function index()
     {
-        $carritos = Carrito::all();
-
-        return view('carrito.index', [
-            'carritos' => $carritos->where('user_id', Auth::user()->id)->sortBy('producto.nombre')
-        ]);
+        $carrito = Carrito::where('user_id', Auth::user()->id)->first();
+    
+        $carritos = $carrito ? $carrito->items : collect();
+    
+        return view('carrito.index', compact('carritos'));
     }
 
     public function migrar(Request $request)
@@ -29,36 +30,37 @@ class CarritoController extends Controller
             Log::info('Productos recibidos para migrar:', $productos);
 
             if (!empty($productos)) {
+                $carrito = Carrito::firstOrCreate(['user_id' => $user->id]);
+
                 foreach ($productos as $item) {
-                    $carritoExistente = Carrito::where('user_id', $user->id)
+                    $carritoItem = CarritoItem::where('carrito_id', $carrito->id)
                         ->where('producto_id', $item['producto_id'])
                         ->first();
-                    if ($carritoExistente) {
-                        $carritoExistente->cantidad += $item['cantidad'];
-                        $carritoExistente->save();
+                    if ($carritoItem) {
+                        $carritoItem->cantidad += $item['cantidad'];
+                        $carritoItem->save();
                     } else {
-                        Carrito::create([
-                            'user_id' => $user->id,
+                        CarritoItem::create([
+                            'carrito_id' => $carrito->id,
                             'producto_id' => $item['producto_id'],
                             'cantidad' => $item['cantidad'],
                         ]);
                     }
                 }
             }
-    
+
             return response()->json(['message' => 'Carrito migrado con éxito.']);
         } else {
             return redirect('/');
         }
-
     }
 
     public function completarCompra()
     {
         $user = Auth::user();
-        $carritos = Carrito::where('user_id', $user->id)->get();
+        $carrito = Carrito::where('user_id', $user->id)->first();
 
-        if ($carritos->isEmpty()) {
+        if (!$carrito || $carrito->items->isEmpty()) {
             return redirect()->route('carrito')->with('error', '¡Tu carrito está vacío!');
         }
 
@@ -67,15 +69,15 @@ class CarritoController extends Controller
         $pedido->dni = $user->dni;
         $pedido->telefono = $user->telefono;
         $pedido->direccion = $user->direccion;
-        $pedido->precio_total = $carritos->sum(function ($carrito) {
-            return $carrito->producto->precio * $carrito->cantidad;
+        $pedido->precio_total = $carrito->items->sum(function ($item) {
+            return $item->producto->precio * $item->cantidad;
         });
         $pedido->fecha_compra = now();
         $pedido->save();
 
-        foreach ($carritos as $carrito) {
-            $pedido->productos()->attach($carrito->producto_id, ['cantidad' => $carrito->cantidad]);
-            $carrito->delete();
+        foreach ($carrito->items as $item) {
+            $pedido->productos()->attach($item->producto_id, ['cantidad' => $item->cantidad]);
+            $item->delete();
         }
 
         return redirect()->route('carrito')->with('success', 'Compra completada con éxito.');
@@ -85,23 +87,25 @@ class CarritoController extends Controller
     {
         $cantidad = $request->input('cantidad', 1);
 
-        $carrito = Carrito::where('producto_id', $producto->id)
-            ->where('user_id', auth()->user()->id)
+        $carrito = Carrito::firstOrCreate(['user_id' => Auth::user()->id]);
+
+        $carritoItem = CarritoItem::where('carrito_id', $carrito->id)
+            ->where('producto_id', $producto->id)
             ->first();
 
-        if (empty($carrito)) {
-            $carrito = new Carrito();
-            $carrito->user_id = Auth::user()->id;
-            $carrito->producto_id = $producto->id;
-            $carrito->cantidad = $cantidad;
+        if (empty($carritoItem)) {
+            $carritoItem = new CarritoItem();
+            $carritoItem->carrito_id = $carrito->id;
+            $carritoItem->producto_id = $producto->id;
+            $carritoItem->cantidad = $cantidad;
         } else {
-            $carrito->cantidad += $cantidad;
+            $carritoItem->cantidad += $cantidad;
         }
 
         $producto->stock -= $cantidad;
         $producto->save();
 
-        $carrito->save();
+        $carritoItem->save();
 
         return response()->json([
             'message' => 'Producto añadido al carrito.',
@@ -109,48 +113,47 @@ class CarritoController extends Controller
         ]);
     }
 
-
     public function clear()
     {
-        $carritos = Carrito::where('user_id', auth()->user()->id)->get();
+        $carrito = Carrito::where('user_id', auth()->user()->id)->first();
 
-        foreach ($carritos as $carrito) {
-            $producto = $carrito->producto;
-            $producto->stock += $carrito->cantidad;
-            $producto->save();
+        if ($carrito) {
+            foreach ($carrito->items as $item) {
+                $producto = $item->producto;
+                $producto->stock += $item->cantidad;
+                $producto->save();
+                $item->delete();
+            }
         }
 
-        Carrito::where('user_id', auth()->user()->id)->delete();
-
-        return redirect()->route('carrito')->with('success', 'Carrito vaciado con exito.');
+        return redirect()->route('carrito')->with('success', 'Carrito vaciado con éxito.');
     }
 
-
-    public function decrementarCantidad(Carrito $carrito)
+    public function decrementarCantidad(CarritoItem $carritoItem)
     {
-        if ($carrito->cantidad === 1) {
-            $carrito->producto->stock += 1;
-            $carrito->producto->save();
-            $carrito->delete();
+        if ($carritoItem->cantidad === 1) {
+            $carritoItem->producto->stock += 1;
+            $carritoItem->producto->save();
+            $carritoItem->delete();
 
             return redirect()->route('carrito')->with('success', 'Se eliminó el producto del carrito.');
         }
 
-        $carrito->cantidad -= 1;
-        $carrito->producto->stock += 1;
-        $carrito->producto->save();
-        $carrito->save();
+        $carritoItem->cantidad -= 1;
+        $carritoItem->producto->stock += 1;
+        $carritoItem->producto->save();
+        $carritoItem->save();
 
         return redirect()->route('carrito')->with('success', 'Se redujo la cantidad del producto en el carrito.');
     }
 
-    public function incrementarCantidad(Carrito $carrito)
+    public function incrementarCantidad(CarritoItem $carritoItem)
     {
-        if ($carrito->producto->stock > 0) {
-            $carrito->cantidad += 1;
-            $carrito->producto->stock -= 1;
-            $carrito->producto->save();
-            $carrito->save();
+        if ($carritoItem->producto->stock > 0) {
+            $carritoItem->cantidad += 1;
+            $carritoItem->producto->stock -= 1;
+            $carritoItem->producto->save();
+            $carritoItem->save();
 
             return redirect()->route('carrito')->with('success', 'Se incrementó la cantidad del producto en el carrito.');
         } else {

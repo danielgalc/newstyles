@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Carrito extends Model
 {
@@ -12,18 +11,15 @@ class Carrito extends Model
 
     protected $fillable = [
         'user_id',
-        'producto_id',
-        'cantidad',
     ];
 
-    public function user(): BelongsTo
+    public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    public function producto(): BelongsTo
+    public function items()
     {
-        return $this->belongsTo(Producto::class);
+        return $this->hasMany(CarritoItem::class);
     }
-
 }
