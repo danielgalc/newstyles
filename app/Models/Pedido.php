@@ -38,7 +38,7 @@ class Pedido extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class)->withTrashed(); // Para mantener la relación con usuarios eliminados
+        return $this->belongsTo(User::class); // Para mantener la relación con usuarios eliminados
     }
 
     public function productos()

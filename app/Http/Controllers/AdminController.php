@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\BloqueoPeluquero;
 use App\Models\User;
 use App\Models\Cita;
+use App\Models\Pedido;
 use App\Models\Servicio;
 use App\Models\Producto;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class AdminController extends Controller
@@ -50,40 +52,40 @@ class AdminController extends Controller
         $estado = $request->input('estado'); // Obtener el filtro de estado desde la solicitud
         $buscar = $request->input('buscar'); // Obtener el término de búsqueda desde la solicitud
         $peluqueroId = $request->input('peluquero'); // Obtener el filtro de peluquero desde la solicitud
-    
+
         $query = Cita::query();
-    
+
         // Aplicar búsqueda si está presente
         if ($buscar) {
-            $query->whereHas('user', function($q) use ($buscar) {
+            $query->whereHas('user', function ($q) use ($buscar) {
                 $q->where('name', 'LIKE', "%{$buscar}%")
-                  ->orWhere('email', 'LIKE', "%{$buscar}%")
-                  ->orWhere('id', 'LIKE', "%{$buscar}%")
-                  ->orWhere('dni', 'LIKE', "%{$buscar}%");
+                    ->orWhere('email', 'LIKE', "%{$buscar}%")
+                    ->orWhere('id', 'LIKE', "%{$buscar}%")
+                    ->orWhere('dni', 'LIKE', "%{$buscar}%");
             });
         }
-    
+
         // Aplicar filtro de estado si está presente
         if ($estado) {
             $query->where('estado', $estado);
         }
-    
+
         // Aplicar filtro de peluquero si está presente
         if ($peluqueroId) {
             $query->where('peluquero_id', $peluqueroId);
         }
-    
+
         $citas = $query->orderBy('fecha', 'desc')->paginate(5);
         $servicios = Servicio::all();
         $users = User::where('rol', 'peluquero')->get();
-    
+
         if ($request->ajax()) {
             return view('admin.citas.partials.citas_list', compact('citas'))->render();
         }
-    
+
         return view('admin.citas.gestionar_citas', compact('citas', 'servicios', 'users', 'estado', 'buscar', 'peluqueroId'));
     }
-    
+
 
     public function listaServicios(Request $request)
     {
@@ -118,14 +120,14 @@ class AdminController extends Controller
     {
         $categoria = $request->input('categoria'); // Obtener el filtro de categoría desde la solicitud
         $buscar = $request->input('buscar'); // Obtener el término de búsqueda desde la solicitud
-    
+
         $query = Producto::query();
-    
+
         // Aplicar filtro de categoría si está presente
         if ($categoria) {
             $query->where('categoria', $categoria);
         }
-    
+
         // Aplicar búsqueda si está presente
         if ($buscar) {
             $query->where(function ($q) use ($buscar) {
@@ -133,18 +135,18 @@ class AdminController extends Controller
                     ->orWhere('descripcion', 'ILIKE', "%{$buscar}%");
             });
         }
-    
+
         $productos = $query->orderBy('updated_at', 'desc')->paginate(8);
-    
+
         $categorias = Producto::select('categoria')->distinct()->whereNotNull('categoria')->pluck('categoria');
-    
+
         if ($request->ajax()) {
             return view('admin.productos.partials.productos_list', compact('productos'))->render();
         }
-    
+
         return view('admin.productos.lista_productos', compact('productos', 'categoria', 'buscar', 'categorias'));
     }
-    
+
 
     public function gestionarBloqueos(Request $request)
     {
@@ -157,6 +159,52 @@ class AdminController extends Controller
 
         return view('admin.bloqueos.bloqueos', compact('bloqueos', 'users'));
     }
+
+    public function gestionarPedidos(Request $request)
+    {
+        $estado = $request->input('estado'); // Obtener el filtro de estado desde la solicitud
+        $buscar = $request->input('buscar'); // Obtener el término de búsqueda desde la solicitud
+    
+        $query = Pedido::query();
+    
+        // Aplicar búsqueda si está presente
+        if ($buscar) {
+            $query->whereHas('user', function($q) use ($buscar) {
+                $q->where('name', 'LIKE', "%{$buscar}%")
+                  ->orWhere('email', 'LIKE', "%{$buscar}%")
+                  ->orWhere('id', 'LIKE', "%{$buscar}%")
+                  ->orWhere('dni', 'LIKE', "%{$buscar}%");
+            })->orWhere('transaccion', 'LIKE', "%{$buscar}%");
+        }
+    
+        // Aplicar filtro de estado si está presente
+        if ($estado) {
+            $query->where('estado', $estado);
+        }
+    
+        $pedidos = $query->orderBy('fecha_compra', 'desc')->paginate(8);
+        $users = User::all();
+    
+        // Obtener los productos asociados a cada pedido
+        foreach ($pedidos as $pedido) {
+            $pedido->productos = DB::table('pedido_producto')
+                ->join('productos', 'pedido_producto.producto_id', '=', 'productos.id')
+                ->where('pedido_producto.pedido_id', $pedido->id)
+                ->select('productos.nombre', 'pedido_producto.cantidad')
+                ->get()
+                ->map(function($producto) {
+                    return (array) $producto;
+                })
+                ->toArray();
+        }
+    
+        if ($request->ajax()) {
+            return view('admin.pedidos.partials.pedidos_list', compact('pedidos'))->render();
+        }
+    
+        return view('admin.pedidos.gestionar_pedidos', compact('pedidos', 'estado', 'buscar', 'users'));
+    }
+
 
     public function mostrarDatos()
     {

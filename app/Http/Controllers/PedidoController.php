@@ -57,17 +57,17 @@ class PedidoController extends Controller
     {
         $user = Auth::user();
 
-        // Obtener los pedidos en orden de actualidad
+        // Obtener los pedidos paginados en orden de actualidad
         $pedidos = Pedido::where('user_id', $user->id)
             ->orderBy('fecha_compra', 'desc')
-            ->get();
+            ->paginate(10); // Pagina 10 pedidos por página
 
-        $pedidoReciente = $pedidos->first();
-        $pedidosAnteriores = $pedidos->skip(1); // Omitir el más reciente para mostrar los anteriores por separado
+        // Obtener el pedido más reciente solo si estamos en la primera página
+        $pedidoReciente = $pedidos->currentPage() == 1 ? $pedidos->first() : null;
 
         return view('pedidos.historial_pedidos', [
             'pedidoReciente' => $pedidoReciente,
-            'pedidosAnteriores' => $pedidosAnteriores
+            'pedidos' => $pedidos
         ]);
     }
 
@@ -145,28 +145,13 @@ class PedidoController extends Controller
         $pedido = Pedido::withTrashed()->findOrFail($id);
 
         $request->validate([
-            'productos' => 'required|string',
-            'precio_total' => 'required|numeric',
-            'fecha_compra' => 'required|date',
-            'user_id' => 'required|exists:users,id',
-            'dni' => 'required|string|size:9|unique:pedidos,dni,' . $pedido->id,
-            'telefono' => 'required|string|size:9|unique:pedidos,telefono,' . $pedido->id,
-            'direccion' => 'required|string',
-            'transaccion' => 'nullable|string|unique:pedidos,transaccion,' . $pedido->id, // Validación para transacción
+            'estado' => 'required|string|in:pendiente,aceptado,completado,cancelado',
         ]);
 
-        $pedido->productos = $request->productos;
-        $pedido->precio_total = $request->precio_total;
-        $pedido->fecha_compra = $request->fecha_compra;
-        $pedido->user_id = $request->user_id;
-        $pedido->dni = $request->dni;
-        $pedido->telefono = $request->telefono;
-        $pedido->direccion = $request->direccion;
         $pedido->estado = $request->estado;
-        $pedido->transaccion = $request->transaccion;
         $pedido->save();
 
-        return redirect()->route('pedidos.index')->with('success', 'Pedido actualizado con éxito.');
+        return redirect()->route('admin.pedidos')->with('success', 'Pedido actualizado con éxito.');
     }
 
     // Eliminar un pedido específico (soft delete)
@@ -175,7 +160,7 @@ class PedidoController extends Controller
         $pedido = Pedido::findOrFail($id);
         $pedido->delete();
 
-        return redirect()->route('pedidos.index')
+        return redirect()->route('admin.pedidos')
             ->with('success', 'Pedido eliminado con éxito.');
     }
 

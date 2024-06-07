@@ -49,15 +49,8 @@ Route::middleware(['auth', 'verified', 'comprobarRol', 'comprobarRolPeluquero'])
     Route::put('/citas/{id}/cancelar', [CitaController::class, 'cancelar'])->name('citas.cancelar');
 
     // Rutas de pedidos
-    Route::get('/pedidos', [PedidoController::class, 'index'])->name('pedidos.index');
     Route::get('/pedidos/create', [PedidoController::class, 'create'])->name('pedidos.create');
     Route::post('/pedidos', [PedidoController::class, 'store'])->name('pedidos.store');
-    Route::get('/pedidos/{id}', [PedidoController::class, 'show'])->name('pedidos.show');
-    Route::get('/pedidos/{id}/edit', [PedidoController::class, 'edit'])->name('pedidos.edit');
-    Route::put('/pedidos/{id}', [PedidoController::class, 'update'])->name('pedidos.update');
-    Route::delete('/pedidos/{id}', [PedidoController::class, 'destroy'])->name('pedidos.destroy');
-    Route::put('/pedidos/{id}/restore', [PedidoController::class, 'restore'])->name('pedidos.restore');
-    Route::delete('/pedidos/{id}/forceDelete', [PedidoController::class, 'forceDelete'])->name('pedidos.forceDelete');
     Route::get('/historial_pedidos', [PedidoController::class, 'historial'])->name('historial_pedidos');
     Route::get('/pedidos/{id}', [PedidoController::class, 'show']);
     Route::post('/pedidos/cancelar/{pedido}', [PedidoController::class, 'cancelarPedido']);
@@ -97,6 +90,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/servicios', [AdminController::class, 'listaServicios'])->name('admin.servicios');
     Route::get('/admin/productos', [AdminController::class, 'listaProductos'])->name('admin.productos');
     Route::get('/admin/bloqueos', [AdminController::class, 'gestionarBloqueos'])->name('admin.bloqueos');
+    Route::get('/admin/pedidos', [AdminController::class, 'gestionarPedidos'])->name('admin.pedidos');
 
     // Rutas de CRUD de usuarios
     Route::post('/usuarios', [UserController::class, 'store'])->name('users.store');
@@ -132,6 +126,12 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::put('/admin/bloqueos/{id}', [BloqueoPeluqueroController::class, 'update'])->name('bloqueos.update');
     Route::delete('/admin/bloqueos/{id}', [BloqueoPeluqueroController::class, 'destroy'])->name('bloqueos.destroy');
     Route::get('admin/bloqueos/horasBloqueadas', [BloqueoPeluqueroController::class, 'horasBloqueadas'])->name('bloqueos.horas_bloqueadas');
+
+    // Rutas de pedidos - Admin
+    Route::put('/pedidos/{id}', [PedidoController::class, 'update'])->name('pedidos.update');
+    Route::delete('/pedidos/{id}', [PedidoController::class, 'destroy'])->name('pedidos.destroy');
+
+
 });
 
 // Ruta mailing
