@@ -17,7 +17,7 @@ class CarritoController extends Controller
         $carrito = Carrito::where('user_id', Auth::user()->id)->first();
 
         $carritos = $carrito ? $carrito->items : collect();
-        $precioTotal = $carritos->sum(function($item) {
+        $precioTotal = $carritos->sum(function ($item) {
             return $item->producto->precio * $item->cantidad;
         });
 
@@ -62,11 +62,11 @@ class CarritoController extends Controller
     {
         $user = Auth::user();
         $carrito = Carrito::where('user_id', $user->id)->first();
-    
+
         if (!$carrito || $carrito->items->isEmpty()) {
             return response()->json(['error' => '¡Tu carrito está vacío!'], 400);
         }
-    
+
         $pedido = new Pedido();
         $pedido->user_id = $user->id;
         $pedido->dni = $user->dni;
@@ -76,19 +76,28 @@ class CarritoController extends Controller
             return $item->producto->precio * $item->cantidad;
         });
         $pedido->fecha_compra = now();
+        $pedido->transaccion = Pedido::generarTransaccion(); // Generar el valor de transacción
         $pedido->save();
-    
+
         foreach ($carrito->items as $item) {
             $pedido->productos()->attach($item->producto_id, ['cantidad' => $item->cantidad]);
             $item->delete(); // Eliminar el item del carrito sin reponer el stock
         }
-    
+
         return response()->json(['success' => 'Compra completada con éxito.']);
     }
-    
+
+
     public function add(Request $request, Producto $producto)
     {
         $cantidad = $request->input('cantidad', 1);
+
+        // Verificar si hay suficiente stock
+        if ($producto->stock < $cantidad) {
+            return response()->json([
+                'error' => 'No hay suficiente stock disponible para agregar este producto.'
+            ], 400);
+        }
 
         $carrito = Carrito::firstOrCreate(['user_id' => Auth::user()->id]);
 
@@ -102,6 +111,12 @@ class CarritoController extends Controller
             $carritoItem->producto_id = $producto->id;
             $carritoItem->cantidad = $cantidad;
         } else {
+            // Verificar si hay suficiente stock para aumentar la cantidad
+            if ($producto->stock < $carritoItem->cantidad + $cantidad) {
+                return response()->json([
+                    'error' => 'No hay suficiente stock disponible para agregar esta cantidad.'
+                ], 400);
+            }
             $carritoItem->cantidad += $cantidad;
         }
 
@@ -116,18 +131,26 @@ class CarritoController extends Controller
         ]);
     }
 
+
     public function clear()
     {
         $carrito = Carrito::where('user_id', auth()->user()->id)->first();
 
         if ($carrito) {
             foreach ($carrito->items as $item) {
-                $item->delete(); // Eliminar el item del carrito sin reponer el stock
+                // Reponer el stock del producto
+                $producto = $item->producto;
+                $producto->stock += $item->cantidad;
+                $producto->save();
+
+                // Eliminar el item del carrito
+                $item->delete();
             }
         }
 
         return redirect()->route('carrito')->with('success', 'Carrito vaciado con éxito.');
     }
+
 
     public function decrementarCantidad(Request $request, $carritoItemId)
     {
@@ -155,6 +178,7 @@ class CarritoController extends Controller
         $carritoItem = CarritoItem::findOrFail($carritoItemId);
         $producto = $carritoItem->producto;
 
+        // Verificar si hay suficiente stock
         if ($producto->stock > 0) {
             $carritoItem->cantidad += 1;
             $producto->stock -= 1;

@@ -33,7 +33,7 @@ export default function LoggedLogos() {
                 {isOpen && (
                     <Menu
                         as="div"
-                        className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md overflow-hidden z-22"
+                        className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md overflow-hidden z-10"
                     >
                         <Menu.Item>
                             {({ active }) => (
@@ -59,12 +59,13 @@ export default function LoggedLogos() {
                         </Menu.Item>
                         <Menu.Item>
                             {({ active }) => (
-                                <button
+                                <a
                                     className={`${active ? 'bg-gray-100' : ''
                                         } block px-4 py-2 text-sm text-gray-700 w-full text-left`}
+                                    href='/historial_pedidos'
                                 >
                                     Historial de pedidos
-                                </button>
+                                </a>
                             )}
                         </Menu.Item>
                         <Menu.Item>

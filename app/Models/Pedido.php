@@ -12,13 +12,25 @@ class Pedido extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
+        'user_id',
         'productos',
         'precio_total',
-        'user_id',
+        'fecha_compra',
         'dni',
         'telefono',
         'direccion',
+        'estado',
+        'transaccion',
     ];
+
+    // Generar un valor de transacción único
+    public static function generarTransaccion()
+    {
+        $ultimoPedido = self::orderBy('id', 'desc')->first();
+        $ultimoId = $ultimoPedido ? $ultimoPedido->id : 0;
+        $nuevoId = $ultimoId + 1;
+        return 'NWS#' . str_pad($nuevoId, 6, '0', STR_PAD_LEFT);
+    }
 
     protected $casts = [
         'productos' => 'array', // Para que Laravel convierta el JSON a un array automáticamente
@@ -29,8 +41,9 @@ class Pedido extends Model
         return $this->belongsTo(User::class)->withTrashed(); // Para mantener la relación con usuarios eliminados
     }
 
-    public function productos(): BelongsToMany
+    public function productos()
     {
-        return $this->belongsToMany(Producto::class)->withPivot('cantidad');
+        return $this->belongsToMany(Producto::class, 'pedido_producto')
+                    ->withPivot('cantidad'); // assuming 'cantidad' is a column in the pivot table
     }
 }

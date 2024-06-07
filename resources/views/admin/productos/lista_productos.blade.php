@@ -3,7 +3,7 @@
 @section('title', 'Lista de Productos')
 
 @php
-use Illuminate\Support\Str;
+    use Illuminate\Support\Str;
 @endphp
 
 @section('content')
@@ -22,8 +22,9 @@ use Illuminate\Support\Str;
         <form method="GET" action="{{ route('admin.productos') }}" id="filter-form" class="flex items-center">
             <select class="rounded mr-2" name="categoria" id="filtro-productos" onchange="document.getElementById('filter-form').submit();">
                 <option value="" {{ request('categoria') == '' ? 'selected' : '' }}>Mostrar todo</option>
-                <option value="categoria1" {{ request('categoria') == 'categoria1' ? 'selected' : '' }}>Categoría 1</option>
-                <option value="categoria2" {{ request('categoria') == 'categoria2' ? 'selected' : '' }}>Categoría 2</option>
+                @foreach($categorias as $cat)
+                    <option value="{{ $cat }}" {{ request('categoria') == $cat ? 'selected' : '' }}>{{ $cat }}</option>
+                @endforeach
             </select>
             <input type="text" name="buscar" placeholder="Buscar productos..." class="rounded border-gray-300 mr-2" value="{{ request('buscar') }}">
             <button type="submit" class="ml-2 text-white bg-teal-500 hover:bg-teal-800 focus:ring-4 focus:outline-none focus:ring-teal-300 font-medium rounded-lg text-sm px-4 h-10 text-center dark:bg-teal-600 dark:hover:bg-teal-700 dark:focus:ring-teal-800">Buscar</button>
@@ -82,8 +83,9 @@ use Illuminate\Support\Str;
                     <div class="col-span-2">
                         <label for="categoria_{{ $producto->id }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Categoría</label>
                         <select name="categoria" id="categoria_{{ $producto->id }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required>
-                            <option value="categoria1" {{ $producto->categoria == 'categoria1' ? 'selected' : '' }}>Categoría 1</option>
-                            <option value="categoria2" {{ $producto->categoria == 'categoria2' ? 'selected' : '' }}>Categoría 2</option>
+                            @foreach($categorias as $cat)
+                                <option value="{{ $cat }}" {{ $producto->categoria == $cat ? 'selected' : '' }}>{{ $cat }}</option>
+                            @endforeach
                         </select>
                     </div>
                 </div>
@@ -183,8 +185,9 @@ use Illuminate\Support\Str;
                     <div class="col-span-2">
                         <label for="categoriaCrear" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Categoría</label>
                         <select name="categoria" id="categoriaCrear" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required>
-                            <option value="categoria1">Categoría 1</option>
-                            <option value="categoria2">Categoría 2</option>
+                            @foreach($categorias as $cat)
+                                <option value="{{ $cat }}">{{ $cat }}</option>
+                            @endforeach
                         </select>
                     </div>
                 </div>
@@ -204,12 +207,12 @@ use Illuminate\Support\Str;
         -webkit-appearance: none;
         margin: 0;
     }
-    
+
     /* Ocultar los controles de número en Firefox */
     .number-input[type=number] {
         -moz-appearance: textfield;
     }
-    </style>
+</style>
 
 <!-- SCRIPT PARA FILTRAR Y PAGINAR POR AJAX -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

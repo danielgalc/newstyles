@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import Zoom from 'react-medium-image-zoom';
+import 'react-medium-image-zoom/dist/styles.css';
 
 export default function ProductoCard({ producto, auth, onProductoAdded }) {
     const [successMessage, setSuccessMessage] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
     const [cantidad, setCantidad] = useState(1);
 
     const handleAddToCart = async () => {
@@ -13,22 +16,39 @@ export default function ProductoCard({ producto, auth, onProductoAdded }) {
                 if (response.status === 200) {
                     onProductoAdded(response.data.producto);
                     setSuccessMessage(`¡Añadido al carrito! (${cantidad} unidad${cantidad > 1 ? 'es' : ''})`);
+                    setErrorMessage('');
                     setTimeout(() => setSuccessMessage(''), 4000);
                 }
             } catch (error) {
-                console.error('Error adding product to cart:', error);
+                if (error.response && error.response.data && error.response.data.error) {
+                    setErrorMessage(error.response.data.error);
+                } else {
+                    setErrorMessage('Error al añadir al carrito.');
+                }
+                setTimeout(() => setErrorMessage(''), 4000);
             }
         } else {
             // Usuario no autenticado
             const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
             const productoEnCarrito = carrito.find(item => item.id === producto.id);
             if (productoEnCarrito) {
+                if (productoEnCarrito.cantidad + cantidad > producto.stock) {
+                    setErrorMessage('No hay suficiente stock disponible para agregar esta cantidad.');
+                    setTimeout(() => setErrorMessage(''), 4000);
+                    return;
+                }
                 productoEnCarrito.cantidad += cantidad;
             } else {
+                if (cantidad > producto.stock) {
+                    setErrorMessage('No hay suficiente stock disponible para agregar esta cantidad.');
+                    setTimeout(() => setErrorMessage(''), 4000);
+                    return;
+                }
                 carrito.push({ id: producto.id, cantidad });
             }
             localStorage.setItem('carrito', JSON.stringify(carrito));
             setSuccessMessage(`¡Añadido al carrito! (${cantidad} unidad${cantidad > 1 ? 'es' : ''})`);
+            setErrorMessage('');
             setTimeout(() => setSuccessMessage(''), 4000);
         }
     };
@@ -39,7 +59,13 @@ export default function ProductoCard({ producto, auth, onProductoAdded }) {
 
     return (
         <div className="bg-white p-4 rounded-md shadow-md transition-all duration-300 ease-in-out transform hover:shadow-lg hover:bg-gray-900 hover:text-white hover:scale-105">
-            <img src={`/images/productos/${producto.imagen}`} alt={producto.nombre} className="w-full h-96 object-cover mb-2 rounded-md object-bottom" />
+            <Zoom>
+                <img
+                    src={`/images/productos/${producto.imagen}`}
+                    alt={producto.nombre}
+                    className="w-full h-96 object-cover mb-2 rounded-md object-bottom"
+                />
+            </Zoom>
             <div className="text-container">
                 <h3 className="text-lg font-semibold">{producto.nombre}</h3>
                 <p className="text-gray-400">{producto.descripcion}</p>
@@ -67,6 +93,11 @@ export default function ProductoCard({ producto, auth, onProductoAdded }) {
                 {successMessage && (
                     <div className="mt-2 w-full text-center text-3xs bg-green-100 text-green-800 p-2 rounded">
                         {successMessage}
+                    </div>
+                )}
+                {errorMessage && (
+                    <div className="mt-2 w-full text-center text-3xs bg-red-100 text-red-800 p-2 rounded">
+                        {errorMessage}
                     </div>
                 )}
             </div>

@@ -118,30 +118,33 @@ class AdminController extends Controller
     {
         $categoria = $request->input('categoria'); // Obtener el filtro de categoría desde la solicitud
         $buscar = $request->input('buscar'); // Obtener el término de búsqueda desde la solicitud
-
+    
         $query = Producto::query();
-
+    
         // Aplicar filtro de categoría si está presente
         if ($categoria) {
             $query->where('categoria', $categoria);
         }
-
+    
         // Aplicar búsqueda si está presente
         if ($buscar) {
             $query->where(function ($q) use ($buscar) {
-                $q->where('nombre', 'LIKE', "%{$buscar}%")
-                    ->orWhere('descripcion', 'LIKE', "%{$buscar}%");
+                $q->where('nombre', 'ILIKE', "%{$buscar}%")
+                    ->orWhere('descripcion', 'ILIKE', "%{$buscar}%");
             });
         }
-
+    
         $productos = $query->orderBy('updated_at', 'desc')->paginate(8);
-
+    
+        $categorias = Producto::select('categoria')->distinct()->whereNotNull('categoria')->pluck('categoria');
+    
         if ($request->ajax()) {
             return view('admin.productos.partials.productos_list', compact('productos'))->render();
         }
-
-        return view('admin.productos.lista_productos', compact('productos', 'categoria', 'buscar'));
+    
+        return view('admin.productos.lista_productos', compact('productos', 'categoria', 'buscar', 'categorias'));
     }
+    
 
     public function gestionarBloqueos(Request $request)
     {

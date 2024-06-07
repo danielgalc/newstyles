@@ -100,7 +100,7 @@ export default function Register() {
                                 required
                             />
                         </div>
-                        <InputError message={errors.name || localErrors.name} className="mt-2 text-red-500" />
+                        <InputError message={errors.name || localErrors.name} className="mt-2 text-red-300" />
                     </div>
 
                     <div className="mb-2">
@@ -117,7 +117,7 @@ export default function Register() {
                                 required
                             />
                         </div>
-                        <InputError message={errors.email || localErrors.email} className="mt-2 text-red-500" />
+                        <InputError message={errors.email || localErrors.email} className="mt-2 text-red-300" />
                     </div>
 
                     <div className="mb-2">
@@ -138,7 +138,7 @@ export default function Register() {
                                 }}
                             />
                         </div>
-                        <InputError message={errors.dni || localErrors.dni} className="mt-2 text-red-500" />
+                        <InputError message={errors.dni || localErrors.dni} className="mt-2 text-red-300" />
                     </div>
 
                     <div className="mb-2">
@@ -159,7 +159,7 @@ export default function Register() {
                                 }}
                             />
                         </div>
-                        <InputError message={errors.telefono || localErrors.telefono} className="mt-2 text-red-500" />
+                        <InputError message={errors.telefono || localErrors.telefono} className="mt-2 text-red-300" />
                     </div>
 
                     <div className="mb-2">
@@ -175,7 +175,7 @@ export default function Register() {
                                 required
                             />
                         </div>
-                        <InputError message={errors.direccion || localErrors.direccion} className="mt-2 text-red-500" />
+                        <InputError message={errors.direccion || localErrors.direccion} className="mt-2 text-red-300" />
                     </div>
 
                     <div className="mb-2">
@@ -192,7 +192,7 @@ export default function Register() {
                                 required
                             />
                         </div>
-                        <InputError message={errors.password || localErrors.password} className="mt-2 text-red-500" />
+                        <InputError message={errors.password || localErrors.password} className="mt-2 text-red-300" />
                     </div>
 
                     <div className="mb-2">
@@ -209,7 +209,7 @@ export default function Register() {
                                 required
                             />
                         </div>
-                        <InputError message={errors.password_confirmation || localErrors.password_confirmation} className="mt-2 text-red-500" />
+                        <InputError message={errors.password_confirmation || localErrors.password_confirmation} className="mt-2 text-red-300" />
                     </div>
 
                     <div className="flex items-center justify-center">

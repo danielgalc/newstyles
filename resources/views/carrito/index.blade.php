@@ -62,7 +62,7 @@
                                     Compra completada
                                 </div>
                             </div>
-                            <button class="bg-red-500 hover:bg-red-600 text-black font-bold py-2 px-4 rounded w-full" onclick="toggleModal('confirm_clear_modal')">Vaciar carrito</button>
+                            <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded w-full" onclick="toggleModal('confirm_clear_modal')">Vaciar carrito</button>
                         </div>
                     </div>
                 @endif

@@ -58,6 +58,11 @@ Route::middleware(['auth', 'verified', 'comprobarRol', 'comprobarRolPeluquero'])
     Route::delete('/pedidos/{id}', [PedidoController::class, 'destroy'])->name('pedidos.destroy');
     Route::put('/pedidos/{id}/restore', [PedidoController::class, 'restore'])->name('pedidos.restore');
     Route::delete('/pedidos/{id}/forceDelete', [PedidoController::class, 'forceDelete'])->name('pedidos.forceDelete');
+    Route::get('/historial_pedidos', [PedidoController::class, 'historial'])->name('historial_pedidos');
+    Route::get('/pedidos/{id}', [PedidoController::class, 'show']);
+    Route::post('/pedidos/cancelar/{pedido}', [PedidoController::class, 'cancelarPedido']);
+    Route::get('/pedidos/{id}/pdf', [PedidoController::class, 'descargarPDF'])->name('pedidos.pdf');
+
 
     // Perfil del usuario
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

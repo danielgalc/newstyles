@@ -44,7 +44,7 @@
 
         <!-- Div para mostrar citas pendientes -->
         <div class="relative backdrop-filter backdrop-blur-lg bg-white bg-opacity-10 border border-white border-opacity-20 shadow-lg rounded-lg p-8 w-full max-w-md">
-            <h2 class="text-3xl text-red-600 text-center mb-4 font-righteous">Citas Pendientes</h2>
+            <h2 class="text-3xl text-yellow-500 text-center mb-4 font-righteous">Citas Pendientes</h2>
             <div id="citas_pendientes" class="grid gap-4">
                 @if($citasPendientes->isEmpty())
                 <p class="text-gray-200 text-center">No hay citas pendientes.</p>
@@ -74,7 +74,7 @@
     <div class="w-full mx-auto mt-10 max-w-md py-2 px-4 text-red hover:before:bg-redborder-red-500 relative h-[50px] w-40 overflow-hidden bg-white px-3 text-red-500 transition-all before:absolute before:bottom-0 before:left-0 before:top-0 before:z-0 before:h-full before:w-0 before:bg-red-500 before:transition-all before:duration-500 hover:text-white hover:shadow-red-500 hover:before:left-0 hover:before:w-full">
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <x-dropdown-link class="mt-auto text-xl relative z-10 text-red-500 hover:text-white" :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();">
+                <x-dropdown-link class="mt-auto text-xl relative z-10 text-red-600 hover:text-white" :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();">
                     {{ __('Cerrar sesión') }}
                 </x-dropdown-link>
             </form>

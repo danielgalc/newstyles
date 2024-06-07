@@ -5,6 +5,8 @@ import GuestLayout from '@/Layouts/GuestLayout';
 import Grid from '@/Components/Productos/Grid';
 import axios from 'axios';
 import debounce from 'lodash/debounce';
+import { Head } from '@inertiajs/react';
+
 
 export default function Productos({ auth, productos, search }) {
     const [searchTerm, setSearchTerm] = useState(search || '');
@@ -83,7 +85,9 @@ export default function Productos({ auth, productos, search }) {
     };
 
     return (
+        
         <div className="Productos">
+        <Head title="Productos - NewStyles" />
             {auth.user ? (
                 <AuthenticatedLayout user={auth.user}>
                     <Banner text="Catálogo de productos" />
