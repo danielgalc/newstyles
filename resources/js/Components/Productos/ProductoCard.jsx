@@ -25,7 +25,7 @@ export default function ProductoCard({ producto, auth, onProductoAdded }) {
                 if (error.response && error.response.data && error.response.data.error) {
                     setErrorMessage(error.response.data.error);
                 } else {
-                    setErrorMessage('Error al añadir al carrito.');
+                    setErrorMessage('Error al añadir al carrito. ¿Has iniciado sesión?');
                 }
                 setTimeout(() => setErrorMessage(''), 4000);
             }
