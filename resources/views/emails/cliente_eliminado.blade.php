@@ -59,7 +59,7 @@
         </div>
         <h1>Cuenta Eliminada</h1>
         <p>Hola <span class="label">{{ $user->name }}</span>,</p>
-        <p>Te informamos que tu cuenta ha sido eliminada permanentemente. Además, todas tus citas han sido canceladas.</p>
+        <p>Te informamos que tu cuenta ha sido eliminada permanentemente. Además, todas tus citas y pedidos no enviados han sido cancelados.</p>
         <p>Si tienes alguna pregunta o necesitas más información, por favor contáctanos.</p>
         <p>Gracias,</p>
         <p>Equipo de NewStyles</p>

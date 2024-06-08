@@ -5,7 +5,7 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 
 
-const Admin = ({ auth, usuarios, citas, servicios, productos, bloqueos }) => {
+const Admin = ({ auth, usuarios, citas, servicios, productos, bloqueos, pedidos }) => {
 
   return (
     <div>
@@ -92,6 +92,21 @@ const Admin = ({ auth, usuarios, citas, servicios, productos, bloqueos }) => {
               horas: bloqueo.horas.join(', '), // Las horas ya están formateadas
             }))}
             link="admin/bloqueos"
+          />
+        </div>
+        <div className="max-w-8xl mx-auto mt-4 max-[400px]:mt-2">
+          <TablaAdmin
+            titulo="Lista de Pedidos"
+            subtitulo="Últimos pedidos realizados"
+            columnas={['Usuario', 'Fecha de Compra', 'Precio Total', 'Estado', 'Transaccion']}
+            datos={pedidos.map((pedido) => ({
+              user: pedido.name,
+              precio: pedido.precio_total,
+              fecha_compra: new Date(pedido.fecha_compra).toLocaleDateString('es-ES'),
+              estado: pedido.estado,
+              transaccion: pedido.transaccion,
+            }))}
+            link="admin/pedidos"
           />
         </div>
       </NavAdmin>

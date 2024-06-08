@@ -196,9 +196,11 @@ class PedidoController extends Controller
     public function destroy($id)
     {
         $pedido = Pedido::findOrFail($id);
-        Mail::to($pedido->user->email)->send(new PedidoCancelado($pedido));
-        $pedido->delete();
-
+        if ($pedido->user && ($pedido->estado == "pediente" || $pedido->estado == "aceptado")){
+            Mail::to($pedido->user->email)->send(new PedidoCancelado($pedido));
+        } else {
+            $pedido->delete();
+        }
 
         return redirect()->route('admin.pedidos')
             ->with('success', 'Pedido eliminado con éxito.');

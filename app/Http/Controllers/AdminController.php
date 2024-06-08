@@ -212,6 +212,7 @@ class AdminController extends Controller
         $servicios = Servicio::latest()->take(5)->get();
         $productos = Producto::latest()->take(5)->get();
         $bloqueos = BloqueoPeluquero::with('peluquero')->latest()->take(5)->get();
+        $pedidos = Pedido::latest()->take(5)->get();
 
         $citas->each(function ($cita) {
             $cita->hora = \Carbon\Carbon::parse($cita->hora);
@@ -231,6 +232,7 @@ class AdminController extends Controller
             'servicios' => $servicios,
             'productos' => $productos,
             'bloqueos' => $bloqueos,
+            'pedidos' => $pedidos,
         ]);
     }
 }

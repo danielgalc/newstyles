@@ -174,8 +174,6 @@ class UserController extends Controller
         return redirect('/admin/usuarios')
             ->with('success', 'Usuario actualizado con éxito.');
     }
-    
-    
 
     /**
      * Remove the specified resource from storage.
