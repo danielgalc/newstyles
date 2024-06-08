@@ -173,7 +173,7 @@ class AdminController extends Controller
                 $q->whereHas('user', function($q) use ($buscar) {
                     $q->where('name', 'LIKE', "%{$buscar}%")
                       ->orWhere('email', 'LIKE', "%{$buscar}%");
-                })->orWhere('transaccion', 'LIKE', "%{$buscar}%");
+                    })->orWhere('transaccion', 'LIKE', "%{$buscar}%");
             });
         }
     
@@ -185,19 +185,15 @@ class AdminController extends Controller
         $pedidos = $query->orderBy('fecha_compra', 'desc')->paginate(8);
         $users = User::all();
     
-        // Obtener los productos asociados a cada pedido
+        // Obtener los productos asociados a cada pedido desde pedido_producto
         foreach ($pedidos as $pedido) {
             $pedido->productos = DB::table('pedido_producto')
-                ->join('productos', 'pedido_producto.producto_id', '=', 'productos.id')
-                ->where('pedido_producto.pedido_id', $pedido->id)
-                ->select('productos.nombre', 'pedido_producto.cantidad')
+                ->where('pedido_id', $pedido->id)
+                ->select('nombre_producto as nombre', 'cantidad')
                 ->get()
-                ->map(function($producto) {
-                    return (array) $producto;
-                })
                 ->toArray();
         }
-
+    
         $estados = Pedido::select('estado')->distinct()->whereNotNull('estado')->pluck('estado');
     
         if ($request->ajax()) {
@@ -206,6 +202,7 @@ class AdminController extends Controller
     
         return view('admin.pedidos.gestionar_pedidos', compact('pedidos', 'estado', 'estados', 'buscar', 'users'));
     }
+    
 
 
     public function mostrarDatos()

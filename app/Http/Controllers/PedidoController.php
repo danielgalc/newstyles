@@ -56,20 +56,29 @@ class PedidoController extends Controller
     public function historial()
     {
         $user = Auth::user();
-
+    
         // Obtener los pedidos paginados en orden de actualidad
         $pedidos = Pedido::where('user_id', $user->id)
             ->orderBy('fecha_compra', 'desc')
             ->paginate(10); // Pagina 10 pedidos por página
-
+    
         // Obtener el pedido más reciente solo si estamos en la primera página
         $pedidoReciente = $pedidos->currentPage() == 1 ? $pedidos->first() : null;
-
+    
+        // Obtener los productos asociados a cada pedido desde pedido_producto
+        foreach ($pedidos as $pedido) {
+            $pedido->productos = DB::table('pedido_producto')
+                ->where('pedido_id', $pedido->id)
+                ->select('nombre_producto', 'cantidad')
+                ->get()
+                ->toArray();
+        }
+    
         return view('pedidos.historial_pedidos', [
             'pedidoReciente' => $pedidoReciente,
             'pedidos' => $pedidos
         ]);
-    }
+    }   
 
 
     public function cancelarPedido($pedidoId)
@@ -104,25 +113,34 @@ class PedidoController extends Controller
     // Mostrar un pedido específico
     public function show($id)
     {
-        $pedido = Pedido::with('productos')->findOrFail($id);
+        $pedido = Pedido::findOrFail($id);
+    
+        // Obtener los productos asociados a este pedido desde pedido_producto
+        $productos = DB::table('pedido_producto')
+            ->where('pedido_id', $id)
+            ->select('nombre_producto as nombre', 'cantidad')
+            ->get();
+    
+        $pedido->productos = $productos;
+    
         return response()->json($pedido);
     }
+    
 
     public function descargarPDF($id)
     {
-        // Encuentra el pedido por su ID
-        $pedido = Pedido::findOrFail($id);
+    // Encuentra el pedido por su ID
+    $pedido = Pedido::findOrFail($id);
 
-        if ($pedido->estado === 'cancelado') {
-            return redirect()->back()->with('error', 'No se puede descargar el PDF de un pedido cancelado.');
-        }
+    if ($pedido->estado === 'cancelado') {
+        return redirect()->back()->with('error', 'No se puede descargar el PDF de un pedido cancelado.');
+    }
 
-        // Obtén los productos asociados al pedido desde la tabla pivote
-        $productos = DB::table('pedido_producto')
-            ->join('productos', 'pedido_producto.producto_id', '=', 'productos.id')
-            ->where('pedido_producto.pedido_id', $id)
-            ->select('productos.nombre', 'pedido_producto.cantidad')
-            ->get();
+    // Obtén los productos asociados al pedido desde la tabla pivote pedido_producto
+    $productos = DB::table('pedido_producto')
+        ->where('pedido_id', $id)
+        ->select('nombre_producto as nombre', 'cantidad')
+        ->get();
 
         $pdf = FacadePdf::loadView('pedidos.pdf', [
             'pedido' => $pedido,

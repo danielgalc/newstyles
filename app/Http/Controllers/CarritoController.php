@@ -62,11 +62,11 @@ class CarritoController extends Controller
     {
         $user = Auth::user();
         $carrito = Carrito::where('user_id', $user->id)->first();
-
+    
         if (!$carrito || $carrito->items->isEmpty()) {
             return response()->json(['error' => '¡Tu carrito está vacío!'], 400);
         }
-
+    
         $pedido = new Pedido();
         $pedido->user_id = $user->id;
         $pedido->dni = $user->dni;
@@ -78,14 +78,25 @@ class CarritoController extends Controller
         $pedido->fecha_compra = now();
         $pedido->transaccion = Pedido::generarTransaccion(); // Generar el valor de transacción
         $pedido->save();
-
+    
         foreach ($carrito->items as $item) {
-            $pedido->productos()->attach($item->producto_id, ['cantidad' => $item->cantidad]);
-            $item->delete(); // Eliminar el item del carrito sin reponer el stock
+            // Obtener el nombre del producto
+            $nombreProducto = $item->producto->nombre;
+            
+            // Adjuntar el producto al pedido con el nombre del producto
+            $pedido->productos()->attach($item->producto_id, [
+                'cantidad' => $item->cantidad,
+                'nombre_producto' => $nombreProducto,
+            ]);
+    
+            // Eliminar el item del carrito sin reponer el stock
+            $item->delete();
         }
-
+    
         return response()->json(['success' => 'Compra completada con éxito.']);
     }
+    
+    
 
 
     public function add(Request $request, Producto $producto)

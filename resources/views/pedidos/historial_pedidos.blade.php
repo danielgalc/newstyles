@@ -83,11 +83,10 @@
                         <p><strong>DNI:</strong> ${pedido.dni}</p>
                         <p><strong>Teléfono:</strong> ${pedido.telefono}</p>
                         <p><strong>Dirección:</strong> ${pedido.direccion}</p>
-                        <h2 class="text-xl font-semibold text-teal-600 mb-2">Productos Comprados:</h2>
                         <ul>
                     `;
                     pedido.productos.forEach(producto => {
-                        detallesHtml += `<li>${producto.nombre} (${producto.pivot.cantidad})</li>`;
+                        detallesHtml += `<li>${producto.nombre} (${producto.cantidad})</li>`;
                     });
                     detallesHtml += '</ul>';
 
