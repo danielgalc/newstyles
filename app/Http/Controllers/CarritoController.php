@@ -31,35 +31,52 @@ class CarritoController extends Controller
     {
         $user = Auth::user();
         $productos = $request->input('productos', []);
-
+    
         if ($user->rol === 'cliente') {
             Log::info('Productos recibidos para migrar:', $productos);
-
+    
             if (!empty($productos)) {
                 $carrito = Carrito::firstOrCreate(['user_id' => $user->id]);
-
+    
                 foreach ($productos as $item) {
-                    $carritoItem = CarritoItem::where('carrito_id', $carrito->id)
-                        ->where('producto_id', $item['producto_id'])
-                        ->first();
-                    if ($carritoItem) {
-                        $carritoItem->cantidad += $item['cantidad'];
-                        $carritoItem->save();
-                    } else {
-                        CarritoItem::create([
-                            'carrito_id' => $carrito->id,
-                            'producto_id' => $item['producto_id'],
-                            'cantidad' => $item['cantidad'],
-                        ]);
+                    $producto = Producto::find($item['producto_id']);
+    
+                    if ($producto) {
+                        // Verificar si hay suficiente stock
+                        if ($producto->stock < $item['cantidad']) {
+                            return response()->json([
+                                'error' => 'No hay suficiente stock disponible para migrar este producto: ' . $producto->nombre
+                            ], 400);
+                        }
+    
+                        $carritoItem = CarritoItem::where('carrito_id', $carrito->id)
+                            ->where('producto_id', $item['producto_id'])
+                            ->first();
+    
+                        if ($carritoItem) {
+                            $carritoItem->cantidad += $item['cantidad'];
+                            $carritoItem->save();
+                        } else {
+                            CarritoItem::create([
+                                'carrito_id' => $carrito->id,
+                                'producto_id' => $item['producto_id'],
+                                'cantidad' => $item['cantidad'],
+                            ]);
+                        }
+    
+                        // Reducir el stock del producto
+                        $producto->stock -= $item['cantidad'];
+                        $producto->save();
                     }
                 }
             }
-
+    
             return response()->json(['message' => 'Carrito migrado con éxito.']);
         } else {
             return redirect('/');
         }
     }
+    
 
     public function completarCompra(Request $request)
     {

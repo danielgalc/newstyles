@@ -177,7 +177,6 @@ class PedidoController extends Controller
         $pedido->estado = $request->estado;
         $pedido->save();
 
-        // Enviar correo de aceptación solo si el nuevo estado es "aceptada"
         if ($estadoAnterior !== 'aceptado' && $pedido->estado === 'aceptado') {
             Mail::to($pedido->user->email)->send(new PedidoAceptado($pedido));
         }
@@ -186,7 +185,6 @@ class PedidoController extends Controller
             Mail::to($pedido->user->email)->send(new PedidoEnviado($pedido));
         }
 
-        // Enviar correo de cancelación solo si el nuevo estado es "cancelada"
         if ($estadoAnterior !== 'cancelado' && $pedido->estado === 'cancelado') {
             Mail::to($pedido->user->email)->send(new PedidoCancelado($pedido));
         }
@@ -195,7 +193,6 @@ class PedidoController extends Controller
         return redirect()->route('admin.pedidos')->with('success', 'Pedido actualizado con éxito.');
     }
 
-    // Eliminar un pedido específico (soft delete)
     public function destroy($id)
     {
         $pedido = Pedido::findOrFail($id);

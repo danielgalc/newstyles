@@ -7,6 +7,7 @@ export default function ProductoCard({ producto, auth, onProductoAdded }) {
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [cantidad, setCantidad] = useState(1);
+    const [stock, setStock] = useState(producto.stock); // Estado para el stock
 
     const handleAddToCart = async () => {
         if (auth.user) {
@@ -18,6 +19,7 @@ export default function ProductoCard({ producto, auth, onProductoAdded }) {
                     setSuccessMessage(`¡Añadido al carrito! (${cantidad} unidad${cantidad > 1 ? 'es' : ''})`);
                     setErrorMessage('');
                     setTimeout(() => setSuccessMessage(''), 4000);
+                    setStock(stock - cantidad); // Actualizar el stock localmente
                 }
             } catch (error) {
                 if (error.response && error.response.data && error.response.data.error) {
@@ -32,14 +34,14 @@ export default function ProductoCard({ producto, auth, onProductoAdded }) {
             const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
             const productoEnCarrito = carrito.find(item => item.id === producto.id);
             if (productoEnCarrito) {
-                if (productoEnCarrito.cantidad + cantidad > producto.stock) {
+                if (productoEnCarrito.cantidad + cantidad > stock) {
                     setErrorMessage('No hay suficiente stock disponible para agregar esta cantidad.');
                     setTimeout(() => setErrorMessage(''), 4000);
                     return;
                 }
                 productoEnCarrito.cantidad += cantidad;
             } else {
-                if (cantidad > producto.stock) {
+                if (cantidad > stock) {
                     setErrorMessage('No hay suficiente stock disponible para agregar esta cantidad.');
                     setTimeout(() => setErrorMessage(''), 4000);
                     return;
@@ -50,6 +52,7 @@ export default function ProductoCard({ producto, auth, onProductoAdded }) {
             setSuccessMessage(`¡Añadido al carrito! (${cantidad} unidad${cantidad > 1 ? 'es' : ''})`);
             setErrorMessage('');
             setTimeout(() => setSuccessMessage(''), 4000);
+            setStock(stock - cantidad); // Actualizar el stock localmente
         }
     };
 
@@ -70,15 +73,15 @@ export default function ProductoCard({ producto, auth, onProductoAdded }) {
                 <h3 className="text-lg font-semibold">{producto.nombre}</h3>
                 <p className="text-gray-400">{producto.descripcion}</p>
                 <p className="text-lg font-bold text-teal-600">{producto.precio}&euro;</p>
-                <p className="text-gray-500">Stock: {producto.stock}</p>
+                <p className="text-gray-500">Stock: {stock}</p> {/* Mostrar el stock actualizado */}
                 <div className="flex items-center mt-2">
                     <div className='flex gap-4'>
                         <button
                             onClick={handleAddToCart}
                             className="bg-teal-500 text-white py-2 px-4 rounded hover:bg-teal-700"
-                            disabled={producto.stock === 0 || cantidad < 1}
+                            disabled={stock === 0 || cantidad < 1}
                         >
-                            {producto.stock === 0 ? 'Sin stock' : 'Añadir al carrito'}
+                            {stock === 0 ? 'Sin stock' : 'Añadir al carrito'}
                         </button>
                         <input
                             type="number"
@@ -86,7 +89,7 @@ export default function ProductoCard({ producto, auth, onProductoAdded }) {
                             value={cantidad}
                             onChange={handleCantidadChange}
                             className="p-2 border rounded-md w-20 mr-2 text-black"
-                            disabled={producto.stock === 0}
+                            disabled={stock === 0}
                         />
                     </div>
                 </div>
