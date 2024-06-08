@@ -1,14 +1,10 @@
-// Landing.js
-
-import React, { useEffect } from 'react';
+import React from 'react';
 import HeroSection from '@/Components/Landing/HeroSection';
 import FeatureSection from '@/Components/Landing/FeatureSection';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import GuestLayout from '@/Layouts/GuestLayout';
 import ReviewsSection from '@/Components/Landing/ReviewSection';
 import { Head } from '@inertiajs/react';
-
-
 
 function App({ auth }) {
   return (
@@ -30,4 +26,5 @@ function App({ auth }) {
     </div>
   );
 }
+
 export default App;
