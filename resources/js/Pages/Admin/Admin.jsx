@@ -1,10 +1,15 @@
 import TablaAdmin from '@/Components/Admin/TablaAdmin';
 import NavAdmin from '@/Layouts/NavAdmin';
+import { Head } from '@inertiajs/react';
 import React from 'react';
+import { Helmet } from 'react-helmet';
+
 
 const Admin = ({ auth, usuarios, citas, servicios, productos, bloqueos }) => {
+
   return (
     <div>
+      <Head title="Panel de Administración" />
       <NavAdmin user={auth.user}>
         <h1 className="text-6xl font-bold mb-4 max-[400px]:text-3xl">
           Bienvenido, <span className="text-teal-500">{auth.user.name}</span>

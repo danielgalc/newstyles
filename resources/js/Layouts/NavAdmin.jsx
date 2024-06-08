@@ -39,7 +39,7 @@ export default function NavAdmin({ user, header, children }) {
                 {/* Enlaces de navegación */}
                 <ul className="space-y-8 mt-8 p-4 max-[400px]:space-y-4 max-[400px]:mt-4">
                     <li className="transition-all duration-150 hover:scale-105 max-[400px]:text-sm">
-                        <a href="admin/usuarios" className="text-white flex items-center hover:text-teal-700">
+                        <a href="admin/usuarios" className="text-white flex items-center">
                             <svg className="svg-icon-2 mr-2 pb-1 hover:text-teal-700" xmlns="http://www.w3.org/2000/svg" height="16" width="14" viewBox="0 0 448 512" fill="currentColor">
                                 <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z" />
                             </svg>
@@ -48,7 +48,7 @@ export default function NavAdmin({ user, header, children }) {
                     </li>
 
                     <li className="transition-all duration-150 hover:scale-105 max-[400px]:text-sm">
-                        <a href="admin/citas" className="text-white flex items-center hover:text-teal-700">
+                        <a href="admin/citas" className="text-white flex items-center ">
                             <svg fill="currentColor" className="mr-2.5 pb-1" height="32" width="28" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 610.398 610.398" xml:space="preserve">
                                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -74,7 +74,7 @@ export default function NavAdmin({ user, header, children }) {
                         </a>
                     </li>
                     <li className="transition-all duration-150 hover:scale-105 max-[400px]:text-sm">
-                        <a href="admin/servicios" className="text-white flex items-center hover:text-teal-700">
+                        <a href="admin/servicios" className="text-white flex items-center ">
                             <svg xmlns="http://www.w3.org/2000/svg" width="34" height="30" fill="currentColor" className="tijeras-icon mr-2 pb-1" viewBox="0 0 16 16">
                                 <path d="M3.5 3.5c-.614-.884-.074-1.962.858-2.5L8 7.226 11.642 1c.932.538 1.472 1.616.858 2.5L8.81 8.61l1.556 2.661a2.5 2.5 0 1 1-.794.637L8 9.73l-1.572 2.177a2.5 2.5 0 1 1-.794-.637L7.19 8.61 3.5 3.5zm2.5 10a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0zm7 0a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0z" />
                             </svg>
@@ -82,7 +82,7 @@ export default function NavAdmin({ user, header, children }) {
                         </a>
                     </li>
                     <li className="transition-all duration-150 hover:scale-105 max-[400px]:text-sm">
-                        <a href="admin/productos" className="text-white flex items-center hover:text-teal-700">
+                        <a href="admin/productos" className="text-white flex items-center ">
                             <svg fill="currentColor" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve" width="34px" height="30px" className="mr-1.5 pb-1 productos-icon" stroke="currentColor">
                                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -103,7 +103,7 @@ export default function NavAdmin({ user, header, children }) {
                         </a>
                     </li>
                     <li className="transition-all duration-150 hover:scale-105 max-[400px]:text-sm">
-                        <a href="admin/bloqueos" className="text-white flex items-center hover:text-teal-700">
+                        <a href="admin/bloqueos" className="text-white flex items-center ">
                             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="" width="30px" height="30px" className="text-teal-400 hover:text-teal mr-1.5 pb-1 productos-icon">
                                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -115,14 +115,8 @@ export default function NavAdmin({ user, header, children }) {
                         </a>
                     </li>
                     <li className="transition-all duration-150 hover:scale-105 max-[400px]:text-sm">
-                        <a href="admin/pedidos" className="text-white flex items-center hover:text-teal-700">
-                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="" width="30px" height="30px" className="text-teal-400 hover:text-teal mr-1.5 pb-1 productos-icon">
-                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                <g id="SVGRepo_iconCarrier">
-                                    <path className="hover:bg-teal-700" d="M3 5.5L5 3.5M21 5.5L19 3.5M9 9.5L15 15.5M15 9.5L9 15.5M20 12.5C20 16.9183 16.4183 20.5 12 20.5C7.58172 20.5 4 16.9183 4 12.5C4 8.08172 7.58172 4.5 12 4.5C16.4183 4.5 20 8.08172 20 12.5Z" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                                </g>
-                            </svg>
+                        <a href="admin/pedidos" className="text-white flex items-center ">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="33px" height="33px" className="text-teal-400 hover:text-teal mr-1.5 pb-1 productos-icon"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M7.5 18C8.32843 18 9 18.6716 9 19.5C9 20.3284 8.32843 21 7.5 21C6.67157 21 6 20.3284 6 19.5C6 18.6716 6.67157 18 7.5 18Z" stroke="#fff" stroke-width="1.5"></path> <path d="M16.5 18.0001C17.3284 18.0001 18 18.6716 18 19.5001C18 20.3285 17.3284 21.0001 16.5 21.0001C15.6716 21.0001 15 20.3285 15 19.5001C15 18.6716 15.6716 18.0001 16.5 18.0001Z" stroke="#fff" stroke-width="1.5"></path> <path d="M11 10.8L12.1429 12L15 9" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M2 3L2.26121 3.09184C3.5628 3.54945 4.2136 3.77826 4.58584 4.32298C4.95808 4.86771 4.95808 5.59126 4.95808 7.03836V9.76C4.95808 12.7016 5.02132 13.6723 5.88772 14.5862C6.75412 15.5 8.14857 15.5 10.9375 15.5H12M16.2404 15.5C17.8014 15.5 18.5819 15.5 19.1336 15.0504C19.6853 14.6008 19.8429 13.8364 20.158 12.3075L20.6578 9.88275C21.0049 8.14369 21.1784 7.27417 20.7345 6.69708C20.2906 6.12 18.7738 6.12 17.0888 6.12H11.0235M4.95808 6.12H7" stroke="#fff" stroke-width="1.5" stroke-linecap="round"></path> </g></svg>
                             Gestionar Pedidos
                         </a>
                     </li>
