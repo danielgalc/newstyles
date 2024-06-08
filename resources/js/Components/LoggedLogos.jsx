@@ -38,7 +38,7 @@ export default function LoggedLogos({ isMenu = false }) {
                         <Menu.Item>
                             {({ active }) => (
                                 <a
-                                    className={`${active ? 'bg-gray-100' : ''} block px-4 py-2 text-sm text-gray-700 w-full text-left`}
+                                    className={`${active ? 'bg-gray-100' : ''} block px-4 py-2 text-sm text-gray-700 w-full text-left hover:rounded-t-lg`}
                                     href='/profile'
                                 >
                                     Perfil
@@ -70,7 +70,7 @@ export default function LoggedLogos({ isMenu = false }) {
                                 <a
                                     onClick={handleLogout}
                                     href='/'
-                                    className={`${active ? 'bg-gray-100' : ''} block px-4 py-2 text-sm text-gray-700 w-full text-left`}
+                                    className={`${active ? 'bg-gray-100' : ''} block px-4 py-2 text-sm text-gray-700 w-full text-left hover:text-white hover:bg-red-500 hover:rounded-b-lg`}
                                 >
                                     Cerrar sesión
                                 </a>

@@ -139,7 +139,7 @@
                         </button>
                     </div>
                     <!-- Modal body -->
-                    <div class="p-4 md:p-5">
+                    <div class="p-4 md:p-5 dark:text-white">
                         <p>¿Estás seguro de que quieres cancelar esta cita? ID: {{ $proximaCita->id }}</p>
                         <div class="flex justify-end items-center mt-4">
                             <form action="{{ route('citas.cancelar', ['id' => $proximaCita->id]) }}" method="post" class="p-4 md:p-5">
@@ -150,7 +150,7 @@
                                 </button>
                             </form>
 
-                            <button type="button" class="h-10 text-gray-600 bg-gray-200 hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800" data-modal-toggle="confirm_cancel_modal_{{ $proximaCita->id }}">
+                            <button type="button" class="h-10 text-gray-600 bg-gray-200 hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-200 dark:hover:bg-gray-300 dark:focus:ring-gray-800" data-modal-toggle="confirm_cancel_modal_{{ $proximaCita->id }}">
                                 Cancelar
                             </button>
                         </div>

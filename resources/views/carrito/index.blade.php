@@ -58,7 +58,7 @@
                                 {{-- Botón de PayPal --}}
                                 <div id="paypal-button-container"></div>
                                 <div id="compra-completada-message"
-                                    class="hidden bg-green-200 text-green-800 border border-green-400 p-4 rounded mt-4">
+                                    class="hidden bg-green-600 text-white border border-green-400 p-4 rounded my-4">
                                     Compra completada
                                 </div>
                             </div>
