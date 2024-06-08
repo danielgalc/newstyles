@@ -82,7 +82,7 @@ class ProductoController extends Controller
             'precio' => ['required', 'numeric', 'min:0.01'],
             'imagen' => ['nullable', 'max:2048'],
             'stock' => ['required', 'integer', 'min:0'],
-            'categoria' => ['required', 'string'],
+            'categoria' => ['required', 'string', 'min:3', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚ\s]+$/'],
         ], [
             'nombre.required' => 'El nombre del producto es obligatorio.',
             'nombre.string' => 'El nombre del producto debe ser una cadena de texto.',
@@ -154,7 +154,7 @@ class ProductoController extends Controller
             'precio' => ['required', 'numeric', 'min:0.01'],
             'imagen' => ['nullable', 'max:2048'],
             'stock' => ['required', 'integer', 'min:0'],
-            'categoria' => ['required', 'string'],
+            'categoria' => ['required', 'string', 'min:3', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚ\s]+$/'],
         ], [
             'nombre.required' => 'El nombre del producto es obligatorio.',
             'nombre.string' => 'El nombre del producto debe ser una cadena de texto.',

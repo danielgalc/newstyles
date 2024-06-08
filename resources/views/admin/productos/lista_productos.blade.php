@@ -120,7 +120,7 @@
             </div>
             <!-- Modal body -->
             <div class="p-4 md:p-5 dark:text-white">
-                <p>¿Estás seguro de que quieres eliminar este producto? ID: {{ $producto->id }}</p>
+                <p>¿Estás seguro de que quieres eliminar este producto?</p>
                 <div class="flex justify-end items-center mt-4">
                     <form action="{{ route('productos.destroy', ['id' => $producto->id]) }}" method="post" class="p-4 md:p-5">
                         @csrf
@@ -184,11 +184,7 @@
                     </div>
                     <div class="col-span-2">
                         <label for="categoriaCrear" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Categoría</label>
-                        <select name="categoria" id="categoriaCrear" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required>
-                            @foreach($categorias as $cat)
-                                <option value="{{ $cat }}">{{ $cat }}</option>
-                            @endforeach
-                        </select>
+                        <input type="text" name="categoria" id="categoriaCrear" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ $producto->categoria }}" required>
                     </div>
                 </div>
                 <button type="submit" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
@@ -303,8 +299,11 @@
             }
 
             // Validar la categoría
-            if (!categoriaInput.value) {
-                showError(categoriaInput, 'Por favor, selecciona una categoría');
+            if (categoriaInput.value.length < 3 || !categoriaInput.value) {
+                showError(categoriaInput, 'Categoría no válido. Introduce un categoria válido.');
+                errors = true;
+            } else if (!validarInput(categoriaInput.value)) {
+                showError(categoriaInput, 'Ni números ni símbolos especiales son válidos en este campo. Introduce un categoria válido, por favor.');
                 errors = true;
             } else {
                 hideError(categoriaInput);
