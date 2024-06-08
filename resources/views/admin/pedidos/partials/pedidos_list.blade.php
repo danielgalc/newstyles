@@ -13,9 +13,11 @@
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
             @foreach ($pedidos as $pedido)
-            <tr class="hover:bg-teal-200 cursor-pointer w-full pedido-row">
+                <tr class="hover:bg-teal-200 cursor-pointer w-full pedido-row">
                     <td class="px-6 py-4 whitespace-nowrap text-center" data-modal-toggle="edit_pedido_modal_{{ $pedido->id }}" data-modal-target="edit_pedido_modal_{{ $pedido->id }}">{{ $pedido->id }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-center" data-modal-toggle="edit_pedido_modal_{{ $pedido->id }}" data-modal-target="edit_pedido_modal_{{ $pedido->id }}">{{ $pedido->user->name }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-center" data-modal-toggle="edit_pedido_modal_{{ $pedido->id }}" data-modal-target="edit_pedido_modal_{{ $pedido->id }}">
+                        {{ $pedido->user->name ?? 'Usuario Eliminado' }}
+                    </td>
                     <td class="px-6 py-4 whitespace-nowrap text-center" data-modal-toggle="edit_pedido_modal_{{ $pedido->id }}" data-modal-target="edit_pedido_modal_{{ $pedido->id }}">{{ \Carbon\Carbon::parse($pedido->fecha_compra)->format('d/m/Y') }}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-center" data-modal-toggle="edit_pedido_modal_{{ $pedido->id }}" data-modal-target="edit_pedido_modal_{{ $pedido->id }}">{{ $pedido->precio_total }} &euro;</td>
                     <td class="px-6 py-4 whitespace-nowrap text-center"data-modal-toggle="edit_pedido_modal_{{ $pedido->id }}" data-modal-target="edit_pedido_modal_{{ $pedido->id }}">{{ ucfirst($pedido->estado) }}</td>
@@ -29,8 +31,6 @@
     </table>
     <!-- Mostrar enlaces de paginación -->
     {{ $pedidos->appends(['estado' => request('estado'), 'buscar' => request('buscar')])->links() }}
-
 @else
     <p>No hay pedidos disponibles.</p>
 @endif
-
