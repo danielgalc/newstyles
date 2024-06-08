@@ -50,7 +50,7 @@
 
         <!-- Div del bloqueo de horas con efecto Glassmorfismo -->
         <div class="relative backdrop-filter backdrop-blur-lg bg-white bg-opacity-10 border border-white border-opacity-20 shadow-lg rounded-lg px-8 pt-8 pb-2 w-full max-w-md">
-            <h2 class="text-3xl text-red-600 text-center mb-4 font-righteous">Bloquear Horas</h2>
+            <h2 class="text-3xl text-red-400 text-center mb-4 font-righteous">Bloquear Horas</h2>
 
             <form action="{{ route('bloqueos.store') }}" method="post">
                 @csrf
@@ -65,7 +65,7 @@
                         <select id="horas_bloquear" name="horas[]" class="block w-full text-sm text-gray-800 border border-gray-300 rounded-lg cursor-pointer bg-gray-50" multiple>
                             <!-- Aquí se llenarán las horas disponibles mediante AJAX -->
                         </select>
-                        <small class="text-gray-500">Mantén presionada la tecla Ctrl (Windows) o Comando (Mac) para seleccionar múltiples horas.</small>
+                        <small class="text-gray-300 italic">Mantén presionada la tecla Ctrl (Windows) o Comando (Mac) para seleccionar múltiples horas.</small>
                     </div>
                 </div>
                 <button type="submit" class="text-white bg-red-600 hover:bg-red-700 inline-flex items-center font-medium rounded-lg text-sm px-5 py-2.5 text-center">Bloquear</button>
@@ -89,7 +89,7 @@
                         <select id="horas_desbloquear" name="horas[]" class="block w-full text-sm text-gray-800 border border-gray-300 rounded-lg cursor-pointer bg-gray-50" multiple>
                             <!-- Aquí se llenarán las horas bloqueadas mediante AJAX -->
                         </select>
-                        <small class="text-gray-500">Mantén presionada la tecla Ctrl (Windows) o Comando (Mac) para seleccionar múltiples horas.</small>
+                        <small class="text-gray-300 italic">Mantén presionada la tecla Ctrl (Windows) o Comando (Mac) para seleccionar múltiples horas.</small>
                     </div>
                 </div>
                 <button type="submit" class="text-white bg-teal-500 hover:bg-teal-700 inline-flex items-center font-medium rounded-lg text-sm px-5 py-2.5 text-center">Desbloquear</button>

@@ -59,12 +59,12 @@
                     <a href="historial-citas" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200">Historial de citas</a>
                 </li>
                 <li>
-                    <a href="historial-pedidos" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200">Historial de pedidos</a>
+                    <a href="historial_pedidos" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200">Historial de pedidos</a>
                 </li>
                 <li>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
-                        <a class="block px-4 py-2 cursor-pointer hover:bg-red-500 hover:rounded-b-lg" :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();">
+                        <a class="block px-4 py-2 cursor-pointer hover:text-white hover:bg-red-500 hover:rounded-b-lg" :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();">
                             {{ __('Cerrar sesión') }}
                         </a>
                     </form>

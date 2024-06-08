@@ -19,26 +19,28 @@
             <td class="px-6 py-4 whitespace-nowrap text-center" data-modal-toggle="edit_cita_modal_{{ $cita->id }}" data-modal-target="edit_cita_modal_{{ $cita->id }}">{{ $cita->user->name }}</td>
             <td class="px-6 py-4 whitespace-nowrap text-center" data-modal-toggle="edit_cita_modal_{{ $cita->id }}" data-modal-target="edit_cita_modal_{{ $cita->id }}">{{ $cita->peluquero->name }}</td>
             <td class="px-6 py-4 whitespace-nowrap text-center" data-modal-toggle="edit_cita_modal_{{ $cita->id }}" data-modal-target="edit_cita_modal_{{ $cita->id }}">{{ $cita->servicio }}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-center" data-modal-toggle="edit_cita_modal_{{ $cita->id }}" data-modal-target="edit_cita_modal_{{ $cita->id }}">{{ $cita->fecha }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-center" data-modal-toggle="edit_cita_modal_{{ $cita->id }}" data-modal-target="edit_cita_modal_{{ $cita->id }}">
+                {{ \Carbon\Carbon::parse($cita->fecha)->format('d-m-Y') }}
+            </td>
             <td class="px-6 py-4 whitespace-nowrap text-center" data-modal-toggle="edit_cita_modal_{{ $cita->id }}" data-modal-target="edit_cita_modal_{{ $cita->id }}">
                 {{ \Carbon\Carbon::createFromFormat('H:i:s', $cita->hora)->format('H:i') }}
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-center" data-modal-toggle="edit_cita_modal_{{ $cita->id }}" data-modal-target="edit_cita_modal_{{ $cita->id }}">
                 @switch($cita->estado)
-                    @case('aceptada')
-                        Aceptada
-                        @break
-                    @case('pendiente')
-                        Pendiente
-                        @break
-                    @case('cancelada')
-                        Cancelada
-                        @break
-                    @case('finalizada')
-                        Finalizada
-                        @break
-                    @default
-                        {{ $cita->estado }}
+                @case('aceptada')
+                Aceptada
+                @break
+                @case('pendiente')
+                Pendiente
+                @break
+                @case('cancelada')
+                Cancelada
+                @break
+                @case('finalizada')
+                Finalizada
+                @break
+                @default
+                {{ $cita->estado }}
                 @endswitch
             </td>
 

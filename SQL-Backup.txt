@@ -1,0 +1,15 @@
+createdb -U postgres -h localhost postgres
+
+createuser -s -r react
+createdb react
+
+DB_CONNECTION=pgsql
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_DATABASE=postgres
+DB_USERNAME=postgres
+DB_PASSWORD=postgres
+
+psql -U tu_usuario -h localhost -d tu_base_de_datos < database/backups/backup.sql
+
+psql -h localhost -d postgres -U postgres

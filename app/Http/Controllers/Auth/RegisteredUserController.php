@@ -33,14 +33,20 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
+            'email' => 'required|string|lowercase|email|max:255|unique:users,email',
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'dni' => ['required', 'string', 'regex:/^[0-9]{8}[A-Z]$/', 'unique:users,dni'],
+            'telefono' => ['required', 'string', 'regex:/^[0-9]{9}$/', 'unique:users,telefono'],
+            'direccion' => ['required', 'string', 'max:255'],
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'dni' => $request->dni,
+            'telefono' => $request->telefono,
+            'direccion' => $request->direccion,
         ]);
 
         event(new Registered($user));
@@ -50,3 +56,4 @@ class RegisteredUserController extends Controller
         return redirect('/verify-email');
     }
 }
+

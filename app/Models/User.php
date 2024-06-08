@@ -20,10 +20,13 @@ class User extends Authenticatable implements MustVerifyEmailContract
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'rol'
+        'name', 
+        'email', 
+        'password', 
+        'rol', 
+        'dni', 
+        'telefono', 
+        'direccion',
     ];
 
     /**
@@ -59,5 +62,10 @@ class User extends Authenticatable implements MustVerifyEmailContract
     public function carrito(): HasMany
     {
         return $this->hasMany(Carrito::class);
+    }
+
+    public function pedidos()
+    {
+        return $this->hasMany(Pedido::class);
     }
 }

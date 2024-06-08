@@ -2,64 +2,64 @@
 
 namespace App\Http\Controllers;
 
-
+use App\Models\Carrito;
 use App\Models\Producto;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class ProductoController extends Controller
 {
     public function index(Request $request)
-    {
-        $search = $request->input('search');
-        $sortBy = $request->input('sortBy');
-        $category = $request->input('category');
+{
+    $search = $request->input('search');
+    $sortBy = $request->input('sortBy');
+    $category = $request->input('category');
 
-        $query = Producto::query();
+    $query = Producto::query();
 
-        if ($search) {
-            $query->where('nombre', 'ilike', "%{$search}%")
-                ->orWhere('descripcion', 'ilike', "%{$search}%");
-        }
+    if ($search) {
+        $query->where('nombre', 'ilike', "%{$search}%")
+            ->orWhere('descripcion', 'ilike', "%{$search}%");
+    }
 
-        if ($category) {
-            $query->where('categoria', $category);
-        }
+    if ($category) {
+        $query->where('categoria', $category);
+    }
 
-        switch ($sortBy) {
-            case 'asc':
-                $query->orderBy('nombre', 'asc');
-                break;
-            case 'desc':
-                $query->orderBy('nombre', 'desc');
-                break;
-            case 'price_asc':
-                $query->orderBy('precio', 'asc');
-                break;
-            case 'price_desc':
-                $query->orderBy('precio', 'desc');
-                break;
-            default:
-                $query->orderBy('id', 'desc');
-                break;
-        }
+    switch ($sortBy) {
+        case 'asc':
+            $query->orderBy('nombre', 'asc');
+            break;
+        case 'desc':
+            $query->orderBy('nombre', 'desc');
+            break;
+        case 'price_asc':
+            $query->orderBy('precio', 'asc');
+            break;
+        case 'price_desc':
+            $query->orderBy('precio', 'desc');
+            break;
+        default:
+            $query->orderBy('id', 'desc');
+            break;
+    }
 
-        $productos = $query->paginate(8);
+    $productos = $query->paginate(8);
 
-        if ($request->wantsJson()) {
-            return response()->json([
-                'productos' => $productos,
-            ]);
-        }
-
-        return Inertia::render('Productos/Productos', [
+    if ($request->wantsJson()) {
+        return response()->json([
             'productos' => $productos,
-            'search' => $search,
-            'sortBy' => $sortBy,
-            'category' => $category,
         ]);
     }
 
+    return Inertia::render('Productos/Productos', [
+        'productos' => $productos,
+        'search' => $search,
+        'sortBy' => $sortBy,
+        'category' => $category,
+    ]);
+}
     public function categorias()
     {
         $categorias = Producto::select('categoria')
@@ -82,7 +82,7 @@ class ProductoController extends Controller
             'precio' => ['required', 'numeric', 'min:0.01'],
             'imagen' => ['nullable', 'max:2048'],
             'stock' => ['required', 'integer', 'min:0'],
-            'categoria' => ['required', 'string'],
+            'categoria' => ['required', 'string', 'min:3', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚ\s]+$/'],
         ], [
             'nombre.required' => 'El nombre del producto es obligatorio.',
             'nombre.string' => 'El nombre del producto debe ser una cadena de texto.',
@@ -154,7 +154,7 @@ class ProductoController extends Controller
             'precio' => ['required', 'numeric', 'min:0.01'],
             'imagen' => ['nullable', 'max:2048'],
             'stock' => ['required', 'integer', 'min:0'],
-            'categoria' => ['required', 'string'],
+            'categoria' => ['required', 'string', 'min:3', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚ\s]+$/'],
         ], [
             'nombre.required' => 'El nombre del producto es obligatorio.',
             'nombre.string' => 'El nombre del producto debe ser una cadena de texto.',

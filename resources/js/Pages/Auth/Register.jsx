@@ -12,6 +12,9 @@ export default function Register() {
         email: '',
         password: '',
         password_confirmation: '',
+        dni: '',
+        telefono: '',
+        direccion: '',
     });
 
     const [localErrors, setLocalErrors] = useState({});
@@ -32,7 +35,7 @@ export default function Register() {
     const validateForm = () => {
         const errors = {};
 
-        if (!data.name || data.name.length < 10) {
+        if (!data.name || data.name.length < 3) {
             errors.name = 'Nombre no válido. Introduce un nombre válido.';
         } else if (!/^[a-zA-ZáéíóúÁÉÍÓÚ\s]+$/.test(data.name)) {
             errors.name = 'Ni números ni símbolos especiales son válidos en este campo. Introduce un nombre válido, por favor.';
@@ -52,6 +55,18 @@ export default function Register() {
 
         if (data.password !== data.password_confirmation) {
             errors.password_confirmation = 'Las contraseñas no coinciden.';
+        }
+
+        if (!data.dni || !/^[0-9]{8}[A-Z]$/.test(data.dni)) {
+            errors.dni = 'El DNI debe estar compuesto por 8 números y una letra mayúscula.';
+        }
+
+        if (!data.telefono || !/^[0-9]{9}$/.test(data.telefono)) {
+            errors.telefono = 'El teléfono debe estar compuesto por 9 números sin espacios.';
+        }
+
+        if (!data.direccion || !/^[a-zA-ZáéíóúÁÉÍÓÚ0-9\s]+$/.test(data.direccion)) {
+            errors.direccion = 'La dirección no puede contener caracteres especiales.';
         }
 
         setLocalErrors(errors);
@@ -85,7 +100,7 @@ export default function Register() {
                                 required
                             />
                         </div>
-                        <InputError message={errors.name || localErrors.name} className="mt-2 text-red-500" />
+                        <InputError message={errors.name || localErrors.name} className="mt-2 text-red-300" />
                     </div>
 
                     <div className="mb-2">
@@ -102,7 +117,65 @@ export default function Register() {
                                 required
                             />
                         </div>
-                        <InputError message={errors.email || localErrors.email} className="mt-2 text-red-500" />
+                        <InputError message={errors.email || localErrors.email} className="mt-2 text-red-300" />
+                    </div>
+
+                    <div className="mb-2">
+                        <InputLabel htmlFor="dni" value="DNI" className="text-white" />
+                        <div className="relative">
+                            <TextInput
+                                id="dni"
+                                name="dni"
+                                value={data.dni}                                
+                                className="mt-1 block w-full bg-transparent text-white border border-white border-opacity-20 rounded-lg focus:ring-teal-400 focus:border-teal-400"
+                                autoComplete="dni"
+                                onChange={(e) => setData('dni', e.target.value)}
+                                required
+                                onKeyPress={(e) => {
+                                    if (e.key === ' ') {
+                                        e.preventDefault();
+                                    }
+                                }}
+                            />
+                        </div>
+                        <InputError message={errors.dni || localErrors.dni} className="mt-2 text-red-300" />
+                    </div>
+
+                    <div className="mb-2">
+                        <InputLabel htmlFor="telefono" value="Teléfono" className="text-white" />
+                        <div className="relative">
+                            <TextInput
+                                id="telefono"
+                                name="telefono"
+                                value={data.telefono}
+                                className="mt-1 block w-full bg-transparent text-white border border-white border-opacity-20 rounded-lg focus:ring-teal-400 focus:border-teal-400"
+                                autoComplete="telefono"
+                                onChange={(e) => setData('telefono', e.target.value)}
+                                required
+                                onKeyPress={(e) => {
+                                    if (e.key === ' ') {
+                                        e.preventDefault();
+                                    }
+                                }}
+                            />
+                        </div>
+                        <InputError message={errors.telefono || localErrors.telefono} className="mt-2 text-red-300" />
+                    </div>
+
+                    <div className="mb-2">
+                        <InputLabel htmlFor="direccion" value="Dirección" className="text-white" />
+                        <div className="relative">
+                            <TextInput
+                                id="direccion"
+                                name="direccion"
+                                value={data.direccion}
+                                className="mt-1 block w-full bg-transparent text-white border border-white border-opacity-20 rounded-lg focus:ring-teal-400 focus:border-teal-400"
+                                autoComplete="direccion"
+                                onChange={(e) => setData('direccion', e.target.value)}
+                                required
+                            />
+                        </div>
+                        <InputError message={errors.direccion || localErrors.direccion} className="mt-2 text-red-300" />
                     </div>
 
                     <div className="mb-2">
@@ -119,7 +192,7 @@ export default function Register() {
                                 required
                             />
                         </div>
-                        <InputError message={errors.password || localErrors.password} className="mt-2 text-red-500" />
+                        <InputError message={errors.password || localErrors.password} className="mt-2 text-red-300" />
                     </div>
 
                     <div className="mb-2">
@@ -136,7 +209,7 @@ export default function Register() {
                                 required
                             />
                         </div>
-                        <InputError message={errors.password_confirmation || localErrors.password_confirmation} className="mt-2 text-red-500" />
+                        <InputError message={errors.password_confirmation || localErrors.password_confirmation} className="mt-2 text-red-300" />
                     </div>
 
                     <div className="flex items-center justify-center">

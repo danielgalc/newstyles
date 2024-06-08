@@ -1,22 +1,30 @@
 import TablaAdmin from '@/Components/Admin/TablaAdmin';
 import NavAdmin from '@/Layouts/NavAdmin';
+import { Head } from '@inertiajs/react';
 import React from 'react';
+import { Helmet } from 'react-helmet';
 
-const Admin = ({ auth, usuarios, citas, servicios, productos, bloqueos }) => {
+
+const Admin = ({ auth, usuarios, citas, servicios, productos, bloqueos, pedidos }) => {
+
   return (
     <div>
+      <Head title="Panel de Administración" />
       <NavAdmin user={auth.user}>
-        <h1 className="text-6xl font-bold mb-4">
+        <h1 className="text-6xl font-bold mb-4 max-[400px]:text-3xl">
           Bienvenido, <span className="text-teal-500">{auth.user.name}</span>
         </h1>
-        <div className="user-preview-container grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 gap-4">
+        <div className="user-preview-container grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 gap-4 max-[400px]:gap-2">
           <TablaAdmin
             titulo="Usuarios"
             subtitulo="Últimos usuarios añadidos"
-            columnas={['Nombre', 'Email', 'Rol', 'Verificado', 'Última Modificación']}
+            columnas={['Nombre', 'Email', 'DNI', 'Teléfono', 'Dirección', 'Rol', 'Verificado', 'Última Modificación']}
             datos={usuarios.map((usuario) => ({
               name: usuario.name,
               email: usuario.email,
+              dni: usuario.dni,
+              telefono: usuario.telefono,
+              direccion: usuario.direccion,
               rol: usuario.rol,
               verificado: usuario.email_verified_at ? 'Sí' : 'No',
               updated_at: new Date(usuario.updated_at).toLocaleString('es-ES'),
@@ -24,7 +32,7 @@ const Admin = ({ auth, usuarios, citas, servicios, productos, bloqueos }) => {
             link="admin/usuarios"
           />
         </div>
-        <div className="max-w-8xl mx-auto mt-4">
+        <div className="max-w-8xl mx-auto mt-4 max-[400px]:mt-2">
           <TablaAdmin
             titulo="Citas"
             subtitulo="Últimas citas añadidas"
@@ -41,7 +49,7 @@ const Admin = ({ auth, usuarios, citas, servicios, productos, bloqueos }) => {
             link="admin/citas"
           />
         </div>
-        <div className="max-w-8xl mx-auto mt-4">
+        <div className="max-w-8xl mx-auto mt-4 max-[400px]:mt-2">
           <TablaAdmin
             titulo="Servicios"
             subtitulo="Últimos servicios agregados"
@@ -57,22 +65,23 @@ const Admin = ({ auth, usuarios, citas, servicios, productos, bloqueos }) => {
             link="admin/servicios"
           />
         </div>
-        <div className="max-w-8xl mx-auto mt-4">
+        <div className="max-w-8xl mx-auto mt-4 max-[400px]:mt-2">
           <TablaAdmin
             titulo="Productos"
             subtitulo="Últimos productos agregados"
-            columnas={['Producto', 'Precio', 'Stock', 'Fecha de creación', 'Última modificación']}
+            columnas={['Producto', 'Precio', 'Stock', 'Categoría', 'Fecha de creación', 'Última modificación']}
             datos={productos.map((producto) => ({
               nombre: producto.nombre,
               precio: `${producto.precio}€`,
               stock: producto.stock,
+              categoria: producto.categoria,
               created_at: new Date(producto.created_at).toLocaleString('es-ES'),
               updated_at: new Date(producto.updated_at).toLocaleString('es-ES'),
             }))}
             link="admin/productos"
           />
         </div>
-        <div className="max-w-8xl mx-auto mt-4">
+        <div className="max-w-8xl mx-auto mt-4 max-[400px]:mt-2">
           <TablaAdmin
             titulo="Bloqueos de Peluqueros"
             subtitulo="Últimos bloqueos añadidos"
@@ -83,6 +92,20 @@ const Admin = ({ auth, usuarios, citas, servicios, productos, bloqueos }) => {
               horas: bloqueo.horas.join(', '), // Las horas ya están formateadas
             }))}
             link="admin/bloqueos"
+          />
+        </div>
+        <div className="max-w-8xl mx-auto mt-4 max-[400px]:mt-2">
+          <TablaAdmin
+            titulo="Lista de Pedidos"
+            subtitulo="Últimos pedidos realizados"
+            columnas={['Transaccion', 'Fecha de Compra', 'Precio Total', 'Estado']}
+            datos={pedidos.map((pedido) => ({
+              transaccion: pedido.transaccion,
+              fecha_compra: new Date(pedido.fecha_compra).toLocaleDateString('es-ES'),
+              precio: `${pedido.precio_total}€`,
+              estado: pedido.estado,
+            }))}
+            link="admin/pedidos"
           />
         </div>
       </NavAdmin>

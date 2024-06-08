@@ -6,6 +6,8 @@ import GuestLayout from '@/Layouts/GuestLayout';
 import GridServicios from '@/Components/Servicios/GridServicios';
 import axios from 'axios';
 import debounce from 'lodash/debounce';
+import { Head } from '@inertiajs/react';
+
 
 export default function Servicios({ auth, servicios, search, peluqueros }) {
   const [searchTerm, setSearchTerm] = useState(search || '');
@@ -46,6 +48,7 @@ export default function Servicios({ auth, servicios, search, peluqueros }) {
 
   return (
     <div className="Servicios">
+      <Head title="Servicios - NewStyles" />
       {auth.user ? (
         <AuthenticatedLayout user={auth.user}>
           <Banner text="Listado de servicios" />

@@ -8,6 +8,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="icon" type="image/x-icon" href="{{ asset('/images/Logo1Transparente.png') }}">
     @vite('resources/css/app.css')
 </head>
 
@@ -32,8 +33,8 @@
             <nav class="nav-admin p-4">
                 <ul class="space-y-8 mt-4 ">
                     <li class="transition-all duration-150 hover:scale-105">
-                        <a href="{{ route('admin.usuarios') }}" class="text-white flex items-center font-inter text-[18px] hover:text-teal-700">
-                            <svg class="svg-icon-2 mr-2 pb-1 hover:text-teal-700" xmlns="http://www.w3.org/2000/svg" height="16" width="14" viewBox="0 0 448 512" fill="currentColor">
+                        <a href="{{ route('admin.usuarios') }}" class="text-white flex items-center font-inter text-[18px]">
+                            <svg class="svg-icon-2 mr-2 pb-1" xmlns="http://www.w3.org/2000/svg" height="16" width="14" viewBox="0 0 448 512" fill="currentColor">
                                 <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z" />
                             </svg>
                             Usuarios
@@ -41,7 +42,7 @@
                     </li>
 
                     <li class="transition-all duration-150 hover:scale-105">
-                        <a href="{{ route('admin.citas') }}" class="text-white flex items-center font-inter text-[18px] hover:text-teal-700">
+                        <a href="{{ route('admin.citas') }}" class="text-white flex items-center font-inter text-[18px]">
                             <svg fill="currentColor" class="mr-2.5 pb-1" height="32" width="28" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 610.398 610.398" xml:space="preserve">
                                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -67,7 +68,7 @@
                         </a>
                     </li>
                     <li class="transition-all duration-150 hover:scale-105">
-                        <a href="{{ route('admin.servicios') }}" class="text-white flex items-center font-inter text-[18px] hover:text-teal-700">
+                        <a href="{{ route('admin.servicios') }}" class="text-white flex items-center font-inter text-[18px]">
                             <svg xmlns="http://www.w3.org/2000/svg" width="34" height="30" fill="currentColor" class="tijeras-icon mr-2 pb-1" viewBox="0 0 16 16">
                                 <path d="M3.5 3.5c-.614-.884-.074-1.962.858-2.5L8 7.226 11.642 1c.932.538 1.472 1.616.858 2.5L8.81 8.61l1.556 2.661a2.5 2.5 0 1 1-.794.637L8 9.73l-1.572 2.177a2.5 2.5 0 1 1-.794-.637L7.19 8.61 3.5 3.5zm2.5 10a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0zm7 0a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0z" />
                             </svg>
@@ -75,7 +76,7 @@
                         </a>
                     </li>
                     <li class="transition-all duration-150 hover:scale-105">
-                        <a href="{{ route('admin.productos') }}" class="text-white flex items-center font-inter text-[18px] hover:text-teal-700">
+                        <a href="{{ route('admin.productos') }}" class="text-white flex items-center font-inter text-[18px]">
                             <svg fill="currentColor" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve" width="34px" height="30px" class="mr-1.5 pb-1 productos-icon" stroke="currentColor">
                                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -96,24 +97,21 @@
                         </a>
                     </li>
                     <li class="transition-all duration-150 hover:scale-105">
-                        <a href="{{ route('admin.bloqueos') }}" class="text-white flex items-center font-inter text-[18px] hover:text-teal-700">
-                            <svg fill="currentColor" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve" width="34px" height="30px" class="mr-1.5 pb-1 productos-icon" stroke="currentColor">
+                        <a href="{{ route('admin.bloqueos') }}" class="text-white flex items-center font-inter text-[18px]">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="" width="30px" height="30px" class="text-teal-400 hover:text-teal pb-1 mr-2.5">
                                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
                                 <g id="SVGRepo_iconCarrier">
-                                    <g>
-                                        <g>
-                                            <path d="M431.123,299.707c0.476-1.695,0.892-3.448,1.223-5.272c3.633-20.059-3.262-41.132-20.495-62.638l-13.077-16.318 l-14.786,14.787c-15.842,15.842-25.134,13.346-49.975,6.666c-15.998-4.301-35.909-9.654-61.657-9.654 c-27.654,0-52.907,6.375-73.738,17.703l-5.068-106.016l-23.526-49.529V0H57.634v89.041L31.59,138.65L18.542,512h385.015 l24.976-174.829h27.461v31.22h37.463v-68.683H431.123z M95.097,37.463h37.463v37.463H95.097V37.463z M87.688,112.39h51.766 l11.862,24.976h-76.74L87.688,112.39z M56.764,474.537l0.5-24.976h92.591l3.568,24.976H56.764z M148.237,299.707h-19.791 l16.056,112.39H58.381l9.285-237.268h90.095l4.79,100.165C156.641,282.527,151.817,290.801,148.237,299.707z M371.064,474.537 H191.265l-19.625-137.366h215.671h3.378L371.064,474.537z M395.538,287.434c-0.91,5.553-4.166,9.74-6.732,12.273h-1.494H190.845 c15.928-21.581,45.85-34.966,81.51-34.966c20.8,0,37.339,4.447,51.931,8.371c21.77,5.853,44.132,11.867,68.268-2.228 C395.017,276.343,396.417,282.07,395.538,287.434z"></path>
-                                        </g>
-                                    </g>
-                                    <g>
-                                        <g>
-                                            <rect x="231.212" y="387.122" width="99.902" height="37.463"></rect>
-                                        </g>
-                                    </g>
+                                    <path className="hover:bg-teal-700" d="M3 5.5L5 3.5M21 5.5L19 3.5M9 9.5L15 15.5M15 9.5L9 15.5M20 12.5C20 16.9183 16.4183 20.5 12 20.5C7.58172 20.5 4 16.9183 4 12.5C4 8.08172 7.58172 4.5 12 4.5C16.4183 4.5 20 8.08172 20 12.5Z" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
                                 </g>
                             </svg>
                             Horas bloqueadas
+                        </a>
+                    </li>
+                    <li class="transition-all duration-150 hover:scale-105 max-[400px]:text-sm text-[18px]">
+                        <a href="{{ route('admin.pedidos') }}" class="text-white flex items-center mb-2">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="33px" height="33px" class="text-teal-400 mr-1.5 pb-1 productos-icon"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M7.5 18C8.32843 18 9 18.6716 9 19.5C9 20.3284 8.32843 21 7.5 21C6.67157 21 6 20.3284 6 19.5C6 18.6716 6.67157 18 7.5 18Z" stroke="#fff" stroke-width="1.5"></path> <path d="M16.5 18.0001C17.3284 18.0001 18 18.6716 18 19.5001C18 20.3285 17.3284 21.0001 16.5 21.0001C15.6716 21.0001 15 20.3285 15 19.5001C15 18.6716 15.6716 18.0001 16.5 18.0001Z" stroke="#fff" stroke-width="1.5"></path> <path d="M11 10.8L12.1429 12L15 9" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M2 3L2.26121 3.09184C3.5628 3.54945 4.2136 3.77826 4.58584 4.32298C4.95808 4.86771 4.95808 5.59126 4.95808 7.03836V9.76C4.95808 12.7016 5.02132 13.6723 5.88772 14.5862C6.75412 15.5 8.14857 15.5 10.9375 15.5H12M16.2404 15.5C17.8014 15.5 18.5819 15.5 19.1336 15.0504C19.6853 14.6008 19.8429 13.8364 20.158 12.3075L20.6578 9.88275C21.0049 8.14369 21.1784 7.27417 20.7345 6.69708C20.2906 6.12 18.7738 6.12 17.0888 6.12H11.0235M4.95808 6.12H7" stroke="#fff" stroke-width="1.5" stroke-linecap="round"></path> </g></svg>
+                            Gestionar Pedidos
                         </a>
                     </li>
                 </ul>

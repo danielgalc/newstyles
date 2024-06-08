@@ -12,15 +12,14 @@ function ReviewsSection() {
   ];
 
   return (
-    <div className="bg-teal-400 h-1/3 p-8 min-h-full flex flex-col items-center justify-center">
-      <h1 className="text-black text-4xl font-bold mb-8">¡Echa un vistazo a las reseñas de los usuarios!</h1>
+    <div className="bg-teal-400 p-4 sm:p-8 min-h-full flex flex-col items-center justify-center">
+      <h1 className="text-black text-2xl sm:text-4xl font-bold mb-4 sm:mb-8">¡Echa un vistazo a las reseñas de los usuarios!</h1>
 
-      <div className="grid grid-rows-2 grid-cols-3 gap-16">
-        {/* Generar los divs de las reseñas con animaciones */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-16">
         {reviews.map(review => (
           <div key={review.id} className="bg-white p-4 flex flex-col justify-between rounded-lg shadow-md transform transition duration-300 ease-in-out hover:scale-105">
-            <p className="text-gray-800">{review.text}</p>
-            <p className="text-gray-600 mt-2">- {review.author}</p>
+            <p className="text-gray-800 text-sm sm:text-base">{review.text}</p>
+            <p className="text-gray-600 text-xs sm:text-sm mt-2">- {review.author}</p>
           </div>
         ))}
       </div>

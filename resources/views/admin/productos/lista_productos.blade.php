@@ -3,7 +3,7 @@
 @section('title', 'Lista de Productos')
 
 @php
-use Illuminate\Support\Str;
+    use Illuminate\Support\Str;
 @endphp
 
 @section('content')
@@ -22,8 +22,9 @@ use Illuminate\Support\Str;
         <form method="GET" action="{{ route('admin.productos') }}" id="filter-form" class="flex items-center">
             <select class="rounded mr-2" name="categoria" id="filtro-productos" onchange="document.getElementById('filter-form').submit();">
                 <option value="" {{ request('categoria') == '' ? 'selected' : '' }}>Mostrar todo</option>
-                <option value="categoria1" {{ request('categoria') == 'categoria1' ? 'selected' : '' }}>Categoría 1</option>
-                <option value="categoria2" {{ request('categoria') == 'categoria2' ? 'selected' : '' }}>Categoría 2</option>
+                @foreach($categorias as $cat)
+                    <option value="{{ $cat }}" {{ request('categoria') == $cat ? 'selected' : '' }}>{{ $cat }}</option>
+                @endforeach
             </select>
             <input type="text" name="buscar" placeholder="Buscar productos..." class="rounded border-gray-300 mr-2" value="{{ request('buscar') }}">
             <button type="submit" class="ml-2 text-white bg-teal-500 hover:bg-teal-800 focus:ring-4 focus:outline-none focus:ring-teal-300 font-medium rounded-lg text-sm px-4 h-10 text-center dark:bg-teal-600 dark:hover:bg-teal-700 dark:focus:ring-teal-800">Buscar</button>
@@ -82,8 +83,9 @@ use Illuminate\Support\Str;
                     <div class="col-span-2">
                         <label for="categoria_{{ $producto->id }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Categoría</label>
                         <select name="categoria" id="categoria_{{ $producto->id }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required>
-                            <option value="categoria1" {{ $producto->categoria == 'categoria1' ? 'selected' : '' }}>Categoría 1</option>
-                            <option value="categoria2" {{ $producto->categoria == 'categoria2' ? 'selected' : '' }}>Categoría 2</option>
+                            @foreach($categorias as $cat)
+                                <option value="{{ $cat }}" {{ $producto->categoria == $cat ? 'selected' : '' }}>{{ $cat }}</option>
+                            @endforeach
                         </select>
                     </div>
                 </div>
@@ -118,7 +120,7 @@ use Illuminate\Support\Str;
             </div>
             <!-- Modal body -->
             <div class="p-4 md:p-5 dark:text-white">
-                <p>¿Estás seguro de que quieres eliminar este producto? ID: {{ $producto->id }}</p>
+                <p>¿Estás seguro de que quieres eliminar este producto?</p>
                 <div class="flex justify-end items-center mt-4">
                     <form action="{{ route('productos.destroy', ['id' => $producto->id]) }}" method="post" class="p-4 md:p-5">
                         @csrf
@@ -182,10 +184,7 @@ use Illuminate\Support\Str;
                     </div>
                     <div class="col-span-2">
                         <label for="categoriaCrear" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Categoría</label>
-                        <select name="categoria" id="categoriaCrear" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required>
-                            <option value="categoria1">Categoría 1</option>
-                            <option value="categoria2">Categoría 2</option>
-                        </select>
+                        <input type="text" name="categoria" id="categoriaCrear" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ $producto->categoria }}" required>
                     </div>
                 </div>
                 <button type="submit" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
@@ -204,12 +203,12 @@ use Illuminate\Support\Str;
         -webkit-appearance: none;
         margin: 0;
     }
-    
+
     /* Ocultar los controles de número en Firefox */
     .number-input[type=number] {
         -moz-appearance: textfield;
     }
-    </style>
+</style>
 
 <!-- SCRIPT PARA FILTRAR Y PAGINAR POR AJAX -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -300,8 +299,11 @@ use Illuminate\Support\Str;
             }
 
             // Validar la categoría
-            if (!categoriaInput.value) {
-                showError(categoriaInput, 'Por favor, selecciona una categoría');
+            if (categoriaInput.value.length < 3 || !categoriaInput.value) {
+                showError(categoriaInput, 'Categoría no válido. Introduce un categoria válido.');
+                errors = true;
+            } else if (!validarInput(categoriaInput.value)) {
+                showError(categoriaInput, 'Ni números ni símbolos especiales son válidos en este campo. Introduce un categoria válido, por favor.');
                 errors = true;
             } else {
                 hideError(categoriaInput);

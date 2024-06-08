@@ -6,10 +6,13 @@ import Gallery from '@/Components/QuienesSomos/Gallery';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import GuestLayout from '@/Layouts/GuestLayout';
 import Footer from '@/Components/QuienesSomos/Footer';
+import { Head } from '@inertiajs/react';
+
 
 const QuienesSomos = ({ auth }) => {
   return (
     <div className="QuienesSomos">
+      <Head title="Quienes Somos - NewStyles" />
       {auth.user ? (
         <AuthenticatedLayout user={auth.user}>
           <Banner text="¿Quiénes somos?" />

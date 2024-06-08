@@ -5,12 +5,12 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Providers\RouteServiceProvider;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -28,26 +28,17 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): RedirectResponse
+    public function store(LoginRequest $request)
     {
         $request->authenticate();
 
-        if ($request->user()->hasVerifiedEmail()) {
-            auth()->login($request->user());
-
-            if (auth()->user()->rol === 'admin') {
-                return redirect('/admin')->with('reload', true);
-            } else if (auth()->user()->rol === 'peluquero') {
-                return redirect('/peluquero')->with('reload', true);
-            }
-            return redirect('/');
-        }
-
         $request->session()->regenerate();
 
-        return redirect()->route('verification.notice');
-    }
+        $user = Auth::user();
 
+        return response()->json(['user' => $user]);
+    }
+    
     /**
      * Destroy an authenticated session.
      */
@@ -62,3 +53,4 @@ class AuthenticatedSessionController extends Controller
         return redirect('/');
     }
 }
+

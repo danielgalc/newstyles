@@ -37,20 +37,20 @@ class CitaController extends Controller
     {
         $user = auth()->user();
         $fechaHoy = Carbon::now()->format('Y-m-d');
-
+    
         $citasPendientes = Cita::where('user_id', $user->id)
             ->whereIn('estado', ['aceptada', 'pendiente'])
             ->whereDate('fecha', '>=', $fechaHoy)
             ->orderBy('fecha', 'asc')
             ->orderBy('hora', 'asc')
             ->get();
-
+    
         $citasFinalizadas = Cita::where('user_id', $user->id)
             ->whereIn('estado', ['finalizada', 'cancelada'])
             ->orderBy('fecha', 'desc')
             ->orderBy('hora', 'desc')
-            ->get();
-
+            ->paginate(9);
+    
         $bloqueos = BloqueoPeluquero::where('peluquero_id', $user->id)
             ->whereDate('fecha', '>=', $fechaHoy)
             ->orderBy('fecha', 'asc')
@@ -59,15 +59,17 @@ class CitaController extends Controller
                 return json_decode($bloqueo->horas);
             })
             ->toArray();
-
+    
         return view('citas.historial-citas', [
             'proximaCita' => $citasPendientes->first(),
             'citasFinalizadas' => $citasFinalizadas,
             'users' => User::where('rol', 'peluquero')->get(),
             'servicios' => Servicio::all(),
             'bloqueos' => $bloqueos,
+            'isFirstPage' => $citasFinalizadas->currentPage() == 1,
         ]);
     }
+    
 
 
     public function cancelar(Request $request, $id)
@@ -144,8 +146,8 @@ class CitaController extends Controller
         $cita = new Cita();
         $cita->user_id = $request->input('user_id');
         $cita->peluquero_id = $request->input('peluquero_id');
-        $cita->fecha = $request->input('fecha');
-        $cita->hora = $hora;
+        $cita->fecha = Carbon::parse($request->input('fecha'))->format('d-m-Y');
+        $cita->hora = Carbon::parse($request->input('hora'))->format('H:i');
         $servicio = Servicio::findOrFail($request->input('servicio'));
         $cita->servicio = $servicio->nombre;
 
@@ -235,8 +237,8 @@ class CitaController extends Controller
 
         $cita->user_id = $request->input('user_id');
         $cita->peluquero_id = $request->input('peluquero_id');
-        $cita->fecha = $request->input('fecha');
-        $cita->hora = $hora;
+        $cita->fecha = Carbon::parse($request->input('fecha'))->format('d-m-Y');
+        $cita->hora = Carbon::parse($request->input('hora'))->format('H:i');
         $servicio = Servicio::findOrFail($request->input('servicio'));
         $cita->servicio = $servicio->nombre;
         $cita->estado = $request->input('estado');

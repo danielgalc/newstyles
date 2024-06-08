@@ -10,9 +10,14 @@ class Producto extends Model
 {
     use HasFactory;
 
-    public function carrito(): HasMany
+    public function carritos(): HasMany
     {
         return $this->hasMany(Carrito::class);
     }
 
+    public function pedidos()
+    {
+        return $this->belongsToMany(Pedido::class, 'pedido_producto', 'producto_id', 'pedido_id')
+            ->withPivot('cantidad', 'nombre_producto'); // Añadir 'nombre_producto'
+    }
 }

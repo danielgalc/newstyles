@@ -17,6 +17,8 @@
     <link rel="stylesheet" href="app.css" />
     <link rel="stylesheet" href="style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
+    <link rel="icon" type="image/x-icon" href="{{ asset('/images/Logo1Transparente.png') }}">
+
 
 
     <!-- Scripts -->

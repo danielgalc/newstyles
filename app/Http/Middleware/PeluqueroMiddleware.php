@@ -4,22 +4,21 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class PeluqueroMiddleware
 {
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @return mixed
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next): Response
     {
-        if (auth()->check() && auth()->user()->rol == 'peluquero') {
+        if(auth()->user()->rol=='peluquero'){
             return $next($request);
         }
 
-        return redirect('/peluquero')->with('error', 'No tienes permiso para acceder a esta página.');
+        return redirect('/');
     }
 }

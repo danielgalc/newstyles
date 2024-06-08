@@ -72,7 +72,6 @@ const Footer = ({ auth }) => {
 
     return (
         <footer className="w-full bg-gradient-to-b from-teal-500 to-teal-400 text-white py-12">
-            <Head title="Contact Us" />
             <div className="container mx-auto px-6">
                 <div className="text-center mb-10">
                     <h1 className="text-6xl font-righteous">CONTACTA CON NOSOTROS</h1>
