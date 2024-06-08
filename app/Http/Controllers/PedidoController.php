@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\PedidoAceptado;
+use App\Mail\PedidoCancelado;
+use App\Mail\PedidoEnviado;
 use App\Models\Pedido;
 use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class PedidoController extends Controller
 {
@@ -107,6 +111,8 @@ class PedidoController extends Controller
         $pedido->estado = 'Cancelado';
         $pedido->save();
 
+        Mail::to($pedido->user->email)->send(new PedidoCancelado($pedido));
+
         return response()->json(['success' => 'Pedido cancelado con éxito.']);
     }
 
@@ -162,12 +168,29 @@ class PedidoController extends Controller
     {
         $pedido = Pedido::findOrFail($id);
 
+        $estadoAnterior = $pedido->estado;
+
         $request->validate([
             'estado' => 'required|string|in:pendiente,aceptado,enviado,cancelado',
         ]);
 
         $pedido->estado = $request->estado;
         $pedido->save();
+
+        // Enviar correo de aceptación solo si el nuevo estado es "aceptada"
+        if ($estadoAnterior !== 'aceptado' && $pedido->estado === 'aceptado') {
+            Mail::to($pedido->user->email)->send(new PedidoAceptado($pedido));
+        }
+
+        if ($estadoAnterior !== 'enviado' && $pedido->estado === 'enviado') {
+            Mail::to($pedido->user->email)->send(new PedidoEnviado($pedido));
+        }
+
+        // Enviar correo de cancelación solo si el nuevo estado es "cancelada"
+        if ($estadoAnterior !== 'cancelado' && $pedido->estado === 'cancelado') {
+            Mail::to($pedido->user->email)->send(new PedidoCancelado($pedido));
+        }
+
 
         return redirect()->route('admin.pedidos')->with('success', 'Pedido actualizado con éxito.');
     }
