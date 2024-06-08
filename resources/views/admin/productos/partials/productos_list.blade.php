@@ -22,8 +22,8 @@
                     <td class="px-6 py-4 whitespace-nowrap text-center">{{ $producto->imagen }}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-center">{{ $producto->stock }}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-center">{{ $producto->categoria }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-center">{{ $producto->updated_at }}</td>
-                </tr>
+                    <td class="px-6 py-4 whitespace-nowrap text-center">{{ $producto->updated_at->format('d-m-Y H:i') }}</td>
+                    </tr>
             @endforeach
         </tbody>
     </table>

@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Carbon\Carbon;
 
 class CarritoController extends Controller
 {
@@ -95,10 +96,9 @@ class CarritoController extends Controller
         $pedido->precio_total = $carrito->items->sum(function ($item) {
             return $item->producto->precio * $item->cantidad;
         });
-        $pedido->fecha_compra = now();
+        $pedido->fecha_compra = Carbon::now()->format('d-m-Y');
         $pedido->transaccion = Pedido::generarTransaccion(); // Generar el valor de transacción
         $pedido->save();
-
 
         foreach ($carrito->items as $item) {
             // Obtener el nombre del producto

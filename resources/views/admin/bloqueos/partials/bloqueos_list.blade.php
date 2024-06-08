@@ -13,16 +13,18 @@
         <tr class="hover:bg-teal-200 cursor-pointer w-full bloqueo-row">
             <td class="px-6 py-4 whitespace-nowrap text-center" data-modal-toggle="edit_bloqueo_modal_{{ $bloqueo->id }}" data-modal-target="edit_bloqueo_modal_{{ $bloqueo->id }}">{{ $bloqueo->id }}</td>
             <td class="px-6 py-4 whitespace-nowrap text-center" data-modal-toggle="edit_bloqueo_modal_{{ $bloqueo->id }}" data-modal-target="edit_bloqueo_modal_{{ $bloqueo->id }}">{{ $bloqueo->peluquero->name }}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-center" data-modal-toggle="edit_bloqueo_modal_{{ $bloqueo->id }}" data-modal-target="edit_bloqueo_modal_{{ $bloqueo->id }}">{{ $bloqueo->fecha }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-center" data-modal-toggle="edit_bloqueo_modal_{{ $bloqueo->id }}" data-modal-target="edit_bloqueo_modal_{{ $bloqueo->id }}">
+                {{ \Carbon\Carbon::parse($bloqueo->fecha)->format('d-m-Y') }}
+            </td>
             <td class="px-6 py-4 whitespace-nowrap text-center" data-modal-toggle="edit_bloqueo_modal_{{ $bloqueo->id }}" data-modal-target="edit_bloqueo_modal_{{ $bloqueo->id }}">
                 @php
-                    $horas = is_string($bloqueo->horas) ? json_decode($bloqueo->horas, true) : $bloqueo->horas;
+                $horas = is_string($bloqueo->horas) ? json_decode($bloqueo->horas, true) : $bloqueo->horas;
                 @endphp
                 @if (is_array($horas))
-                    @foreach ($horas as $hora)
-                        {{ \Carbon\Carbon::createFromFormat('H:i:s', $hora)->format('H:i') }}
-                        @if (!$loop->last), @endif
-                    @endforeach
+                @foreach ($horas as $hora)
+                {{ \Carbon\Carbon::createFromFormat('H:i:s', $hora)->format('H:i') }}
+                @if (!$loop->last), @endif
+                @endforeach
                 @endif
             </td>
         </tr>

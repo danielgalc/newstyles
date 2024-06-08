@@ -63,7 +63,7 @@ class PedidoController extends Controller
     
         // Obtener los pedidos paginados en orden de actualidad
         $pedidos = Pedido::where('user_id', $user->id)
-            ->orderBy('fecha_compra', 'desc')
+            ->orderBy('created_at', 'desc')
             ->paginate(10); // Pagina 10 pedidos por página
     
         // Obtener el pedido más reciente solo si estamos en la primera página
@@ -196,7 +196,9 @@ class PedidoController extends Controller
     public function destroy($id)
     {
         $pedido = Pedido::findOrFail($id);
+        Mail::to($pedido->user->email)->send(new PedidoCancelado($pedido));
         $pedido->delete();
+
 
         return redirect()->route('admin.pedidos')
             ->with('success', 'Pedido eliminado con éxito.');

@@ -79,6 +79,13 @@
                 </button>
             </div>
             <!-- Modal body -->
+            @if ($pedido->user == null)
+            <div class="flex justify-center items-center w-full p-4">
+                <button type="button" class="text-white inline-flex items-center bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800" data-modal-hide="edit_pedido_modal_{{ $pedido->id }}" data-modal-target="confirm_delete_modal_{{ $pedido->id }}" data-modal-toggle="confirm_delete_modal_{{ $pedido->id }}">
+                    Eliminar pedido
+                </button>
+            </div>
+            @else
             <!-- Form Editar -->
             <form action="{{ route('pedidos.update', ['id' => $pedido->id]) }}" id="editForm_{{ $pedido->id }}" method="post" class="p-4 md:p-5">
                 @csrf
@@ -97,10 +104,10 @@
                 <button type="submit" class="text-white inline-flex items-center bg-teal-500 hover:bg-teal-800 focus:ring-4 focus:outline-none focus:ring-teal-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-teal-600 dark:hover:bg-teal-700 dark:focus:ring-teal-800">
                     Guardar cambios
                 </button>
-
                 <button type="button" class="text-white inline-flex items-center bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800" data-modal-hide="edit_pedido_modal_{{ $pedido->id }}" data-modal-target="confirm_delete_modal_{{ $pedido->id }}" data-modal-toggle="confirm_delete_modal_{{ $pedido->id }}">
                     Eliminar pedido
                 </button>
+            @endif                
             </form>
         </div>
     </div>

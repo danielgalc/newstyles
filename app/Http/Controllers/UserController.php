@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Mail\CitaCancelada;
 use App\Mail\ClienteEliminado;
 use App\Models\Cita;
+use App\Models\Pedido;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -194,7 +195,7 @@ class UserController extends Controller
                 $cliente = User::find($cita->user_id);
     
                 // Enviar correo de cancelación
-                // Mail::to($cliente->email)->send(new CitaCancelada($cita));
+                Mail::to($cliente->email)->send(new CitaCancelada($cita));
     
                 // Eliminar la cita
                 $cita->delete();
@@ -204,14 +205,23 @@ class UserController extends Controller
         if ($user->rol === 'cliente') {
             // Obtener todas las citas del cliente
             $citas = Cita::where('user_id', $user->id)->get();
-    
+            $pedidos = Pedido::where('user_id', $user->id)->get();
+            
             // Eliminar las citas del cliente
             foreach ($citas as $cita) {
                 $cita->delete();
             }
+
+            // Cancelar los pedidos que no se hayan enviado
+            foreach ($pedidos as $pedido) {
+                if ($pedido->estado == 'pendiente' || $pedido->estado == 'aceptado'){
+                    $pedido->estado = 'cancelado';
+                    $pedido->save();
+                }
+            }
     
             // Enviar correo de notificación de eliminación de cuenta
-            // Mail::to($user->email)->send(new ClienteEliminado($user));
+            Mail::to($user->email)->send(new ClienteEliminado($user));
         }
     
         // Eliminar el usuario

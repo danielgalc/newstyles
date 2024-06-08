@@ -18,7 +18,7 @@
                     <td class="px-6 py-4 whitespace-nowrap text-center" data-modal-toggle="edit_pedido_modal_{{ $pedido->id }}" data-modal-target="edit_pedido_modal_{{ $pedido->id }}">
                         {{ $pedido->user->name ?? 'Usuario Eliminado' }}
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-center" data-modal-toggle="edit_pedido_modal_{{ $pedido->id }}" data-modal-target="edit_pedido_modal_{{ $pedido->id }}">{{ \Carbon\Carbon::parse($pedido->fecha_compra)->format('d/m/Y') }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-center" data-modal-toggle="edit_pedido_modal_{{ $pedido->id }}" data-modal-target="edit_pedido_modal_{{ $pedido->id }}">{{ \Carbon\Carbon::parse($pedido->created_at)->format('d/m/Y H:i') }}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-center" data-modal-toggle="edit_pedido_modal_{{ $pedido->id }}" data-modal-target="edit_pedido_modal_{{ $pedido->id }}">{{ $pedido->precio_total }} &euro;</td>
                     <td class="px-6 py-4 whitespace-nowrap text-center"data-modal-toggle="edit_pedido_modal_{{ $pedido->id }}" data-modal-target="edit_pedido_modal_{{ $pedido->id }}">{{ ucfirst($pedido->estado) }}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-center"data-modal-toggle="edit_pedido_modal_{{ $pedido->id }}" data-modal-target="edit_pedido_modal_{{ $pedido->id }}">{{ $pedido->transaccion }}</td>

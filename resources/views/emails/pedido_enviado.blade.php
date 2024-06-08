@@ -64,7 +64,7 @@
 
         <h2>Detalles del Pedido</h2>
         <p><strong class="label">Transacción:</strong> {{ $pedido->transaccion }}</p>
-        <p><strong class="label">Fecha de compra:</strong> {{ $pedido->fecha_compra }}</p>
+        <p><strong class="label">Fecha de compra:</strong> {{ \Carbon\Carbon::parse($pedido->created_at)->format('d-m-Y H:i') }}</p>
         <p><strong class="label">Precio total:</strong> {{ $pedido->precio_total }} &euro;</p>
 
         <p>Revise su Historial de Pedidos para obtener un seguimiento de sus pedidos.</p>

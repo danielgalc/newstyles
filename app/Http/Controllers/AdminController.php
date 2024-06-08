@@ -75,7 +75,7 @@ class AdminController extends Controller
             $query->where('peluquero_id', $peluqueroId);
         }
 
-        $citas = $query->orderBy('fecha', 'desc')->paginate(5);
+        $citas = $query->orderBy('updated_at', 'desc')->paginate(5);
         $servicios = Servicio::all();
         $users = User::where('rol', 'peluquero')->get();
 
@@ -182,7 +182,7 @@ class AdminController extends Controller
             $query->where('estado', $estado);
         }
     
-        $pedidos = $query->orderBy('fecha_compra', 'desc')->paginate(8);
+        $pedidos = $query->orderBy('updated_at', 'desc')->paginate(8);
         $users = User::all();
     
         // Obtener los productos asociados a cada pedido desde pedido_producto

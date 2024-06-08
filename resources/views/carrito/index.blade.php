@@ -62,11 +62,6 @@
                                     Compra completada
                                 </div>
                             </div>
-                            <form action="{{route('completarCompra')}}" method="post">
-                                @csrf
-                                @method('post')
-                                <button type="submit">Comprar</button>
-                            </form>
                             <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded w-full" onclick="toggleModal('confirm_clear_modal')">Vaciar carrito</button>
                         </div>
                     </div>
@@ -133,7 +128,6 @@
                 onApprove: function(data, actions) {
                     // Captura el pago cuando se aprueba
                     return actions.order.capture().then(function(details) {
-                        alert('Pago completado por ' + details.payer.name.given_name);
                         document.getElementById('paypal-button-container').style.display = 'none';
                         document.getElementById('compra-completada-message').style.display = 'block';
 

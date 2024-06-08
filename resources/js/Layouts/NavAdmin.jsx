@@ -48,7 +48,7 @@ export default function NavAdmin({ user, header, children }) {
                     </li>
 
                     <li className="transition-all duration-150 hover:scale-105 max-[400px]:text-sm">
-                        <a href="admin/citas" className="text-white flex items-center ">
+                        <a href="admin/citas" className="text-white flex items-center">
                             <svg fill="currentColor" className="mr-2.5 pb-1" height="32" width="28" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 610.398 610.398" xml:space="preserve">
                                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -82,7 +82,7 @@ export default function NavAdmin({ user, header, children }) {
                         </a>
                     </li>
                     <li className="transition-all duration-150 hover:scale-105 max-[400px]:text-sm">
-                        <a href="admin/productos" className="text-white flex items-center ">
+                        <a href="admin/productos" className="text-white flex items-center">
                             <svg fill="currentColor" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve" width="34px" height="30px" className="mr-1.5 pb-1 productos-icon" stroke="currentColor">
                                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -103,7 +103,7 @@ export default function NavAdmin({ user, header, children }) {
                         </a>
                     </li>
                     <li className="transition-all duration-150 hover:scale-105 max-[400px]:text-sm">
-                        <a href="admin/bloqueos" className="text-white flex items-center ">
+                        <a href="admin/bloqueos" className="text-white flex items-center">
                             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="" width="30px" height="30px" className="text-teal-400 hover:text-teal mr-1.5 pb-1 productos-icon">
                                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
