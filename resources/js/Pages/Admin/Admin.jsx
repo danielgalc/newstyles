@@ -4,7 +4,7 @@ import React from 'react';
 
 const Admin = ({ auth, usuarios, citas, servicios, productos, bloqueos }) => {
   return (
-    <div className="max-[400px]:p-2">
+    <div>
       <NavAdmin user={auth.user}>
         <h1 className="text-6xl font-bold mb-4 max-[400px]:text-3xl">
           Bienvenido, <span className="text-teal-500">{auth.user.name}</span>

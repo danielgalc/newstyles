@@ -167,16 +167,21 @@ export default function NavAdmin({ user, header, children }) {
                         onClick={() => setShowingNavigationDropdown(false)}
                     ></div>
                     <div className="fixed inset-y-0 left-0 bg-teal-400 p-4 z-20 transform transition-transform duration-300 ease-in-out w-64 translate-x-0">
-                        <a href="admin/usuarios" className="block px-3 py-2 text-white hover:text-teal-700">Usuarios</a>
-                        <a href="admin/citas" className="block px-3 py-2 text-white hover:text-teal-700">Gestionar citas</a>
-                        <a href="admin/servicios" className="block px-3 py-2 text-white hover:text-teal-700">Lista de servicios</a>
-                        <a href="admin/productos" className="block px-3 py-2 text-white hover:text-teal-700">Lista de productos</a>
-                        <a href="admin/bloqueos" className="block px-3 py-2 text-white hover:text-teal-700">Horas bloqueadas</a>
-                        <a href="admin/pedidos" className="block px-3 py-2 text-white hover:text-teal-700">Gestionar Pedidos</a>
+                    <div className="text-black text-2xl font-semibold mb-4 max-[400px]:mb-2">
+                    <a href="/admin">
+                        <img src="images/png/logo-black-transparente.png" alt="Logo Black" className="w-40 h-auto m-auto z-index-1 max-[400px]:w-32" />
+                    </a>
+                </div>
+                        <a href="admin/usuarios" className="block px-3 py-2 text-white max-[400px]:text-black max-[400px]:font-righteous hover:text-teal-700">Usuarios</a>
+                        <a href="admin/citas" className="block px-3 py-2 text-white max-[400px]:text-black max-[400px]:font-righteous hover:text-teal-700">Gestionar citas</a>
+                        <a href="admin/servicios" className="block px-3 py-2 text-white max-[400px]:text-black max-[400px]:font-righteous hover:text-teal-700">Lista de servicios</a>
+                        <a href="admin/productos" className="block px-3 py-2 text-white max-[400px]:text-black max-[400px]:font-righteous hover:text-teal-700">Lista de productos</a>
+                        <a href="admin/bloqueos" className="block px-3 py-2 text-white max-[400px]:text-black max-[400px]:font-righteous hover:text-teal-700">Horas bloqueadas</a>
+                        <a href="admin/pedidos" className="block px-3 py-2 text-white max-[400px]:text-black max-[400px]:font-righteous hover:text-teal-700">Gestionar Pedidos</a>
                         <a
                             onClick={handleLogout}
                             href='/'
-                            className="block px-3 py-2 text-red-500 hover:text-red-700"
+                            className="block px-3 py-2 text-red-500 max-[400px]:text-red-600 max-[400px]:font-righteous hover:text-red-700"
                         >
                             Cerrar sesión
                         </a>
