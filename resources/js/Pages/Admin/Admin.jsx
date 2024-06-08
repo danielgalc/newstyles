@@ -98,13 +98,12 @@ const Admin = ({ auth, usuarios, citas, servicios, productos, bloqueos, pedidos 
           <TablaAdmin
             titulo="Lista de Pedidos"
             subtitulo="Últimos pedidos realizados"
-            columnas={['Usuario', 'Fecha de Compra', 'Precio Total', 'Estado', 'Transaccion']}
+            columnas={['Transaccion', 'Fecha de Compra', 'Precio Total', 'Estado']}
             datos={pedidos.map((pedido) => ({
-              user: pedido.name,
-              precio: pedido.precio_total,
-              fecha_compra: new Date(pedido.fecha_compra).toLocaleDateString('es-ES'),
-              estado: pedido.estado,
               transaccion: pedido.transaccion,
+              fecha_compra: new Date(pedido.fecha_compra).toLocaleDateString('es-ES'),
+              precio: `${pedido.precio_total}€`,
+              estado: pedido.estado,
             }))}
             link="admin/pedidos"
           />
