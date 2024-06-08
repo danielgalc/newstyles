@@ -51,9 +51,9 @@
             <h2 class="text-2xl font-semibold text-teal-600 mb-4">Detalles del Pedido</h2>
             <div id="detallesContenido" class="grid grid-cols-2 gap-4"></div>
             <button class="mt-4 bg-teal-500 text-white py-2 px-4 rounded" onclick="cerrarDetalles()">Cerrar</button>
-            <a id="descargarPDF" href="#" target="_blank" class="mt-4 bg-blue-500 text-white py-2 px-4 rounded hidden">Descargar PDF</a>
             <button id="cancelarPedido" class="mt-4 bg-red-500 text-white py-2 px-4 rounded hidden" onclick="abrirConfirmacion()">Cancelar</button>
-        </div>
+            <button id="descargarPDF" class="bg-blue-500 text-white py-2 px-4 rounded rounded"><a id="descargarPDF" href="#" target="_blank" >Descargar PDF</a></button>
+            </div>
     </div>
 
     <!-- Modal para confirmar la cancelación -->

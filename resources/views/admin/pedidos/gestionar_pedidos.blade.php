@@ -17,6 +17,7 @@
                 <option value="pendiente" {{ request('estado') == 'pendiente' ? 'selected' : '' }}>Pendiente</option>
                 <option value="completado" {{ request('estado') == 'completado' ? 'selected' : '' }}>Completado</option>
                 <option value="cancelado" {{ request('estado') == 'cancelado' ? 'selected' : '' }}>Cancelado</option>
+                <option value="enviado" {{ request('estado') == 'enviado' ? 'selected' : '' }}>Enviado</option>
             </select>
             <input type="text" name="buscar" placeholder="Buscar pedidos..." class="rounded border-gray-300 mr-2" value="{{ request('buscar') }}">
             <button type="submit" class="ml-2 text-white bg-teal-500 hover:bg-teal-800 focus:ring-4 focus:outline-none focus:ring-teal-300 font-medium rounded-lg text-sm px-4 h-10 text-center dark:bg-teal-600 dark:hover:bg-teal-700 dark:focus:ring-teal-800">Buscar</button>
@@ -37,7 +38,7 @@
             <!-- Modal header -->
             <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                 <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                    Productos del Pedido: <span class="italic text-teal-600">{{ $pedido->transaccion }}</span>
+                    Productos del Pedido: <span class="italic text-teal-400">{{ $pedido->transaccion }}</span>
                 </h3>
                 <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="productos_pedido_modal_{{ $pedido->id }}">
                     <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
@@ -47,7 +48,7 @@
                 </button>
             </div>
             <!-- Modal body -->
-            <div class="p-4 md:p-5">
+            <div class="p-4 md:p-5 dark:text-white">
                 <ul>
                     @foreach ($pedido->productos as $producto)
                         <li>{{ $producto['nombre'] }} - Cantidad: {{ $producto['cantidad'] }}</li>
