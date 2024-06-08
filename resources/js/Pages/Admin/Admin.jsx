@@ -4,13 +4,13 @@ import React from 'react';
 
 const Admin = ({ auth, usuarios, citas, servicios, productos, bloqueos }) => {
   return (
-    <div>
+    <div className="max-[400px]:p-2">
       <NavAdmin user={auth.user}>
-        <h1 className="text-6xl font-bold mb-4">
+        <h1 className="text-6xl font-bold mb-4 max-[400px]:text-3xl">
           Bienvenido, <span className="text-teal-500">{auth.user.name}</span>
         </h1>
-        <div className="user-preview-container grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 gap-4">
-        <TablaAdmin
+        <div className="user-preview-container grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 gap-4 max-[400px]:gap-2">
+          <TablaAdmin
             titulo="Usuarios"
             subtitulo="Últimos usuarios añadidos"
             columnas={['Nombre', 'Email', 'DNI', 'Teléfono', 'Dirección', 'Rol', 'Verificado', 'Última Modificación']}
@@ -27,7 +27,7 @@ const Admin = ({ auth, usuarios, citas, servicios, productos, bloqueos }) => {
             link="admin/usuarios"
           />
         </div>
-        <div className="max-w-8xl mx-auto mt-4">
+        <div className="max-w-8xl mx-auto mt-4 max-[400px]:mt-2">
           <TablaAdmin
             titulo="Citas"
             subtitulo="Últimas citas añadidas"
@@ -44,7 +44,7 @@ const Admin = ({ auth, usuarios, citas, servicios, productos, bloqueos }) => {
             link="admin/citas"
           />
         </div>
-        <div className="max-w-8xl mx-auto mt-4">
+        <div className="max-w-8xl mx-auto mt-4 max-[400px]:mt-2">
           <TablaAdmin
             titulo="Servicios"
             subtitulo="Últimos servicios agregados"
@@ -60,7 +60,7 @@ const Admin = ({ auth, usuarios, citas, servicios, productos, bloqueos }) => {
             link="admin/servicios"
           />
         </div>
-        <div className="max-w-8xl mx-auto mt-4">
+        <div className="max-w-8xl mx-auto mt-4 max-[400px]:mt-2">
           <TablaAdmin
             titulo="Productos"
             subtitulo="Últimos productos agregados"
@@ -76,7 +76,7 @@ const Admin = ({ auth, usuarios, citas, servicios, productos, bloqueos }) => {
             link="admin/productos"
           />
         </div>
-        <div className="max-w-8xl mx-auto mt-4">
+        <div className="max-w-8xl mx-auto mt-4 max-[400px]:mt-2">
           <TablaAdmin
             titulo="Bloqueos de Peluqueros"
             subtitulo="Últimos bloqueos añadidos"

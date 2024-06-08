@@ -18,18 +18,18 @@ export default function NavAdmin({ user, header, children }) {
 
 
     return (
-        <div className="flex h-screen bg-gray-100">
+        <div className="flex h-screen bg-gray-100 max-[400px]:flex-col">
             {/* Barra de navegación lateral */}
-            <aside className="flex flex-col w-64 bg-teal-400 shadow-md text-lg font-inter text-center pt-4">
+            <aside className="flex flex-col w-64 bg-teal-400 shadow-md text-lg font-inter text-center pt-4 max-[400px]:w-full max-[400px]:h-auto max-[400px]:pt-2 max-[400px]:hidden">
                 {/* Logo de la aplicación */}
-                <div class="text-black text-2xl font-semibold mb-4">
+                <div className="text-black text-2xl font-semibold mb-4 max-[400px]:mb-2">
                     <a href="/admin">
-                        <img src="images/png/logo-black-transparente.png" alt="Logo Black" class="w-40 h-auto m-auto z-index-1" />
+                        <img src="images/png/logo-black-transparente.png" alt="Logo Black" className="w-40 h-auto m-auto z-index-1 max-[400px]:w-32" />
                     </a>
                 </div>
 
                 {/* Correo electrónico del administrador con línea inferior */}
-                <div className='border-b border-black text-sm font-thin italic py-2'>
+                <div className='border-b border-black text-sm font-thin italic py-2 max-[400px]:py-1'>
                     <span className='mb-4 px-4'>
                         {user.email}
                     </span>
@@ -37,19 +37,19 @@ export default function NavAdmin({ user, header, children }) {
 
 
                 {/* Enlaces de navegación */}
-                <ul class="space-y-8 mt-8 p-4">
-                    <li class="transition-all duration-150 hover:scale-105">
-                        <a href="admin/usuarios" class="text-white flex items-center hover:text-teal-700">
-                            <svg class="svg-icon-2 mr-2 pb-1 hover:text-teal-700" xmlns="http://www.w3.org/2000/svg" height="16" width="14" viewBox="0 0 448 512" fill="currentColor">
+                <ul className="space-y-8 mt-8 p-4 max-[400px]:space-y-4 max-[400px]:mt-4">
+                    <li className="transition-all duration-150 hover:scale-105 max-[400px]:text-sm">
+                        <a href="admin/usuarios" className="text-white flex items-center hover:text-teal-700">
+                            <svg className="svg-icon-2 mr-2 pb-1 hover:text-teal-700" xmlns="http://www.w3.org/2000/svg" height="16" width="14" viewBox="0 0 448 512" fill="currentColor">
                                 <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z" />
                             </svg>
                             Usuarios
                         </a>
                     </li>
 
-                    <li class="transition-all duration-150 hover:scale-105">
-                        <a href="admin/citas" class="text-white flex items-center hover:text-teal-700">
-                            <svg fill="currentColor" class="mr-2.5 pb-1" height="32" width="28" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 610.398 610.398" xml:space="preserve">
+                    <li className="transition-all duration-150 hover:scale-105 max-[400px]:text-sm">
+                        <a href="admin/citas" className="text-white flex items-center hover:text-teal-700">
+                            <svg fill="currentColor" className="mr-2.5 pb-1" height="32" width="28" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 610.398 610.398" xml:space="preserve">
                                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
                                 <g id="SVGRepo_iconCarrier">
@@ -73,17 +73,17 @@ export default function NavAdmin({ user, header, children }) {
                             Gestionar citas
                         </a>
                     </li>
-                    <li class="transition-all duration-150 hover:scale-105">
-                        <a href="admin/servicios" class="text-white flex items-center hover:text-teal-700">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="34" height="30" fill="currentColor" class="tijeras-icon mr-2 pb-1" viewBox="0 0 16 16">
+                    <li className="transition-all duration-150 hover:scale-105 max-[400px]:text-sm">
+                        <a href="admin/servicios" className="text-white flex items-center hover:text-teal-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="34" height="30" fill="currentColor" className="tijeras-icon mr-2 pb-1" viewBox="0 0 16 16">
                                 <path d="M3.5 3.5c-.614-.884-.074-1.962.858-2.5L8 7.226 11.642 1c.932.538 1.472 1.616.858 2.5L8.81 8.61l1.556 2.661a2.5 2.5 0 1 1-.794.637L8 9.73l-1.572 2.177a2.5 2.5 0 1 1-.794-.637L7.19 8.61 3.5 3.5zm2.5 10a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0zm7 0a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0z" />
                             </svg>
                             Lista de servicios
                         </a>
                     </li>
-                    <li class="transition-all duration-150 hover:scale-105">
-                        <a href="admin/productos" class="text-white flex items-center hover:text-teal-700">
-                            <svg fill="currentColor" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve" width="34px" height="30px" class="mr-1.5 pb-1 productos-icon" stroke="currentColor">
+                    <li className="transition-all duration-150 hover:scale-105 max-[400px]:text-sm">
+                        <a href="admin/productos" className="text-white flex items-center hover:text-teal-700">
+                            <svg fill="currentColor" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve" width="34px" height="30px" className="mr-1.5 pb-1 productos-icon" stroke="currentColor">
                                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
                                 <g id="SVGRepo_iconCarrier">
@@ -102,7 +102,7 @@ export default function NavAdmin({ user, header, children }) {
                             Lista de productos
                         </a>
                     </li>
-                    <li className="transition-all duration-150 hover:scale-105">
+                    <li className="transition-all duration-150 hover:scale-105 max-[400px]:text-sm">
                         <a href="admin/bloqueos" className="text-white flex items-center hover:text-teal-700">
                             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="" width="30px" height="30px" className="text-teal-400 hover:text-teal mr-1.5 pb-1 productos-icon">
                                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -114,7 +114,7 @@ export default function NavAdmin({ user, header, children }) {
                             Horas bloqueadas
                         </a>
                     </li>
-                    <li className="transition-all duration-150 hover:scale-105">
+                    <li className="transition-all duration-150 hover:scale-105 max-[400px]:text-sm">
                         <a href="admin/pedidos" className="text-white flex items-center hover:text-teal-700">
                             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="" width="30px" height="30px" className="text-teal-400 hover:text-teal mr-1.5 pb-1 productos-icon">
                                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -132,7 +132,7 @@ export default function NavAdmin({ user, header, children }) {
                         <a
                             onClick={handleLogout}
                             href='/'
-                            className="w-full mt-auto py-3 text-center text-[20px] text-red hover:before:bg-redborder-red-500 relative h-[50px] w-40 overflow-hidden bg-white px-3 text-red-500 shadow-2xl transition-all before:absolute before:bottom-0 before:left-0 before:top-0 before:z-0 before:h-full before:w-0 before:bg-red-500 before:transition-all before:duration-500 hover:text-white hover:shadow-red-500 hover:before:left-0 hover:before:w-full"
+                            className="w-full mt-auto py-3 text-center text-[20px] text-red hover:before:bg-redborder-red-500 relative h-[50px] w-40 overflow-hidden bg-white px-3 text-red-500 shadow-2xl transition-all before:absolute before:bottom-0 before:left-0 before:top-0 before:z-0 before:h-full before:w-0 before:bg-red-500 before:transition-all before:duration-500 hover:text-white hover:shadow-red-500 hover:before:left-0 hover:before:w-full max-[400px]:text-sm max-[400px]:h-[40px] max-[400px]:w-full max-[400px]:text-white max-[400px]:bg-red-500"
                         >
                             <span className='relative z-10'>
                                 Cerrar sesión
@@ -143,19 +143,60 @@ export default function NavAdmin({ user, header, children }) {
                 </Menu>
 
             </aside>
+            {/* Menu hamburguesa */}
+            <nav className="max-[400px]:w-full bg-teal-400 w-full md:hidden p-4 flex justify-between items-center">
+                <div className="text-black text-2xl font-semibold mb-4 max-[400px]:mb-2">
+                    <a href="/admin">
+                        <img src="images/png/logo-black-transparente.png" alt="Logo Black" className="w-40 h-auto m-auto z-index-1 max-[400px]:w-32" />
+                    </a>
+                </div>
+                <button
+                    onClick={() => setShowingNavigationDropdown(!showingNavigationDropdown)}
+                    className="text-white focus:outline-none"
+                >
+                    <svg className="w-6 h-6" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
+                        <path d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </nav>
+
+            {showingNavigationDropdown && (
+                <div>
+                    <div
+                        className="fixed inset-0 bg-black bg-opacity-50 z-10"
+                        onClick={() => setShowingNavigationDropdown(false)}
+                    ></div>
+                    <div className="fixed inset-y-0 left-0 bg-teal-400 p-4 z-20 transform transition-transform duration-300 ease-in-out w-64 translate-x-0">
+                        <a href="admin/usuarios" className="block px-3 py-2 text-white hover:text-teal-700">Usuarios</a>
+                        <a href="admin/citas" className="block px-3 py-2 text-white hover:text-teal-700">Gestionar citas</a>
+                        <a href="admin/servicios" className="block px-3 py-2 text-white hover:text-teal-700">Lista de servicios</a>
+                        <a href="admin/productos" className="block px-3 py-2 text-white hover:text-teal-700">Lista de productos</a>
+                        <a href="admin/bloqueos" className="block px-3 py-2 text-white hover:text-teal-700">Horas bloqueadas</a>
+                        <a href="admin/pedidos" className="block px-3 py-2 text-white hover:text-teal-700">Gestionar Pedidos</a>
+                        <a
+                            onClick={handleLogout}
+                            href='/'
+                            className="block px-3 py-2 text-red-500 hover:text-red-700"
+                        >
+                            Cerrar sesión
+                        </a>
+                    </div>
+                </div>
+            )}
+
 
             {/* Contenido principal */}
-            <div className="bg-white flex flex-col flex-1 w-7xl">
+            <div className="bg-white flex flex-col flex-1 w-7xl max-[400px]:w-full">
                 {/* Encabezado */}
                 {header && (
-                    <header className="bg-white shadow py-4 px-6">
+                    <header className="bg-white shadow py-4 px-6 max-[400px]:py-2 max-[400px]:px-4">
                         <div className="max-w-7xl mx-auto">{header}</div>
                     </header>
                 )}
 
                 {/* Contenido */}
                 <div className="flex-1 overflow-y-auto">
-                    <div className="max-w-8xl mx-auto py-6 px-4">{children}</div>
+                    <div className="max-w-8xl mx-auto py-6 px-4 max-[400px]:py-3 max-[400px]:px-2">{children}</div>
                 </div>
             </div>
         </div>
