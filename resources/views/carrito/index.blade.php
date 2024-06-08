@@ -62,6 +62,11 @@
                                     Compra completada
                                 </div>
                             </div>
+                            <form action="{{route('completarCompra')}}" method="post">
+                                @csrf
+                                @method('post')
+                                <button type="submit">Comprar</button>
+                            </form>
                             <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded w-full" onclick="toggleModal('confirm_clear_modal')">Vaciar carrito</button>
                         </div>
                     </div>

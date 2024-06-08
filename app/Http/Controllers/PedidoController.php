@@ -14,7 +14,7 @@ class PedidoController extends Controller
     // Mostrar la lista de pedidos
     public function index()
     {
-        $pedidos = Pedido::withTrashed()->get(); // Incluye los pedidos eliminados
+        $pedidos = Pedido::get(); // Incluye los pedidos eliminados
         return view('pedidos.index', compact('pedidos'));
     }
 
@@ -135,17 +135,17 @@ class PedidoController extends Controller
     // Mostrar el formulario para editar un pedido específico
     public function edit($id)
     {
-        $pedido = Pedido::withTrashed()->findOrFail($id);
+        $pedido = Pedido::findOrFail($id);
         return view('pedidos.edit', compact('pedido'));
     }
 
     // Actualizar un pedido específico
     public function update(Request $request, $id)
     {
-        $pedido = Pedido::withTrashed()->findOrFail($id);
+        $pedido = Pedido::findOrFail($id);
 
         $request->validate([
-            'estado' => 'required|string|in:pendiente,aceptado,completado,cancelado',
+            'estado' => 'required|string|in:pendiente,aceptado,enviado,cancelado',
         ]);
 
         $pedido->estado = $request->estado;
@@ -162,25 +162,5 @@ class PedidoController extends Controller
 
         return redirect()->route('admin.pedidos')
             ->with('success', 'Pedido eliminado con éxito.');
-    }
-
-    // Restaurar un pedido específico
-    public function restore($id)
-    {
-        $pedido = Pedido::withTrashed()->findOrFail($id);
-        $pedido->restore();
-
-        return redirect()->route('pedidos.index')
-            ->with('success', 'Pedido restaurado con éxito.');
-    }
-
-    // Eliminar permanentemente un pedido específico
-    public function forceDelete($id)
-    {
-        $pedido = Pedido::withTrashed()->findOrFail($id);
-        $pedido->forceDelete();
-
-        return redirect()->route('pedidos.index')
-            ->with('success', 'Pedido eliminado permanentemente con éxito.');
     }
 }

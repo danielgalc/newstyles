@@ -169,12 +169,12 @@ class AdminController extends Controller
     
         // Aplicar búsqueda si está presente
         if ($buscar) {
-            $query->whereHas('user', function($q) use ($buscar) {
-                $q->where('name', 'LIKE', "%{$buscar}%")
-                  ->orWhere('email', 'LIKE', "%{$buscar}%")
-                  ->orWhere('id', 'LIKE', "%{$buscar}%")
-                  ->orWhere('dni', 'LIKE', "%{$buscar}%");
-            })->orWhere('transaccion', 'LIKE', "%{$buscar}%");
+            $query->where(function($q) use ($buscar) {
+                $q->whereHas('user', function($q) use ($buscar) {
+                    $q->where('name', 'LIKE', "%{$buscar}%")
+                      ->orWhere('email', 'LIKE', "%{$buscar}%");
+                })->orWhere('transaccion', 'LIKE', "%{$buscar}%");
+            });
         }
     
         // Aplicar filtro de estado si está presente
@@ -197,12 +197,14 @@ class AdminController extends Controller
                 })
                 ->toArray();
         }
+
+        $estados = Pedido::select('estado')->distinct()->whereNotNull('estado')->pluck('estado');
     
         if ($request->ajax()) {
             return view('admin.pedidos.partials.pedidos_list', compact('pedidos'))->render();
         }
     
-        return view('admin.pedidos.gestionar_pedidos', compact('pedidos', 'estado', 'buscar', 'users'));
+        return view('admin.pedidos.gestionar_pedidos', compact('pedidos', 'estado', 'estados', 'buscar', 'users'));
     }
 
 
