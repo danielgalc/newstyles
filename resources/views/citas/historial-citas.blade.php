@@ -140,7 +140,7 @@
                     </div>
                     <!-- Modal body -->
                     <div class="p-4 md:p-5 dark:text-white">
-                        <p>¿Estás seguro de que quieres cancelar esta cita? ID: {{ $proximaCita->id }}</p>
+                        <p>¿Estás seguro de que quieres cancelar esta cita?</p>
                         <div class="flex justify-end items-center mt-4">
                             <form action="{{ route('citas.cancelar', ['id' => $proximaCita->id]) }}" method="post" class="p-4 md:p-5">
                                 @csrf

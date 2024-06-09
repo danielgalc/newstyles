@@ -134,7 +134,7 @@
             </div>
             <!-- Modal body -->
             <div class="p-4 md:p-5 dark:text-white">
-                <p>¿Estás seguro de que quieres eliminar este pedido? ID: {{ $pedido->id }}</p>
+                <p>¿Estás seguro de que quieres eliminar este pedido?</p>
                 <div class="flex justify-end items-center mt-4">
                     <form action="{{ route('pedidos.destroy', ['id' => $pedido->id]) }}" method="post" class="p-4 md:p-5">
                         @csrf

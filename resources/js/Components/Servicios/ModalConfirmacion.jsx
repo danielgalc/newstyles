@@ -6,6 +6,14 @@ export default function ModalConfirmacion({ isOpen, onClose, reservaInfo }) {
 
   const { fecha, hora, servicio } = reservaInfo;
 
+  // Formatear la fecha
+  const fechaObj = new Date(fecha);
+  const fechaFormateada = `${fechaObj.getDate().toString().padStart(2, '0')}-${(fechaObj.getMonth() + 1).toString().padStart(2, '0')}-${fechaObj.getFullYear()}`;
+
+  // Formatear la hora
+  const [hour, minute] = hora.split(':');
+  const horaFormateada = `${hour.padStart(2, '0')}:${minute.padStart(2, '0')}`;
+
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-10">
       <div className="bg-gray-200 rounded-lg shadow-lg p-6 w-full max-w-md">
@@ -18,7 +26,7 @@ export default function ModalConfirmacion({ isOpen, onClose, reservaInfo }) {
           </button>
         </div>
         <div className="mt-4">
-          <p>Su cita para el día <b>{fecha}</b> a las <b>{hora}</b> horas ha sido solicitada para el servicio: <span className='italic'><b>{servicio.nombre}</b></span></p>
+          <p>Su cita para el día <b>{fechaFormateada}</b> a las <b>{horaFormateada}</b> horas ha sido solicitada para el servicio: <span className='italic'><b>{servicio.nombre}</b></span></p>
           <br />
           <p>Observe el estado de su próxima cita o modifíquela en el <a href="historial-citas" className='text-teal-600'>historial de citas</a>.</p>
         </div>

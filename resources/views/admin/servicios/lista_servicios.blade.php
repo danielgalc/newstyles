@@ -106,7 +106,7 @@
             </div>
             <!-- Modal body -->
             <div class="p-4 md:p-5">
-                <p class="text-white">¿Estás seguro de que quieres eliminar el servicio: <span class="italic text-teal-400">{{$servicio->nombre}}</span>?</p>
+                <p class="text-white">¿Estás seguro de que quieres eliminar el servicio?</p>
                 <div class="flex justify-end items-center mt-4">
                     <form action="{{ route('servicios.destroy', ['id' => $servicio->id]) }}" method="post" class="p-4 md:p-5">
                         @csrf

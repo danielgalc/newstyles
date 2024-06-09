@@ -89,7 +89,7 @@
                 </button>
             </div>
             <div class="p-4 md:p-5">
-                <p class="dark:text-white">¿Estás seguro de que quieres eliminar este bloqueo? <br> <span class="text-teal-400 italic">ID: {{ $bloqueo->id }}</span></p>
+                <p class="dark:text-white">¿Estás seguro de que quieres eliminar este bloqueo?</p>
                 <div class="flex justify-end items-center mt-4">
                     <form action="{{ route('bloqueos.destroy', ['id' => $bloqueo->id]) }}" method="post" class="p-4 md:p-5">
                         @csrf

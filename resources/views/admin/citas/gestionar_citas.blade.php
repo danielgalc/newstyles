@@ -129,7 +129,7 @@
                 </button>
             </div>
             <div class="p-4 md:p-5">
-                <p class="dark:text-white">¿Estás seguro de que quieres eliminar esta cita? <br> <span class="text-teal-400 italic">ID: {{ $cita->id }}</span></p>
+                <p class="dark:text-white">¿Estás seguro de que quieres eliminar esta cita?</p>
                 <div class="flex justify-end items-center mt-4">
                     <form action="{{ route('admin.citas.destroy', ['id' => $cita->id]) }}" method="post" class="p-4 md:p-5">
                         @csrf

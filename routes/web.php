@@ -29,6 +29,7 @@ Route::middleware(['comprobarRol', 'comprobarRolPeluquero'])->group(function () 
 
 Route::middleware(['auth', 'comprobarRol', 'comprobarRolPeluquero'])->group(function(){
     Route::post('/carrito/add/{producto}', [CarritoController::class, 'add'])->name('add');
+    Route::middleware('auth')->post('/carrito/migrar', [CarritoController::class, 'migrar'])->name('carrito.migrar');
 });
 
 // Rutas accesibles para el usuario logueado
@@ -39,7 +40,6 @@ Route::middleware(['auth', 'verified', 'comprobarRol', 'comprobarRolPeluquero'])
     Route::post('/carrito/completar-compra', [CarritoController::class, 'completarCompra'])->name('completarCompra');
     Route::post('/carrito/decrementarCantidad/{carritoItem}', [CarritoController::class, 'decrementarCantidad'])->name('decrementarCantidad');
     Route::post('/carrito/incrementarCantidad/{carritoItem}', [CarritoController::class, 'incrementarCantidad'])->name('incrementarCantidad');    
-    Route::middleware('auth')->post('/carrito/migrar', [CarritoController::class, 'migrar'])->name('carrito.migrar');
 
     // Rutas de citas del usuario
     Route::get('/citas', [CitaController::class, 'index']);

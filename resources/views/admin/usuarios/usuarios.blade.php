@@ -116,7 +116,7 @@
             </div>
             <!-- Modal body -->
             <div class="p-4 md:p-5">
-                <p class="dark:text-white">¿Estás seguro de que quieres eliminar este usuario? <br> <span class="text-teal-400 italic">ID: {{ $usuario->id }} ({{ $usuario->name }})</span></p>
+                <p class="dark:text-white">¿Estás seguro de que quieres eliminar este usuario?</p>
                 <div class="flex justify-end items-center mt-4">
                     <form action="{{ route('users.destroy', ['id' => $usuario->id]) }}" method="post" class="p-4 md:p-5">
                         @csrf
