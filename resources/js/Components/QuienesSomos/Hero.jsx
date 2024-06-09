@@ -6,7 +6,6 @@ const Hero = ({ imageUrl }) => {
       <img src={imageUrl} alt="Imagen" className="w-full h-96 object-cover bg-black" />
 
       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-black to-transparent animate-slide-down"></div>
-
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white font-bold text-xl animate-fade-in">
           <p className="font-italic">¡Bienvenido a <span className="font-righteous text-teal-400">NEWSTYLES</span>, tu destino de belleza y estilo en el corazón de la ciudad! En NewStyles, nos enorgullece ofrecerte una experiencia única donde la pasión por la belleza se une con la innovación y la atención personalizada.</p>
           <br />

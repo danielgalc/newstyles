@@ -77,7 +77,7 @@ const Footer = ({ auth }) => {
                     <h1 className="text-6xl font-righteous">CONTACTA CON NOSOTROS</h1>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center md:text-left">
-                    <div className="bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg rounded-lg p-6 shadow-lg">
+                    <div className="bg-black bg-opacity-5 backdrop-filter backdrop-blur-lg rounded-lg p-6 shadow-lg">
                         <form className="space-y-4" onSubmit={submit}>
                             <div>
                                 <label className="block text-sm font-medium mb-1" htmlFor="name">Nombre</label>
@@ -152,29 +152,31 @@ const Footer = ({ auth }) => {
                     <div className="flex justify-center items-center">
                         <img src="images/png/logo-black-transparente.png" alt="Logo Black" className="w-56 h-auto m-auto z-index-1 drop-shadow-lg" />
                     </div>
-                    <div className='flex flex-col justify-center'>
+                    <div className='flex flex-col justify-center bg-black text-center bg-opacity-5 backdrop-filter backdrop-blur-lg rounded-lg shadow-lg'>
+                        <div className='text-start mx-auto'>
                         <h2 className="text-2xl font-righteous mb-4">INFORMACIÓN DE CONTACTO</h2>
-                        <p className="mb-4 text-lg">Dirección: Calle Falsa 123, Ciudad, País</p>
-                        <p className="mb-4 text-lg">Teléfono: +1 (234) 567-8901</p>
-                        <p className="mb-4 text-lg">Correo electrónico: info@newstyles.com</p>
-                        <p className="mb-4 text-lg">Horario de atención: Lunes a Viernes - 10h a 18h</p>
-                        <div className="flex justify-between gap-16 w-full items-center mx-auto md:justify-start space-x-4 mt-4">
+                        <p className="mb-4 text-lg"><strong>Dirección:</strong><span className='italic'> Calle Falsa 123, Ciudad, País</span></p>
+                        <p className="mb-4 text-lg"><strong>Teléfono:</strong><span className='italic'> +1 (234) 567-8901 </span></p>
+                        <p className="mb-4 text-lg"><strong>Correo electrónico:</strong><span className='italic'> info@newstyles.com </span></p>
+                        <p className="mb-4 text-lg"><strong>Horario de atención:</strong><span className='italic'> Lunes a Viernes - 10h a 18h </span></p>
+                        </div>
+                        <div className="flex justify-between gap-16 w-full items-center mx-auto md:justify-center space-x-4 mt-4">
                             <a href="#" className="text-gray-800 hover:text-gray-600">
                                 <div className="w-8 h-8 rounded-full bg-cover bg-center" style={{ backgroundImage: 'url(https://graffica.ams3.digitaloceanspaces.com/2023/07/F1ySdm9WYAIbjHo-1024x1024.jpeg)' }}>
                                 </div>
                             </a>
-                            <a href="#" className="text-gray-800 hover:text-gray-600">
+                            <a href="https://www.facebook.com/" target="_blank" className="text-gray-800 hover:text-gray-600">
                                 <div className="w-8 h-8 rounded-full bg-cover bg-center" style={{ backgroundImage: 'url(https://cdn.pixabay.com/photo/2021/06/15/12/51/facebook-6338507_1280.png)' }}>
                                 </div>
                             </a>
-                            <a href="#" className="text-gray-800 hover:text-gray-600">
+                            <a href="https://www.instagram.com/" target="_blank" className="text-gray-800 hover:text-gray-600">
                                 <div className="w-8 h-8 rounded-full bg-cover bg-center" style={{ backgroundImage: 'url(https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Instagram_logo_2022.svg/1000px-Instagram_logo_2022.svg.png)' }}>
                                 </div>
                             </a>
                         </div>
                     </div>
                 </div>
-                <div className="mt-12 text-center border-t border-gray-600 pt-4">
+                <div className="text-black font-righteous mt-12 text-center border-t border-gray-600 pt-4">
                     <p>&copy; 2024 NewStyles. Todos los derechos reservados.</p>
                 </div>
             </div>

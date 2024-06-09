@@ -52,7 +52,7 @@
             <div id="detallesContenido" class="grid grid-cols-2 gap-4"></div>
             <button class="mt-4 bg-teal-500 text-white py-2 px-4 rounded" onclick="cerrarDetalles()">Cerrar</button>
             <button id="cancelarPedido" class="mt-4 bg-red-500 text-white py-2 px-4 rounded hidden" onclick="abrirConfirmacion()">Cancelar</button>
-            <button id="descargarPDF" class="bg-blue-500 text-white py-2 px-4 rounded rounded"><a id="descargarPDF" href="#" target="_blank" >Descargar PDF</a></button>
+            <button class="bg-blue-500 text-white py-2 px-4 rounded rounded"><a id="descargarPDF" href="#" target="_blank" >Descargar PDF</a></button>
             </div>
     </div>
 
