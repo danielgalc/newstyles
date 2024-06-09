@@ -71,14 +71,14 @@ export default function ProductoCard({ producto, auth, onProductoAdded }) {
             </Zoom>
             <div className="text-container">
                 <h3 className="text-lg font-semibold">{producto.nombre}</h3>
-                <p className="text-gray-400">{producto.descripcion}</p>
+                <p className="text-sm italic">{producto.descripcion}</p>
                 <p className="text-lg font-bold text-teal-600">{producto.precio}&euro;</p>
-                <p className="text-gray-500">Stock: {stock}</p> {/* Mostrar el stock actualizado */}
+                <p className="">Stock: {stock}</p> {/* Mostrar el stock actualizado */}
                 <div className="flex items-center mt-2">
                     <div className='flex gap-4'>
                         <button
                             onClick={handleAddToCart}
-                            className="bg-teal-500 text-white py-2 px-4 rounded hover:bg-teal-700"
+                            className={`bg-teal-700 text-white py-2 px-4 rounded hover:bg-teal-400 ${stock === 0 ? 'cursor-not-allowed' : ''}`}
                             disabled={stock === 0 || cantidad < 1}
                         >
                             {stock === 0 ? 'Sin stock' : 'Añadir al carrito'}
