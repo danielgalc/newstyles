@@ -101,11 +101,11 @@
                                         <option value="{{ $servicio->id }}" {{ $proximaCita->servicio_id == $servicio->id ? 'selected' : '' }}>{{ $servicio->nombre }}</option>
                                     @endforeach
                                 </select>
-                                <p id="texto_servicio_{{ $proximaCita->id }}" class="text-red-500 text-xs italic mb-2 hidden">Debes seleccionar un servicio.</p>
+                                <p id="texto_servicio_{{ $proximaCita->id }}" class="text-red-600 dark:text-red-300 text-sm mb-2 hidden">Debes seleccionar un servicio.</p>
                             </div>
                         </div>
-                        <p id="texto_cambio_{{ $proximaCita->id }}" class="text-red-500 text-xs italic mb-2 hidden">Has de realizar cambios para poder guardar</p>
-                        <p id="texto_hora_{{ $proximaCita->id }}" class="text-red-500 text-xs italic mb-2 hidden">No puedes hacer cambios a falta de menos de 24 horas para tu cita.</p>
+                        <p id="texto_cambio_{{ $proximaCita->id }}" class="text-red-600 dark:text-red-300 text-sm mb-2 hidden">Has de realizar cambios para poder guardar</p>
+                        <p id="texto_hora_{{ $proximaCita->id }}" class="text-red-600 dark:text-red-300 text-sm mb-2 hidden">No puedes hacer cambios a falta de menos de 24 horas para tu cita.</p>
                         <div class="flex justify-between">
                             <button type="submit" id="submit_button_{{ $proximaCita->id }}" class="text-black bg-gray-300 inline-flex items-center cursor-not-allowed font-medium rounded-lg text-sm px-5 py-2.5 text-center" disabled>
                                 Guardar cambios
@@ -140,7 +140,7 @@
                     </div>
                     <!-- Modal body -->
                     <div class="p-4 md:p-5 dark:text-white">
-                        <p>¿Estás seguro de que quieres cancelar esta cita? ID: {{ $proximaCita->id }}</p>
+                        <p>¿Estás seguro de que quieres cancelar esta cita?</p>
                         <div class="flex justify-end items-center mt-4">
                             <form action="{{ route('citas.cancelar', ['id' => $proximaCita->id]) }}" method="post" class="p-4 md:p-5">
                                 @csrf
@@ -174,7 +174,7 @@
                 const servicioInput = document.getElementById('servicio_edit_' + modalId);
                 const submitButton = document.getElementById('submit_button_' + modalId);
                 const errorMessage = document.createElement('p');
-                errorMessage.className = 'text-red-500 text-xs italic mb-2 mt-2';
+                errorMessage.className = 'text-red-600 dark:text-red-300 text-sm mb-2 mt-2';
                 errorMessage.style.display = 'none';
                 fechaInput.parentNode.insertBefore(errorMessage, fechaInput.nextSibling);
 

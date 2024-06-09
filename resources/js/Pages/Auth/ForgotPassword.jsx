@@ -37,12 +37,12 @@ export default function ForgotPassword({ status }) {
             <div className="relative min-h-screen flex items-center justify-center bg-gray-800">
                 <div className="relative backdrop-filter backdrop-blur-lg bg-white bg-opacity-10 border border-white border-opacity-20 shadow-lg rounded-lg p-8 w-full max-w-md">
                     <h2 className="text-3xl text-white text-center mb-4 font-righteous">¿Olvidaste tu contraseña?</h2>
-                    <div className="w-full text-center mb-4 text-sm text-gray-400">
+                    <div className="w-full text-center mb-4 text-sm text-gray-300">
                         ¡A todos nos ocurre alguna vez! No te preocupes. <br /> <br />Simplemente déjanos saber tu dirección de correo electrónico y te
                         enviaremos un email con un enlace <br /> para restablecer tu contraseña.
                     </div>
 
-                    {status && <div className="mb-4 text-center font-medium text-sm text-green-600">¡Se ha enviado un enlace para restablecer tu contraseña!
+                    {status && <div className="mb-4 text-center font-medium text-sm text-green-400">¡Se ha enviado un enlace para restablecer tu contraseña!
                     </div>}
 
                     <form onSubmit={submit}>
@@ -64,7 +64,7 @@ export default function ForgotPassword({ status }) {
                             </PrimaryButton>
                             <Link
                             href={route('login')}
-                            className="text-sm mt-2 -mb-3 text-center text-gray-500 underline hover:text-red-500"
+                            className="text-sm mt-2 -mb-3 text-center text-gray-400 underline hover:text-red-500"
                         >
                             No quiero restablecer mi contraseña ahora
                         </Link>

@@ -33,7 +33,7 @@ export default function ServicioCard({ servicio, userId, peluqueros, emailVerifi
   };
 
   return (
-    <div className="relative h-36 p-6 shadow-md rounded-md">
+    <div className="relative h-36 p-6 shadow-md rounded-md hover:bg-teal-100">
       <h3 className="text-3xl font-semibold mb-3">{servicio.nombre}</h3>
       <div className="absolute bottom-0 right-0 w-1/4 flex flex-col items-center justify-center p-4">
         <p className="text-3xl">{servicio.precio} &euro;</p>

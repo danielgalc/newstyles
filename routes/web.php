@@ -29,6 +29,7 @@ Route::middleware(['comprobarRol', 'comprobarRolPeluquero'])->group(function () 
 
 Route::middleware(['auth', 'comprobarRol', 'comprobarRolPeluquero'])->group(function(){
     Route::post('/carrito/add/{producto}', [CarritoController::class, 'add'])->name('add');
+    Route::middleware('auth')->post('/carrito/migrar', [CarritoController::class, 'migrar'])->name('carrito.migrar');
 });
 
 // Rutas accesibles para el usuario logueado
@@ -39,7 +40,6 @@ Route::middleware(['auth', 'verified', 'comprobarRol', 'comprobarRolPeluquero'])
     Route::post('/carrito/completar-compra', [CarritoController::class, 'completarCompra'])->name('completarCompra');
     Route::post('/carrito/decrementarCantidad/{carritoItem}', [CarritoController::class, 'decrementarCantidad'])->name('decrementarCantidad');
     Route::post('/carrito/incrementarCantidad/{carritoItem}', [CarritoController::class, 'incrementarCantidad'])->name('incrementarCantidad');    
-    Route::middleware('auth')->post('/carrito/migrar', [CarritoController::class, 'migrar'])->name('carrito.migrar');
 
     // Rutas de citas del usuario
     Route::get('/citas', [CitaController::class, 'index']);
@@ -48,7 +48,7 @@ Route::middleware(['auth', 'verified', 'comprobarRol', 'comprobarRolPeluquero'])
     Route::get('/historial-citas', [CitaController::class, 'historial'])->name('historial-citas');
     Route::put('/citas/updateFromHistorial/{id}', [CitaController::class, 'updateFromHistorial'])->name('citas.updateFromHistorial');
     Route::get('/citas/obtenerCitas', [CitaController::class, 'obtenerCitas'])->name('citas.obtenerCitas');
-    Route::get('/citas/obtenerCitasReserva', [CitaController::class, 'obtenerCitasReserva'])->name('citas.obtenerCitasReserva');
+    /* Route::get('/citas/obtenerCitasReserva', [CitaController::class, 'obtenerCitasReserva'])->name('citas.obtenerCitasReserva'); */
     Route::put('/citas/{id}/cancelar', [CitaController::class, 'cancelar'])->name('citas.cancelar');
 
     // Rutas de pedidos

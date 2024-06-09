@@ -50,9 +50,12 @@
                 <p class="text-gray-200 text-center">No hay citas pendientes.</p>
                 @else
                 @foreach($citasPendientes as $cita)
-                <div class="bg-white p-4 rounded-lg shadow-md text-gray-800 transition duration-300 transform hover:bg-teal-200">
+                <div class="bg-white p-4 rounded-lg shadow-md text-gray-800 transition duration-300 transform hover:scale-105">
                     <p><strong>Cliente:</strong> {{ $cita->user->name }}</p>
-                    <p><strong>Fecha:</strong> {{ $cita->fecha }}</p>
+                    @php
+                        $fechaFormateada = \Carbon\Carbon::parse($cita->fecha)->format('d-m-Y');
+                    @endphp
+                    <p><strong>Fecha:</strong> {{ $fechaFormateada }}</p>
                     <p><strong>Hora:</strong> {{ substr($cita->hora, 0, -3) }}</p>
                     <p><strong>Servicio:</strong> {{ $cita->servicio }}</p>
                     <div class="flex justify-end mt-4">
