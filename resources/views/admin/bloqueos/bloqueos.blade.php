@@ -167,24 +167,51 @@ document.addEventListener('DOMContentLoaded', function() {
         const today = new Date().toISOString().split('T')[0];
         fechaInput.setAttribute('min', today);
 
-        function validarFecha(showError = false) {
+        function validarFecha(showErrorFlag = false) {
             const selectedDate = new Date(fechaInput.value);
             const day = selectedDate.getUTCDay();
 
             if (day === 0 || day === 6) {
                 fechaInput.value = '';
-                if (showError) {
-                    alert('No se pueden seleccionar fines de semana. Por favor, elige otro día.');
+                if (showErrorFlag) {
+                    showError(fechaInput, 'No se pueden seleccionar fines de semana. Por favor, elige otro día.');
                 }
                 return false;
             } else if (fechaInput.value === '') {
-                if (showError) {
-                    alert('Selecciona una fecha antes de elegir una hora');
+                if (showErrorFlag) {
+                    showError(fechaInput, 'Selecciona una fecha antes de elegir una hora');
                 }
                 return false;
             }
 
+            hideError(fechaInput);
             return true;
+        }
+
+        function showError(input, message) {
+            // Eliminar mensaje de error anterior si existe
+            const previousError = input.parentNode.querySelector('.help-block');
+            if (previousError) {
+                previousError.parentNode.removeChild(previousError);
+            }
+
+            const errorSpan = document.createElement('span');
+            errorSpan.classList.add('help-block', 'text-red-600', 'dark:text-red-300', 'text-sm');
+            errorSpan.innerText = message;
+
+            input.parentNode.appendChild(errorSpan);
+
+            input.classList.add('border', 'border-red-500');
+        }
+
+        function hideError(input) {
+            const errorSpan = input.parentNode.querySelector('.help-block');
+
+            if (errorSpan) {
+                errorSpan.parentNode.removeChild(errorSpan);
+            }
+
+            input.classList.remove('border', 'border-red-500');
         }
 
         form.addEventListener('submit', function(event) {
@@ -208,12 +235,15 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // Iniciar scripts para cada modal de edición
     @foreach($bloqueos as $bloqueo)
     iniciarScriptsModales('edit_{{ $bloqueo->id }}');
     @endforeach
 
+    // Iniciar script para el modal de creación
     iniciarScriptsModales('crear');
 });
+
 
 </script>
 

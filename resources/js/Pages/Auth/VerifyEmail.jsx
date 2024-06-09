@@ -29,7 +29,7 @@ export default function VerifyEmail({ status }) {
                     </div>
 
                     {status === 'verification-link-sent' && (
-                        <div className="mb-4 text-center font-medium text-sm text-green-600">
+                        <div className="mb-4 text-center font-medium text-sm text-green-400">
                             ¡Un nuevo enlace de verificación ha sido enviado!
                         </div>
                     )}
@@ -40,7 +40,7 @@ export default function VerifyEmail({ status }) {
 
                             <Link
                                 href={route('landing')}
-                                className="text-sm text-gray-500 underline hover:text-red-500"
+                                className="text-sm text-gray-400 underline hover:text-red-500"
                             >
                                 No quiero confirmar mi correo electrónico ahora
                             </Link>

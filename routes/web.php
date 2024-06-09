@@ -48,7 +48,7 @@ Route::middleware(['auth', 'verified', 'comprobarRol', 'comprobarRolPeluquero'])
     Route::get('/historial-citas', [CitaController::class, 'historial'])->name('historial-citas');
     Route::put('/citas/updateFromHistorial/{id}', [CitaController::class, 'updateFromHistorial'])->name('citas.updateFromHistorial');
     Route::get('/citas/obtenerCitas', [CitaController::class, 'obtenerCitas'])->name('citas.obtenerCitas');
-    Route::get('/citas/obtenerCitasReserva', [CitaController::class, 'obtenerCitasReserva'])->name('citas.obtenerCitasReserva');
+    /* Route::get('/citas/obtenerCitasReserva', [CitaController::class, 'obtenerCitasReserva'])->name('citas.obtenerCitasReserva'); */
     Route::put('/citas/{id}/cancelar', [CitaController::class, 'cancelar'])->name('citas.cancelar');
 
     // Rutas de pedidos

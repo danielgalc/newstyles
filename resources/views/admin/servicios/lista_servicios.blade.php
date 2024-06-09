@@ -22,7 +22,7 @@
                 <option value="secundario" {{ request('clase') == 'secundario' ? 'selected' : '' }}>Secundario</option>
             </select>
             <input type="text" name="buscar" placeholder="Buscar servicios..." class="rounded border-gray-300 ml-2" value="{{ request('buscar') }}">
-            <button type="submit" class="ml-2 text-white bg-teal-500 hover:bg-teal-800 focus:ring-4 focus:outline-none focus:ring-teal-300 font-medium rounded-lg text-sm px-4 h-10 text-center dark:bg-teal-600 dark:hover:bg-teal-700 dark:focus:ring-teal-800">Buscar</button>
+            <button type="submit" class="ml-2 text-white bg-teal-700 hover:bg-teal-800 focus:ring-4 focus:outline-none focus:ring-teal-300 font-medium rounded-lg text-sm px-4 h-10 text-center dark:bg-teal-600 dark:hover:bg-teal-700 dark:focus:ring-teal-800">Buscar</button>
         </form>
     </div>
 
@@ -106,7 +106,7 @@
             </div>
             <!-- Modal body -->
             <div class="p-4 md:p-5">
-                <p class="text-white">¿Estás seguro de que quieres eliminar el servicio?</p>
+                <p class="dark:text-white">¿Estás seguro de que quieres eliminar el servicio?</p>
                 <div class="flex justify-end items-center mt-4">
                     <form action="{{ route('servicios.destroy', ['id' => $servicio->id]) }}" method="post" class="p-4 md:p-5">
                         @csrf
@@ -117,7 +117,7 @@
                         </button>
                     </form>
 
-                    <button type="button" class="h-10 text-gray-100 bg-gray-200 hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800" data-modal-toggle="confirm_delete_modal_{{ $servicio->id }}" data-delete-route="{{ route('servicios.destroy', ['id' => $servicio->id]) }}">
+                    <button type="button" class="h-10 dark:text-gray-100 bg-gray-200 hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800" data-modal-toggle="confirm_delete_modal_{{ $servicio->id }}" data-delete-route="{{ route('servicios.destroy', ['id' => $servicio->id]) }}">
                         Cancelar
                     </button>
                 </div>
@@ -287,7 +287,7 @@
             }
 
             const errorSpan = document.createElement('span');
-            errorSpan.classList.add('help-block', 'text-red-500', 'text-sm');
+            errorSpan.classList.add('help-block', 'text-red-600', 'dark:text-red-300', 'text-sm');
             errorSpan.innerText = message;
 
             input.parentNode.appendChild(errorSpan);

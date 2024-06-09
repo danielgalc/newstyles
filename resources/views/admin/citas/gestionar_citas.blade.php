@@ -30,7 +30,7 @@
                 @endforeach
             </select>
             <input type="text" name="buscar" placeholder="Buscar clientes..." class="rounded border-gray-300 mr-2" value="{{ request('buscar') }}">
-            <button type="submit" class="ml-2 text-white bg-teal-500 hover:bg-teal-800 focus:ring-4 focus:outline-none focus:ring-teal-300 font-medium rounded-lg text-sm px-4 h-10 text-center dark:bg-teal-600 dark:hover:bg-teal-700 dark:focus:ring-teal-800">Buscar</button>
+            <button type="submit" class="ml-2 text-white bg-teal-700 hover:bg-teal-800 focus:ring-4 focus:outline-none focus:ring-teal-300 font-medium rounded-lg text-sm px-4 h-10 text-center dark:bg-teal-600 dark:hover:bg-teal-700 dark:focus:ring-teal-800">Buscar</button>
         </form>
     </div>
 
@@ -48,7 +48,7 @@
             <!-- Modal header -->
             <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                 <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                    Editar Cita: <span class="italic text-teal-600">#{{ $cita->id }}</span>
+                    Editar Cita:</span>
                 </h3>
                 <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="edit_cita_modal_{{ $cita->id }}">
                     <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
@@ -173,7 +173,7 @@
                         <div id="user_search_results_crear" class="absolute z-10 bg-white border border-gray-300 w-3/4 mt-1 rounded-lg shadow-lg hidden overflow-y-auto max-h-40"></div>
                         <input type="hidden" name="user_id" id="user_id_crear" class="rounded-lg hover:rounded-lg" />
                         @error('user_id')
-                        <p class="text-red-500 text-xs italic mt-2">{{ $message }}</p>
+                        <p class="text-red-600 dark:text-red-300 text-sm mt-2">{{ $message }}</p>
                         @enderror
                     </div>
                     <div class="col-span-2">
@@ -184,14 +184,14 @@
                             @endforeach
                         </select>
                         @error('peluquero_id')
-                        <p class="text-red-500 text-xs italic mt-2">{{ $message }}</p>
+                        <p class="text-red-600 dark:text-red-300 text-sm mt-2">{{ $message }}</p>
                         @enderror
                     </div>
                     <div class="col-span-2">
                         <label for="fecha_crear" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fecha</label>
                         <input id="fecha_crear" name="fecha" type="date" class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" required>
                         @error('fecha')
-                        <p class="text-red-500 text-xs italic mt-2">{{ $message }}</p>
+                        <p class="text-red-600 dark:text-red-300 text-sm mt-2">{{ $message }}</p>
                         @enderror
                     </div>
                     <div class="col-span-2">
@@ -200,8 +200,9 @@
                             <option value="">Selecciona una hora</option>
                         </select>
                         @error('hora')
-                        <p class="text-red-500 text-xs italic mt-2">{{ $message }}</p>
+                        <p class="text-red-600 dark:text-red-300 text-sm mt-2">{{ $message }}</p>
                         @enderror
+                        
                     </div>
                     <div class="col-span-2">
                         <label for="servicio_crear" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Servicio</label>
@@ -211,7 +212,7 @@
                             @endforeach
                         </select>
                         @error('servicio')
-                        <p class="text-red-500 text-xs italic mt-2">{{ $message }}</p>
+                        <p class="text-red-600 dark:text-red-300 text-sm mt-2">{{ $message }}</p>
                         @enderror
                     </div>
                 </div>
@@ -234,7 +235,7 @@
             const userIdInput = document.getElementById('user_id_' + modalId);
 
             const errorMessage = document.createElement('p');
-            errorMessage.className = 'text-red-500 text-xs italic mb-2 mt-2';
+            errorMessage.className = 'text-red-600 dark:text-red-300 text-xs mb-2 mt-2';
             errorMessage.style.display = 'none';
             fechaInput.parentNode.insertBefore(errorMessage, fechaInput.nextSibling);
 

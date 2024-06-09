@@ -22,7 +22,7 @@
                 <option value="peluquero" {{ request('rol') == 'peluquero' ? 'selected' : '' }}>Peluqueros</option>
             </select>
             <input type="text" name="buscar" placeholder="Buscar usuarios..." class="rounded border-gray-300 mr-2" value="{{ request('buscar') }}">
-            <button type="submit" class="ml-2 text-white bg-teal-500 hover:bg-teal-800 focus:ring-4 focus:outline-none focus:ring-teal-300 font-medium rounded-lg text-sm px-4 h-10 text-center dark:bg-teal-600 dark:hover:bg-teal-700 dark:focus:ring-teal-800">Buscar</button>
+            <button type="submit" class="ml-2 text-white bg-teal-700 hover:bg-teal-800 focus:ring-4 focus:outline-none focus:ring-teal-300 font-medium rounded-lg text-sm px-4 h-10 text-center dark:bg-teal-600 dark:hover:bg-teal-700 dark:focus:ring-teal-800">Buscar</button>
         </form>
     </div>
 
@@ -330,7 +330,7 @@
             }
 
             const errorSpan = document.createElement('span');
-            errorSpan.classList.add('help-block', 'text-red-500', 'text-sm');
+            errorSpan.classList.add('help-block', 'text-red-600', 'dark:text-red-300', 'text-sm');
             errorSpan.innerText = message;
 
             input.parentNode.appendChild(errorSpan);

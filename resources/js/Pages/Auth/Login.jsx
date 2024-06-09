@@ -111,7 +111,7 @@ export default function Login({ status, canResetPassword }) {
                                     onChange={(e) => setData('email', e.target.value)}
                                 />
                             </div>
-                            <InputError message={errors.email || localErrors.email} className="mt-2 text-red-500" />
+                            <InputError message={errors.email || localErrors.email} className="mt-2 bg-red-600 bg-opacity-70 rounded-md shadow-lg p-2 text-white" />
                         </div>
 
                         <div className="mb-2">
@@ -127,7 +127,7 @@ export default function Login({ status, canResetPassword }) {
                                     onChange={(e) => setData('password', e.target.value)}
                                 />
                             </div>
-                            <InputError message={errors.password || localErrors.password} className="mt-2 text-red-500" />
+                            <InputError message={errors.password || localErrors.password} className="mt-2 bg-red-600 bg-opacity-70 rounded-md shadow-lg p-2 text-white" />
                         </div>
 
                         <div className="flex items-center justify-between mb-6">
@@ -155,8 +155,8 @@ export default function Login({ status, canResetPassword }) {
                                 Iniciar Sesión
                             </PrimaryButton>
                         </div>
-                        <div className='flex justify-center gap-1 text-sm items-center mt-4 text-gray-500'>
-                            ¿No tienes cuenta? <a href="/register" className='text-teal-500'>Haz click aquí para registrarte</a>
+                        <div className='flex justify-center gap-1 text-sm items-center mt-4 text-gray-200'>
+                            ¿No tienes cuenta? <a href="/register" className='text-teal-400'>Haz click aquí para registrarte</a>
                         </div>
                     </form>
                 </div>

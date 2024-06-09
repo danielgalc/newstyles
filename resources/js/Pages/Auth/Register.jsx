@@ -83,7 +83,7 @@ export default function Register() {
 
             <div className="relative backdrop-filter backdrop-blur-lg bg-white bg-opacity-10 border border-white border-opacity-20 shadow-lg rounded-lg px-8 pt-8 pb-4 mt-24 w-full max-w-md">
                 <h2 className="text-3xl text-white text-center mb-4 font-righteous">Crear cuenta</h2>
-                <p className="text-white font-semibold text-center mb-8">¡Únete a <span className='text-teal-500 font-semibold'>Newstyles</span>!</p>
+                <p className="text-white font-semibold text-center mb-8">¡Únete a <span className='text-teal-400 font-semibold'>Newstyles</span>!</p>
 
                 <form onSubmit={submit}>
                     <div className="mb-2">
@@ -100,7 +100,7 @@ export default function Register() {
                                 required
                             />
                         </div>
-                        <InputError message={errors.name || localErrors.name} className="mt-2 text-red-300" />
+                        <InputError message={errors.name || localErrors.name} className="mt-2 bg-red-600 bg-opacity-70 rounded-md shadow-lg p-2 text-white" />
                     </div>
 
                     <div className="mb-2">
@@ -117,7 +117,7 @@ export default function Register() {
                                 required
                             />
                         </div>
-                        <InputError message={errors.email || localErrors.email} className="mt-2 text-red-300" />
+                        <InputError message={errors.email || localErrors.email} className="mt-2 bg-red-600 bg-opacity-70 rounded-md shadow-lg p-2 text-white" />
                     </div>
 
                     <div className="mb-2">
@@ -138,7 +138,7 @@ export default function Register() {
                                 }}
                             />
                         </div>
-                        <InputError message={errors.dni || localErrors.dni} className="mt-2 text-red-300" />
+                        <InputError message={errors.dni || localErrors.dni} className="mt-2 bg-red-600 bg-opacity-70 rounded-md shadow-lg p-2 text-white" />
                     </div>
 
                     <div className="mb-2">
@@ -159,7 +159,7 @@ export default function Register() {
                                 }}
                             />
                         </div>
-                        <InputError message={errors.telefono || localErrors.telefono} className="mt-2 text-red-300" />
+                        <InputError message={errors.telefono || localErrors.telefono} className="mt-2 bg-red-600 bg-opacity-70 rounded-md shadow-lg p-2 text-white" />
                     </div>
 
                     <div className="mb-2">
@@ -175,7 +175,7 @@ export default function Register() {
                                 required
                             />
                         </div>
-                        <InputError message={errors.direccion || localErrors.direccion} className="mt-2 text-red-300" />
+                        <InputError message={errors.direccion || localErrors.direccion} className="mt-2 bg-red-600 bg-opacity-70 rounded-md shadow-lg p-2 text-white" />
                     </div>
 
                     <div className="mb-2">
@@ -192,7 +192,7 @@ export default function Register() {
                                 required
                             />
                         </div>
-                        <InputError message={errors.password || localErrors.password} className="mt-2 text-red-300" />
+                        <InputError message={errors.password || localErrors.password} className="mt-2 bg-red-600 bg-opacity-70 rounded-md shadow-lg p-2 text-white" />
                     </div>
 
                     <div className="mb-2">
@@ -209,7 +209,7 @@ export default function Register() {
                                 required
                             />
                         </div>
-                        <InputError message={errors.password_confirmation || localErrors.password_confirmation} className="mt-2 text-red-300" />
+                        <InputError message={errors.password_confirmation || localErrors.password_confirmation} className="mt-2 bg-red-600 bg-opacity-70 rounded-md shadow-lg p-2 text-white" />
                     </div>
 
                     <div className="flex items-center justify-center">
@@ -218,8 +218,8 @@ export default function Register() {
                         </PrimaryButton>
                     </div>
                 </form>
-                <div className='flex justify-center gap-1 text-sm items-center mt-4 text-gray-500'>
-                    ¿Ya tienes una cuenta?<a href="/login" className='text-teal-500'>Inicia sesión ahora</a>
+                <div className='flex justify-center gap-1 text-sm items-center mt-4 text-gray-200'>
+                    ¿Ya tienes una cuenta?<a href="/login" className='text-teal-400'>Inicia sesión ahora</a>
                 </div>
             </div>
         </div>

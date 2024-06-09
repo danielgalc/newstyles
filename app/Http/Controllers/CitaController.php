@@ -360,6 +360,12 @@ class CitaController extends Controller
      * Funciones del usuario peluquero
      */
 
+    /** Obtener citas comprueba las citas y los bloqueos
+     * de los peluqueros para pasarlas a ModalReserva.jsx
+     * y a gestionar_citas.blade.php, para así solo
+     * mostrar las horas disponibles de cada peluquero.
+     */
+
      public function obtenerCitas(Request $request): JsonResponse
      {
          $peluqueroId = $request->query('peluquero_id');
@@ -385,21 +391,24 @@ class CitaController extends Controller
      }
      
 
-
+    /*
     public function obtenerCitasReserva(Request $request): JsonResponse
     {
         $peluqueroId = $request->query('peluquero_id');
-        $fecha = $request->query('fecha'); // Obtener la fecha del query string
+        $fecha = $request->query('fecha');
 
-        // Asegúrate de que la fecha esté en el formato correcto
         $citas = Cita::where('peluquero_id', $peluqueroId)
-            ->whereDate('fecha', $fecha) // Filtrar por fecha
             ->whereIn('estado', ['aceptada', 'pendiente'])
             ->get();
 
         return response()->json($citas);
-    }
+    } */
 
+    /**
+     * Funcion para la gestión de citas desde la vista de peluqueros,
+     * dónde se obtienen las citas aceptadas de cada día y pendientes y mostrarlas 
+     * en sus respectivos apartados.
+     */
 
     public function gestionarCitas()
     {
@@ -415,6 +424,12 @@ class CitaController extends Controller
         return view('peluquero.citas', compact('citasPendientes', 'citasAceptadas'));
     }
 
+    /**
+     * Funcion para la gestión de horas desde la vista de peluqueros,
+     * dónde se obtienen las horas bloqueadas para que cada peluquero
+     * las distribuya como quiera en sus respectivos apartados.
+     */
+
     public function gestionarHoras()
     {
         $userId = Auth::id();
@@ -424,6 +439,11 @@ class CitaController extends Controller
             ->get();
         return view('peluquero.horas', compact('bloqueos'));
     }
+
+    /**
+     * Funcion para mostrar las citas que tiene aceptadas
+     * cada peluquero según el día que se elija en el input
+     */
     
     public function obtenerCitasDelDia(Request $request)
     {
@@ -432,7 +452,7 @@ class CitaController extends Controller
     
         $citasDelDia = Cita::where('peluquero_id', $peluqueroId)
             ->whereDate('fecha', $fecha)
-            ->whereIn('estado', ['aceptada', 'pendiente'])
+            ->whereIn('estado', ['aceptada'])
             ->with('user')
             ->get();
     
@@ -440,7 +460,10 @@ class CitaController extends Controller
     }
 
 
-    // Vista previa peluqueros
+    /** Vista puente entre React y Blade para
+     *  los usuarios peluqueros, con comprobaciones
+     *  para evitar que ningún otro tipo de usuario acceda. 
+     */
 
     public function peluqueros()
     {

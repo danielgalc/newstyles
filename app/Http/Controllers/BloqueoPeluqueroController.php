@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\BloqueoPeluquero;
 use App\Models\Cita;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
@@ -47,7 +48,6 @@ class BloqueoPeluqueroController extends Controller
     public function store(Request $request)
     {
         $userId = $request->user_id;
-
         $horas = $request->horas;
 
         $bloqueoExistente = BloqueoPeluquero::where('peluquero_id', $userId)
@@ -59,7 +59,19 @@ class BloqueoPeluqueroController extends Controller
             $horasDuplicadas = array_intersect($horasExistentes, $horas);
 
             if (!empty($horasDuplicadas)) {
-                return back()->withErrors(['Las siguientes horas ya están bloqueadas: ' . implode(', ', $horasDuplicadas)]);
+                // Crear un nuevo array para almacenar las horas formateadas
+                $horasDuplicadasFormateadas = [];
+
+                foreach ($horasDuplicadas as $hora) {
+                    // Parsear la hora con Carbon
+                    $horaCarbon = Carbon::parse($hora);
+                    // Formatear la hora a H:i
+                    $horaFormateada = $horaCarbon->format('H:i');
+                    // Añadir la hora formateada al nuevo array
+                    $horasDuplicadasFormateadas[] = $horaFormateada;
+                }
+
+                return back()->withErrors(['Las siguientes horas ya están bloqueadas: ' . implode(', ', $horasDuplicadasFormateadas)]);
             }
 
             $horas = array_merge($horasExistentes, $horas);
@@ -164,8 +176,22 @@ class BloqueoPeluqueroController extends Controller
             $horasDesbloquear = $request->horas;
 
             $horasNoBloqueadas = array_diff($horasDesbloquear, $horasBloqueadas);
+
             if (!empty($horasNoBloqueadas)) {
-                return back()->withErrors(['Las siguientes horas no están bloqueadas: ' . implode(', ', $horasNoBloqueadas)]);
+                // Crear un nuevo array para almacenar las horas formateadas
+                $horasFormateadas = [];
+
+                foreach ($horasNoBloqueadas as $hora) {
+                    // Parsear la hora con Carbon
+                    $horaCarbon = Carbon::parse($hora);
+                    // Formatear la hora a H:i
+                    $horaFormateada = $horaCarbon->format('H:i');
+                    // Añadir la hora formateada al nuevo array
+                    $horasFormateadas[] = $horaFormateada;
+                }
+
+                // Devolver el error con las horas formateadas
+                return back()->withErrors(['Las siguientes horas no están bloqueadas: ' . implode(', ', $horasFormateadas)]);
             }
 
             $horasBloqueadas = array_diff($horasBloqueadas, $horasDesbloquear);
@@ -195,5 +221,5 @@ class BloqueoPeluqueroController extends Controller
         $horasBloqueadas = $bloqueo ? json_decode($bloqueo->horas, true) : [];
 
         return response()->json($horasBloqueadas);
-    }    
+    }
 }
